@@ -513,6 +513,7 @@
         </div>
         <div class="fc-controls">
           <button class="btn secondary" onclick="fcPrev()">◀ Trước</button>
+          <button class="btn secondary" onclick="shuffleFlashcards()">🔀 Trộn thẻ</button>
           <button class="btn secondary" onclick="flipCard()">🔄 Lật thẻ</button>
           <button class="btn" onclick="fcNext()">Sau ▶</button>
         </div>
@@ -1093,6 +1094,15 @@ GRAMMAR_POINTS.forEach((gp, idx)=>{
 let fcIndex = 0;
 const fcKnownSet = new Set();
 const fcCard = document.getElementById('flashcard');
+  function shuffleFlashcards(){
+  for(let i=VOCAB.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [VOCAB[i],VOCAB[j]] = [VOCAB[j],VOCAB[i]];
+  }
+  fcIndex = 0;
+  renderFC();
+  showToast('🔀 Đã trộn thẻ!');
+}
 function renderFC(){
   const v = VOCAB[fcIndex];
   document.getElementById('fc-hz').textContent = v.hz;
