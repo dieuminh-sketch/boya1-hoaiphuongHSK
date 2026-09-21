@@ -3,29 +3,127 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Boya Sơ cấp 1 - Bài 1</title>
+
+  <title>Boya Sơ cấp 1</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f6f2ff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 15px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      background: white;
+      border-radius: 24px;
+      padding: 40px 36px;
+      box-shadow: 0 12px 35px rgba(100, 80, 160, 0.12);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 38px;
+    }
+
+    .header h1 {
+      margin: 0;
+      color: #5946c7;
+      font-size: 38px;
+      font-weight: 700;
+    }
+
+    .header p {
+      margin-top: 10px;
+      margin-bottom: 0;
+      color: #666;
+      font-size: 17px;
+    }
+
+    .lesson-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .lesson {
+      display: block;
+      text-decoration: none;
+      background: #eee9ff;
+      border-radius: 16px;
+      padding: 22px 25px;
+      transition: all 0.2s ease;
+    }
+
+    .lesson:hover {
+      background: #e4dcff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(100, 80, 160, 0.12);
+    }
+
+    .lesson-title {
+      text-align: center;
+      color: #5542c2;
+      font-size: 23px;
+      font-weight: 700;
+    }
+
+    .lesson-desc {
+      text-align: center;
+      color: #777;
+      font-size: 15px;
+      margin-top: 8px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 38px;
+      color: #999;
+      font-size: 14px;
+    }
+  </style>
 </head>
 
 <body>
-    <h1>Boya Sơ cấp 1</h1>
 
-    <h2>Bài 1</h2>
+  <div class="container">
 
-    <a href="Bai1/Boya1_Bai01_OnTap.html">
-        Vào Bài 1
-    </a>
+    <div class="header">
+      <h1>📚 Boya Sơ cấp 1</h1>
+      <p>Luyện nói · HoaiPhuongHSK</p>
+    </div>
 
-    <h2>Bài 2</h2>
+    <div class="lesson-list">
 
-    <a href="Bai2/Boya1_Bai02_OnTap.html">
-        Vào Bài 2
-    </a>
+      <a class="lesson" href="Bai1/Boya1_Bai01_OnTap.html">
+        <div class="lesson-title">📖 Bài 1 · 你好！</div>
+      </a>
 
-  <h2>Bài 3</h2>
+      <a class="lesson" href="Bai2/Boya1_Bai02_OnTap.html">
+        <div class="lesson-title">📖 Bài 2 · 你是哪国人？</div>
+      </a>
 
-    <a href="Bai3/Boya1_Bai03_OnTap.html">
-        Vào Bài 3
-    </a>
-  
+      <a class="lesson" href="Bai3/Boya1_Bai03_OnTap.html">
+        <div class="lesson-title">📖 Bài 3 · 那是你的书吗？</div>
+      </a>
+
+    </div>
+
+    <div class="footer">
+      HoaiPhuongHSK · Boya Sơ cấp 1
+    </div>
+
+  </div>
+
 </body>
 </html>
