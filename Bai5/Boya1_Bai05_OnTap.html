@@ -446,6 +446,7 @@
 </head>
 <body>
 <audio id="audio-tuvung" src="tuvung5.mp3" preload="auto"></audio>
+<audio id="audio-tenrieng" src="tenrieng5.mp3" preload="auto"></audio>
 <audio id="audio-baikhoa1" src="baikhoa5_1.mp3" preload="auto"></audio>
 <audio id="audio-baikhoa2" src="baikhoa5_2.mp3" preload="auto"></audio>
 <button id="present-exit-btn" onclick="togglePresent()" aria-label="Thoát chế độ trình chiếu">✕ Thoát trình chiếu</button>
@@ -954,38 +955,39 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
 /* ============ PHÁT ÂM: AUDIO THẬT (mp3 gốc Boya) theo timestamp ============ */
 /* Từ vựng: tra theo đúng chữ Hán -> {audio: id thẻ <audio>, start, end (giây)}.
    Bài khoá: KHÔNG dùng timestamp từng câu — chỉ phát trọn vẹn cả đoạn qua nút "Nghe cả đoạn" (xem playDialogueFull).
-   Timestamp xác định bằng phân tích khoảng lặng (silencedetect) trên file tuvung5.mp3 gốc, đã xác nhận thứ tự đọc với giáo viên
-   (đoạn đầu file là tiêu đề nhóm "专有名词", không gán cho từ nào). Bài khoá dùng phát trọn đoạn, không cắt theo timestamp từng câu. */
+   Timestamp xác định bằng phân tích khoảng lặng (silencedetect) trên 2 file riêng: tuvung5.mp3 (20 từ vựng)
+   và tenrieng5.mp3 (3 danh từ riêng) — tách file để tránh lệch timestamp giữa 2 nhóm. Bài khoá dùng phát trọn đoạn, không cắt theo timestamp từng câu. */
 const AUDIO_MAP = {
-  // --- Từ vựng (tuvung5.mp3) — timestamp xác định bằng silence detection, đã xác nhận với giáo viên đoạn đầu là tiêu đề nhóm "专有名词" (không dùng) ---
-  "专业":     {audio:"audio-tuvung", start:2.59, end:3.22},
-  "国际":     {audio:"audio-tuvung", start:4.58, end:5.16},
-  "关系":     {audio:"audio-tuvung", start:6.44, end:7.19},
-  "中文":     {audio:"audio-tuvung", start:8.30, end:8.72},
-  "系":       {audio:"audio-tuvung", start:10.11, end:11.02},
-  "研究生":   {audio:"audio-tuvung", start:12.19, end:12.89},
-  "现代":     {audio:"audio-tuvung", start:14.25, end:15.04},
-  "文学":     {audio:"audio-tuvung", start:16.44, end:17.09},
-  "东边":     {audio:"audio-tuvung", start:18.37, end:18.91},
-  "有":       {audio:"audio-tuvung", start:20.14, end:20.51},
-  "空儿":     {audio:"audio-tuvung", start:21.79, end:22.50},
-  "时候":     {audio:"audio-tuvung", start:23.72, end:24.40},
-  "欢迎":     {audio:"audio-tuvung", start:25.43, end:25.82},
-  "去":       {audio:"audio-tuvung", start:27.21, end:27.73},
-  "玩儿":     {audio:"audio-tuvung", start:29.30, end:30.20},
-  "卫生间":   {audio:"audio-tuvung", start:31.47, end:32.19},
-  "教室":     {audio:"audio-tuvung", start:33.60, end:34.40},
-  "旁边":     {audio:"audio-tuvung", start:35.61, end:36.25},
-  "西边":     {audio:"audio-tuvung", start:37.74, end:38.06},
-  "对":       {audio:"audio-tuvung", start:39.86, end:40.79},
-  "张红":     {audio:"audio-tuvung", start:42.20, end:42.97},
-  "北京大学": {audio:"audio-tuvung", start:44.15, end:45.32},
-  "清华大学": {audio:"audio-tuvung", start:46.42, end:47.63}
+  // --- Từ vựng (tuvung5.mp3, 20 mục — timestamp xác định lại bằng silence detection, đã khớp đúng thứ tự bảng) ---
+  "专业":     {audio:"audio-tuvung", start:1.03, end:1.68},
+  "国际":     {audio:"audio-tuvung", start:3.01, end:3.64},
+  "关系":     {audio:"audio-tuvung", start:5.00, end:5.58},
+  "中文":     {audio:"audio-tuvung", start:6.85, end:7.60},
+  "系":       {audio:"audio-tuvung", start:8.72, end:9.14},
+  "研究生":   {audio:"audio-tuvung", start:10.53, end:11.43},
+  "现代":     {audio:"audio-tuvung", start:12.61, end:13.31},
+  "文学":     {audio:"audio-tuvung", start:14.67, end:15.46},
+  "东边":     {audio:"audio-tuvung", start:16.85, end:17.51},
+  "有":       {audio:"audio-tuvung", start:18.79, end:19.33},
+  "空儿":     {audio:"audio-tuvung", start:20.56, end:20.93},
+  "时候":     {audio:"audio-tuvung", start:22.20, end:22.92},
+  "欢迎":     {audio:"audio-tuvung", start:24.14, end:24.82},
+  "去":       {audio:"audio-tuvung", start:25.85, end:26.23},
+  "玩儿":     {audio:"audio-tuvung", start:27.63, end:28.15},
+  "卫生间":   {audio:"audio-tuvung", start:29.72, end:30.62},
+  "教室":     {audio:"audio-tuvung", start:31.89, end:32.61},
+  "旁边":     {audio:"audio-tuvung", start:34.02, end:34.82},
+  "西边":     {audio:"audio-tuvung", start:36.03, end:36.67},
+  "对":       {audio:"audio-tuvung", start:38.16, end:38.48},
+  // --- Danh từ riêng (tenrieng5.mp3, file riêng biệt) ---
+  "张红":     {audio:"audio-tenrieng", start:0.90, end:1.67},
+  "北京大学": {audio:"audio-tenrieng", start:2.85, end:4.02},
+  "清华大学": {audio:"audio-tenrieng", start:5.12, end:6.33}
 };
 let currentPlayingAudio = null;
 let currentPlayingEl = null, currentPlayingBtn = null;
 function stopAllAudio(){
-  ['audio-tuvung','audio-baikhoa1','audio-baikhoa2'].forEach(id=>{
+  ['audio-tuvung','audio-tenrieng','audio-baikhoa1','audio-baikhoa2'].forEach(id=>{
     const el = document.getElementById(id);
     el.pause();
   });
