@@ -405,6 +405,19 @@
     display:inline-flex;align-items:center;gap:6px;transition:.15s;
   }
   .present-toggle.active{background:var(--red);color:#fff;border-color:var(--red);}
+/* Tab con cho các dạng bài tập */
+.ex-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.ex-tab-btn{
+  font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.88rem;
+  background:var(--white);border:2px solid var(--cream-2);color:var(--red-dark);
+  padding:8px 16px;border-radius:999px;cursor:pointer;transition:.15s;
+}
+.ex-tab-btn:hover:not(.active){border-color:var(--red-light);transform:translateY(-1px);}
+.ex-tab-btn.active{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;border-color:var(--accent);box-shadow:0 3px 8px rgba(189,134,54,.3);}
+@media(max-width:800px){
+  .ex-tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;}
+  .ex-tab-btn{flex-shrink:0;min-height:42px;}
+}
 </style>
 </head>
 <body>
@@ -1398,6 +1411,29 @@ function hzOutline(){
 }
 // khởi tạo chữ đầu tiên
 selectHanzi(0);
+/* ============ TAB CON CHO BÀI TẬP (tự tạo nút theo số dạng) ============ */
+(function(){
+  const panel = document.getElementById('panel-write');
+  const blocks = panel.querySelectorAll('.ex-block');
+  if(!blocks.length) return;
+  const bar = document.createElement('div');
+  bar.className = 'ex-tabs';
+  const btns = [];
+  blocks.forEach((_,i)=>{
+    const b = document.createElement('button');
+    b.className = 'ex-tab-btn';
+    b.textContent = 'Dạng ' + (i+1);
+    b.addEventListener('click', ()=>showEx(i));
+    bar.appendChild(b);
+    btns.push(b);
+  });
+  blocks[0].parentNode.insertBefore(bar, blocks[0]);
+  function showEx(i){
+    blocks.forEach((b,idx)=>{ b.style.display = (idx===i) ? '' : 'none'; });
+    btns.forEach((b,idx)=>b.classList.toggle('active', idx===i));
+  }
+  showEx(0);
+})();
 </script>
 </body>
 </html>
