@@ -406,19 +406,21 @@
     display:inline-flex;align-items:center;gap:6px;transition:.15s;
   }
   .present-toggle.active{background:var(--red);color:#fff;border-color:var(--red);}
-/* Tab con cho các dạng bài tập */
-.ex-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
-.ex-tab-btn{
-  font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.88rem;
-  background:var(--white);border:2px solid var(--cream-2);color:var(--red-dark);
-  padding:8px 16px;border-radius:999px;cursor:pointer;transition:.15s;
-}
-.ex-tab-btn:hover:not(.active){border-color:var(--red-light);transform:translateY(-1px);}
-.ex-tab-btn.active{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;border-color:var(--accent);box-shadow:0 3px 8px rgba(189,134,54,.3);}
-@media(max-width:800px){
-  .ex-tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;}
-  .ex-tab-btn{flex-shrink:0;min-height:42px;}
-}
+  /* Bài tập mở rộng: giải thích đáp án, sửa câu, đọc hiểu */
+  .ex-expl{margin-top:10px;background:var(--green-bg);border-left:4px solid var(--green);border-radius:10px;padding:10px 14px;animation:fade .3s;}
+  .ex-expl-hz{font-size:1.2rem;font-weight:700;color:var(--ink);}
+  .ex-expl-py{color:var(--accent-dark);font-size:.85rem;font-weight:700;margin-top:2px;}
+  .ex-expl-vi{color:var(--gray);font-size:.88rem;margin:2px 0 6px;}
+  .ex-expl-why{font-size:.88rem;line-height:1.6;}
+  .ex-expl-warn{margin-top:6px;font-size:.82rem;color:#7a4d05;background:#fff3d6;border-radius:8px;padding:6px 10px;}
+  .fx-item{margin-bottom:18px;padding-bottom:14px;border-bottom:1px dashed var(--cream-2);}
+  .fx-item:last-child{border-bottom:none;}
+  input.ans-in{width:100%;max-width:460px;border:2px solid var(--cream-2);border-radius:12px;padding:9px 12px;font-size:1.1rem;margin:0 8px 8px 0;transition:.15s;}
+  input.ans-in:focus{outline:none;border-color:var(--red-light);box-shadow:0 0 0 3px rgba(217,138,128,.2);}
+  input.ans-in.ok{border-color:var(--green);background:var(--green-bg);}
+  input.ans-in.bad{border-color:var(--error);background:var(--error-bg);}
+  .wrong-s{color:var(--error);}
+  .passage{background:var(--cream);border-left:5px solid var(--red-light);border-radius:12px;padding:14px 16px;font-size:1.2rem;line-height:2.1;}
 </style>
 </head>
 <body>
@@ -551,13 +553,7 @@
       </div>
 
       <div class="card ex-block">
-        <div class="ex-title">Dạng 2 · Nghe và chọn câu nghe được</div>
-        <div class="ex-sub">Bấm 🔊 để nghe, sau đó chọn đúng câu vừa nghe.</div>
-        <div id="listen-sentence-container"></div>
-      </div>
-
-      <div class="card ex-block">
-        <div class="ex-title">Dạng 3 · Điền từ vào đoạn văn</div>
+        <div class="ex-title">Dạng 2 · Điền từ vào đoạn văn</div>
         <div class="ex-sub">Chọn từ đúng trong danh sách thả xuống để hoàn thành hội thoại.</div>
         <div id="fill-container"></div>
         <button class="btn btn-check" onclick="checkFill()">Kiểm tra</button>
@@ -565,15 +561,34 @@
       </div>
 
       <div class="card ex-block">
-        <div class="ex-title">Dạng 4 · Sắp xếp từ thành câu</div>
+        <div class="ex-title">Dạng 3 · Sắp xếp từ thành câu</div>
         <div class="ex-sub">Nhấp vào các từ theo đúng thứ tự để tạo thành câu hoàn chỉnh.</div>
         <div id="order-container"></div>
       </div>
 
       <div class="card ex-block">
-        <div class="ex-title">Dạng 5 · Điền từ vào chỗ trống (ngân hàng từ)</div>
+        <div class="ex-title">Dạng 4 · Điền từ vào chỗ trống (ngân hàng từ)</div>
         <div class="ex-sub">Nhấp vào từ trong ngân hàng bên dưới để điền vào đúng chỗ trống trong câu.</div>
         <div id="blank-container"></div>
+      </div>
+
+      <div class="card ex-block">
+        <div class="ex-title">Dạng 5 · Chọn đáp án đúng</div>
+        <div class="ex-sub">Chọn từ thích hợp điền vào chỗ trống. Sau mỗi câu có giải thích đáp án (chữ Hán · pinyin · tiếng Việt).</div>
+        <div id="mc3-container"></div>
+      </div>
+
+      <div class="card ex-block">
+        <div class="ex-title">Dạng 6 · Sửa câu sai</div>
+        <div class="ex-sub">Viết lại mỗi câu cho đúng ngữ pháp (có thể gõ bằng bàn phím pinyin). Sau khi kiểm tra sẽ hiện giải thích.</div>
+        <div id="fix-container"></div>
+      </div>
+
+      <div class="card ex-block">
+        <div class="ex-title">Dạng 7 · Đọc đoạn văn — phán đoán đúng sai</div>
+        <div class="ex-sub">Đọc đoạn văn rồi chọn Đúng (√) hoặc Sai (×) cho từng câu.</div>
+        <div class="passage hanzi" id="tf-passage" style="margin-bottom:16px;"></div>
+        <div id="tf-container"></div>
       </div>
     </div>
 
@@ -698,6 +713,9 @@ const BADGES = [
   {id:'order', label:'🧩 Sắp câu', need:'orderDone'},
   {id:'listen', label:'🎧 Nghe hiểu', need:'listenDone'},
   {id:'streak5', label:'🔥 Chuỗi 5', need:'streak5'},
+  {id:'mc', label:'🎯 Chọn đáp án', need:'mcDone'},
+  {id:'fix', label:'✏️ Sửa câu', need:'fixDone'},
+  {id:'read', label:'📖 Đọc hiểu', need:'readDone'},
   {id:'hanzi', label:'字 Viết chữ', need:'hanziDone'}
 ];
 function renderBadges(){
@@ -1147,14 +1165,14 @@ let scoreTotal = 0, scoreMax = 0;
 function addScore(n){ scoreTotal += n; document.getElementById('total-score').textContent = scoreTotal; }
 function addMax(n){ scoreMax += n; document.getElementById('total-max').textContent = scoreMax; }
 
-/* --- Dạng 3: điền từ (dropdown) — bám sát bài "选词填空" trang 24 (这/那/哪/什么/谁/也) --- */
+/* --- Dạng 2: điền từ (dropdown) — bám sát bài "选词填空" trang 24 (这/那/哪/什么/谁/也) --- */
 const FILL_DATA = [
-  {before:"1. A：这是", blank:"谁", options:["这","那","哪","什么","谁","也"], after:"的课本？", vi:"(Đây là sách giáo khoa của ai?)"},
-  {before:"2. B：", blank:"那", options:["这","那","哪","什么","谁","也"], after:"是我朋友的课本。", vi:"(Đó là sách giáo khoa của bạn mình.)"},
-  {before:"3. A：这是", blank:"什么", options:["这","那","哪","什么","谁","也"], after:"课本？", vi:"(Đây là sách giáo khoa gì?)"},
-  {before:"4. B：这是英语课本。（A：那本", blank:"哪", options:["这","那","哪","什么","谁","也"], after:"本是你的书？）", vi:"(Quyển nào là sách của bạn?)"},
-  {before:"5. B：", blank:"这", options:["这","那","哪","什么","谁","也"], after:"本是我的书。", vi:"(Quyển này là sách của mình.)"},
-  {before:"6. A：那本", blank:"也", options:["这","那","哪","什么","谁","也"], after:"是你的书吗？", vi:"(Quyển kia cũng là sách của bạn à?)"}
+  {before:"A：这是", blank:"谁", options:["这","那","哪","什么","谁","也"], after:"的课本？", vi:"(Đây là sách giáo khoa của ai?)"},
+  {before:"B：", blank:"那", options:["这","那","哪","什么","谁","也"], after:"是我朋友的课本。", vi:"(Đó là sách giáo khoa của bạn mình.)"},
+  {before:"A：这是", blank:"什么", options:["这","那","哪","什么","谁","也"], after:"课本？（B：这是英语课本。）", vi:"(Đây là sách giáo khoa gì?)"},
+  {before:"A：", blank:"哪", options:["这","那","哪","什么","谁","也"], after:"本（běn，lượng từ）是你的书？", vi:"(Quyển nào là sách của bạn?)"},
+  {before:"B：", blank:"这", options:["这","那","哪","什么","谁","也"], after:"本是我的书。", vi:"(Quyển này là sách của mình.)"},
+  {before:"A：那本", blank:"也", options:["这","那","哪","什么","谁","也"], after:"是你的书吗？（B：是。）", vi:"(Quyển kia cũng là sách của bạn à?)"}
 ];
 const fillContainer = document.getElementById('fill-container');
 FILL_DATA.forEach((f,i)=>{
@@ -1182,10 +1200,10 @@ function checkFill(){
     ok===FILL_DATA.length ? `<span class="result-ok">Đúng ${ok}/${FILL_DATA.length} 🎉</span>`
                            : `<span class="result-bad">Đúng ${ok}/${FILL_DATA.length}</span>`;
   if(!fillScored){ addScore(ok); fillScored = true; }
-  if(ok===FILL_DATA.length){ unlockBadge('fill'); fireConfetti(); showToast('🎯 Hoàn thành Dạng 3 xuất sắc!'); }
+  if(ok===FILL_DATA.length){ unlockBadge('fill'); fireConfetti(); showToast('🎯 Hoàn thành Dạng 2 xuất sắc!'); }
 }
 
-/* --- Dạng 4: sắp xếp từ thành câu (bám sát bài khoá Bài 3) --- */
+/* --- Dạng 3: sắp xếp từ thành câu (bám sát bài khoá Bài 3) --- */
 const ORDER_DATA = [
   {words:["那","是","谁","的","书","？"], answer:"那是谁的书？", vi:"Đó là sách của ai?"},
   {words:["那","是","我","同屋","的","书","。"], answer:"那是我同屋的书。", vi:"Đó là sách của bạn cùng phòng mình."},
@@ -1245,7 +1263,7 @@ function checkOrder(idx){
   }
 }
 
-/* --- Dạng 5: điền từ vào chỗ trống bằng ngân hàng từ (nhấp để điền, giống bài khoá Bài 3) --- */
+/* --- Dạng 4: điền từ vào chỗ trống bằng ngân hàng từ (nhấp để điền, giống bài khoá Bài 3) --- */
 const BLANK_DATA = [
   {parts:["那是", "___", "的书？"], answer:"谁", bank:["谁","什么","哪","这"], vi:"(Đó là sách của ai?)"},
   {parts:["不是，那是我", "___", "的书。"], answer:"同屋", bank:["同屋","朋友","老师","同学"], vi:"(Không phải, đó là sách của bạn cùng phòng mình.)"},
@@ -1304,7 +1322,7 @@ function checkBlank(idx){
     slot.style.borderBottomColor = 'var(--green)'; slot.style.color = 'var(--green)';
     res.innerHTML = `<span class="result-ok">✔ Chính xác!</span>`;
     if(!blankCompleted.has(idx)){ blankCompleted.add(idx); celebrate(slot,3); }
-    if(blankCompleted.size===BLANK_DATA.length){ showToast('📝 Hoàn thành Dạng 5 xuất sắc!'); fireConfetti(); }
+    if(blankCompleted.size===BLANK_DATA.length){ showToast('📝 Hoàn thành Dạng 4 xuất sắc!'); fireConfetti(); }
   } else {
     slot.style.borderBottomColor = 'var(--error)'; slot.style.color = 'var(--error)';
     res.innerHTML = `<span class="result-bad">✘ Chưa đúng. Đáp án: ${correct}</span>`;
@@ -1370,50 +1388,192 @@ function checkListenVocab(btn, idx, chosen){
   if(listenVocabScored===LISTEN_VOCAB_DATA.length){ checkListenDone(); }
 }
 
-/* --- Dạng 2: nghe chọn câu nghe được --- */
-const ALL_SENTENCES = [].concat(DIALOGUES.d1, DIALOGUES.d2);
-const LISTEN_SENTENCE_DATA = [
-  ALL_SENTENCES.find(s=>s.hz==="玛丽，那是谁的书？是你的书吗？"),
-  ALL_SENTENCES.find(s=>s.hz==="不是，那是我同屋的书。"),
-  ALL_SENTENCES.find(s=>s.hz==="是汉语课本吗？"),
-  ALL_SENTENCES.find(s=>s.hz==="这是什么杂志？"),
-  ALL_SENTENCES.find(s=>s.hz==="不是，是我朋友的杂志。")
+function checkListenDone(){
+  if(listenVocabScored===LISTEN_VOCAB_DATA.length){
+    unlockBadge('listen'); showToast('🎧 Hoàn thành bài nghe!');
+  }
+}
+
+/* ============ BÀI TẬP MỞ RỘNG BÀI 3: Dạng 5 (chọn đáp án) · Dạng 6 (sửa câu sai) · Dạng 7 (đọc hiểu đúng/sai) ============ */
+function normZh(s){ return s.replace(/[\s。，、！？,.!?；;：:《》“”"']/g,''); }
+function explainHTML(e){
+  return `<div class="ex-expl">
+    <div class="ex-expl-hz hanzi">${e.hz} <button class="btn-speak" style="width:26px;height:26px;font-size:.75rem;" onclick="speak('${e.hz.replace(/'/g,"\\'")}')">🔊</button></div>
+    <div class="ex-expl-py">${e.py}</div>
+    <div class="ex-expl-vi">${e.vi}</div>
+    <div class="ex-expl-why">💡 ${e.why}</div>
+    ${e.warn ? `<div class="ex-expl-warn">⚠ ${e.warn}</div>` : ''}
+  </div>`;
+}
+const ex3Done = {mc:new Set(), fix:new Set(), tf:new Set()};
+const OPT_LET = ['A','B','C','D'];
+
+/* --- Dạng 5: Chọn đáp án đúng (10 câu) --- */
+const MC3_DATA = [
+  {q:"这是______的书？", o:["吗","吧","哪","谁"], a:3,
+   hz:"这是谁的书？", py:"Zhè shì shéi de shū?", vi:"Đây là sách của ai?",
+   why:"Hỏi chủ sở hữu (người) → dùng 谁 (shéi, ai) + 的. 吗 (ma), 吧 (ba) là trợ từ đặt cuối câu, không đứng trước 的; 哪 (nǎ, nào) phải đi với lượng từ."},
+  {q:"你的同屋是______国人？", o:["哪","什么","那","哪儿"], a:0,
+   hz:"你的同屋是哪国人？", py:"Nǐ de tóngwū shì nǎ guó rén?", vi:"Bạn cùng phòng của bạn là người nước nào?",
+   why:"Mẫu cố định 哪 (nǎ) + 国 + 人 = người nước nào. 那 (nà) nghĩa là 'kia', không dùng để hỏi; 哪儿 (nǎr) hỏi nơi chốn (ở đâu); 什么 không dùng trong mẫu hỏi quốc tịch này."},
+  {q:"这是我的汉语课本，那______我的汉语课本。", o:["也是","是也","也不","不也"], a:0,
+   hz:"这是我的汉语课本，那也是我的汉语课本。", py:"Zhè shì wǒ de Hànyǔ kèběn, nà yě shì wǒ de Hànyǔ kèběn.", vi:"Đây là sách giáo khoa tiếng Hán của tôi, kia cũng là sách giáo khoa tiếng Hán của tôi.",
+   why:"Phó từ 也 (yě, cũng) luôn đứng TRƯỚC 是 → 也是. Vế trước khẳng định (这是…) nên vế sau cũng khẳng định, không dùng 不. 是也 / 不也 sai trật tự."},
+  {q:"这是我的书，你的______？", o:["也","很","不","呢"], a:3,
+   hz:"这是我的书，你的呢？", py:"Zhè shì wǒ de shū, nǐ de ne?", vi:"Đây là sách của tôi, còn của bạn thì sao?",
+   why:"呢 (ne) đặt cuối câu hỏi tỉnh lược: hỏi lại theo ý của câu trước mà không cần lặp lại cả câu. 也, 很, 不 không đứng cuối câu hỏi."},
+  {q:"这______英汉词典是你的吗？", o:["个","瓶","杯","本"], a:3,
+   hz:"这本英汉词典是你的吗？", py:"Zhè běn Yīng-Hàn cídiǎn shì nǐ de ma?", vi:"Cuốn từ điển Anh-Hán này là của bạn à?",
+   why:"本 (běn) là lượng từ dùng cho sách, từ điển, tạp chí. 瓶 (píng) dùng cho chai lọ, 杯 (bēi) dùng cho cốc/ly, 个 (gè) là lượng từ chung nhưng với sách vở dùng 本."},
+  {q:"______本书是我的，这是大卫的？", o:["那","这","哪","哪儿"], a:0,
+   hz:"那本书是我的，这是大卫的？", py:"Nà běn shū shì wǒ de, zhè shì Dàwèi de?", vi:"Quyển sách kia là của tôi, còn đây là của David?",
+   why:"那 (nà, kia – xa) đối lập với 这 (zhè, đây – gần) ở vế sau. Dùng 这 lại thì trùng với vế sau, không hợp nghĩa; 哪 / 哪儿 là từ nghi vấn, không dùng trong vế khẳng định '… là của tôi'."},
+  {q:"那______是我们的汉语老师。", o:["吗","就","很","呢"], a:1,
+   hz:"那就是我们的汉语老师。", py:"Nà jiù shì wǒmen de Hànyǔ lǎoshī.", vi:"Kia chính là giáo viên tiếng Hán của chúng ta.",
+   why:"就是 (jiù shì) = chính là, dùng để xác nhận/nhấn mạnh. 吗, 呢 là trợ từ cuối câu; 很 (hěn) đứng trước tính từ, không đứng trước 是."},
+  {q:"你的杂志是______杂志？", o:["哪","什么","谁","那"], a:1,
+   hz:"你的杂志是什么杂志？", py:"Nǐ de zázhì shì shénme zázhì?", vi:"Tạp chí của bạn là tạp chí gì?",
+   why:"什么 (shénme, gì) + danh từ → hỏi loại/nội dung (tạp chí gì). 哪 phải đi với lượng từ (哪本杂志); 谁 (shéi) hỏi người; 那 (nà) không phải từ nghi vấn."},
+  {q:"______是玛丽的同屋？", o:["哪儿","哪","人","谁"], a:3,
+   hz:"谁是玛丽的同屋？", py:"Shéi shì Mǎlì de tóngwū?", vi:"Ai là bạn cùng phòng của Mary?",
+   why:"Hỏi người làm chủ ngữ → 谁 (shéi). 哪儿 (nǎr) hỏi nơi chốn; 哪 (nǎ) cần lượng từ; 人 (rén) không phải từ nghi vấn."},
+  {q:"你的书是______本书？", o:["什么","那","哪","这"], a:2,
+   hz:"你的书是哪本书？", py:"Nǐ de shū shì nǎ běn shū?", vi:"Sách của bạn là quyển sách nào?",
+   why:"哪 (nǎ) + lượng từ 本 + danh từ → hỏi 'cái nào' trong số nhiều cái. 那 / 这 là từ chỉ thị (kia / này), không dùng để hỏi; 什么本书 không đúng ngữ pháp."}
 ];
-const listenSentenceContainer = document.getElementById('listen-sentence-container');
-let listenSentenceScored = 0;
-LISTEN_SENTENCE_DATA.forEach((item,idx)=>{
-  const distractors = shuffleArr(ALL_SENTENCES.filter(s=>s.hz!==item.hz)).slice(0,3);
-  const options = shuffleArr([item, ...distractors]);
+const mc3C = document.getElementById('mc3-container');
+MC3_DATA.forEach((d,i)=>{
   const div = document.createElement('div');
   div.className = 'listen-item';
   div.innerHTML = `
-    <div class="listen-head">
-      <span class="listen-num">Câu ${idx+1}.</span>
-      <button class="btn-listen" onclick="speak('${item.hz}')">🔊</button>
+    <div class="hanzi" style="font-size:1.2rem;margin-bottom:10px;"><b style="color:var(--red-dark);font-family:'Baloo 2';">${i+1}.</b> ${d.q.replace('______','<span style="display:inline-block;min-width:56px;border-bottom:2px solid var(--red);text-align:center;">&nbsp;</span>')}</div>
+    <div class="mc-options" id="mc3-opts-${i}">
+      ${d.o.map((o,k)=>`<button class="mc-opt hanzi" style="font-size:1.15rem;" onclick="checkMC3(this,${i},${k})">${OPT_LET[k]}. ${o}</button>`).join('')}
     </div>
-    <div class="mc-options" id="ls-opts-${idx}">
-      ${options.map(o=>`<button class="mc-opt hanzi" style="font-size:1.05rem;" onclick="checkListenSentence(this,${idx},'${o.hz}')">${o.hz}</button>`).join('')}
-    </div>`;
-  listenSentenceContainer.appendChild(div);
+    <div id="mc3-exp-${i}"></div>`;
+  mc3C.appendChild(div);
 });
-addMax(LISTEN_SENTENCE_DATA.length);
-function checkListenSentence(btn, idx, chosen){
-  const correct = LISTEN_SENTENCE_DATA[idx].hz;
-  const opts = document.querySelectorAll('#ls-opts-'+idx+' .mc-opt');
-  opts.forEach(o=>{ o.disabled = true; if(o.textContent===correct) o.classList.add('ok'); else o.classList.add('dim'); });
-  if(chosen===correct){
-    btn.classList.remove('dim'); addScore(1); celebrate(btn,1);
-  } else {
-    btn.classList.remove('dim'); btn.classList.add('bad'); fail(btn);
-  }
-  listenSentenceScored++;
-  if(listenSentenceScored===LISTEN_SENTENCE_DATA.length){ checkListenDone(); }
+addMax(MC3_DATA.length);
+function checkMC3(btn,i,k){
+  const d = MC3_DATA[i];
+  document.querySelectorAll('#mc3-opts-'+i+' .mc-opt').forEach((o,idx)=>{ o.disabled = true; if(idx===d.a) o.classList.add('ok'); else o.classList.add('dim'); });
+  if(k===d.a){ btn.classList.remove('dim'); addScore(1); celebrate(btn,1); }
+  else { btn.classList.remove('dim'); btn.classList.add('bad'); fail(btn); }
+  document.getElementById('mc3-exp-'+i).innerHTML = explainHTML(d);
+  ex3Done.mc.add(i);
+  if(ex3Done.mc.size===MC3_DATA.length){ unlockBadge('mc'); showToast('🎯 Hoàn thành Dạng 5!'); }
 }
 
-function checkListenDone(){
-  if(listenVocabScored===LISTEN_VOCAB_DATA.length && listenSentenceScored===LISTEN_SENTENCE_DATA.length){
-    unlockBadge('listen'); showToast('🎧 Hoàn thành bài nghe!');
+/* --- Dạng 6: Sửa câu sai (6 câu) --- */
+const FIX_DATA = [
+  {wrong:"玛丽是留学生是不？", ans:"玛丽是不是留学生？",
+   hz:"玛丽是不是留学生？", py:"Mǎlì shì bu shì liúxuéshēng?", vi:"Mary có phải là du học sinh không?",
+   why:"Câu hỏi chính phản (khẳng định + phủ định): 是不是 (shì bu shì) đặt giữa chủ ngữ và thành phần cần hỏi (留学生). Không đặt 是不 ở cuối câu."},
+  {wrong:"是那本书我的。", ans:"那是我的书。",
+   hz:"那是我的书。", py:"Nà shì wǒ de shū.", vi:"Kia là sách của tôi.",
+   why:"Trật tự câu chữ 是: Chủ ngữ (那) + 是 + Tân ngữ (我的书). Định ngữ 我的 (wǒ de) đứng TRƯỚC danh từ 书."},
+  {wrong:"就是刘明老师我们的老师。", ans:"刘明老师就是我们的老师。",
+   hz:"刘明老师就是我们的老师。", py:"Liú Míng lǎoshī jiù shì wǒmen de lǎoshī.", vi:"Thầy Lưu Minh chính là giáo viên của chúng ta.",
+   why:"就是 (jiù shì, chính là) đứng SAU chủ ngữ (刘明老师), không đứng đầu câu. 我们的老师 = định ngữ 我们 + 的 + 老师."},
+  {wrong:"那是词典什么？", ans:"那是什么词典？",
+   hz:"那是什么词典？", py:"Nà shì shénme cídiǎn?", vi:"Đó là từ điển gì?",
+   why:"Câu hỏi đặc biệt giữ nguyên trật tự câu trần thuật, nhưng 什么 (shénme) phải đứng TRƯỚC danh từ mà nó bổ nghĩa (什么 + 词典)."},
+  {wrong:"你的书是谁书？", ans:"你的书是哪本书？",
+   hz:"你的书是哪本书？", py:"Nǐ de shū shì nǎ běn shū?", vi:"Sách của bạn là quyển sách nào?",
+   why:"Muốn hỏi 'quyển nào' dùng 哪 (nǎ) + lượng từ 本 + 书. 谁 (shéi) chỉ dùng để hỏi người, không đứng trước 书."},
+  {wrong:"哪词典是你的词典？", ans:"哪本词典是你的词典？",
+   hz:"哪本词典是你的词典？", py:"Nǎ běn cídiǎn shì nǐ de cídiǎn?", vi:"Quyển từ điển nào là từ điển của bạn?",
+   why:"哪 (nǎ) phải đi kèm lượng từ trước danh từ: 哪 + 本 + 词典. Không nói 哪词典."}
+];
+const fixC = document.getElementById('fix-container');
+FIX_DATA.forEach((d,i)=>{
+  const w = document.createElement('div');
+  w.className = 'fx-item';
+  w.innerHTML = `
+    <div class="hanzi" style="font-size:1.25rem;margin-bottom:8px;"><b style="color:var(--red-dark);font-family:'Baloo 2';">${i+1}.</b> <span class="wrong-s">${d.wrong}</span></div>
+    <input class="ans-in hanzi" id="fix-in-${i}" placeholder="Viết lại câu đúng…" autocomplete="off">
+    <button class="btn btn-check" onclick="checkFix(${i})">Kiểm tra</button>
+    <span id="fix-res-${i}"></span>
+    <div id="fix-exp-${i}"></div>`;
+  fixC.appendChild(w);
+  w.querySelector('input').addEventListener('keydown', e=>{ if(e.key==='Enter') checkFix(i); });
+});
+addMax(FIX_DATA.length);
+function checkFix(i){
+  const inp = document.getElementById('fix-in-'+i), res = document.getElementById('fix-res-'+i);
+  if(!inp.value.trim()) return;
+  if(normZh(inp.value)===normZh(FIX_DATA[i].ans)){
+    inp.classList.remove('bad'); inp.classList.add('ok');
+    res.innerHTML = `<span class="result-ok">✔ Chính xác! ${FIX_DATA[i].ans}</span>`;
+    if(!ex3Done.fix.has(i)){ ex3Done.fix.add(i); addScore(1); celebrate(inp,2); }
+  } else {
+    inp.classList.remove('ok'); inp.classList.add('bad');
+    res.innerHTML = `<span class="result-bad">✘ Chưa đúng. Đáp án: ${FIX_DATA[i].ans}</span>`; fail(inp);
   }
+  document.getElementById('fix-exp-'+i).innerHTML = explainHTML(FIX_DATA[i]);
+  if(ex3Done.fix.size===FIX_DATA.length){ unlockBadge('fix'); fireConfetti(); showToast('✏️ Sửa câu hoàn hảo!'); }
+}
+
+/* --- Dạng 7: Đọc đoạn văn — phán đoán đúng sai (10 câu) --- */
+const TF_PASSAGE = "大卫是我的同学，也是我的同屋。大卫是美国留学生，我是越南留学生。我们来中国学汉语。我们的汉语老师是王老师和刘老师。我学汉语，也学英语。大卫学汉语，也学日语。大卫认识中村，中村是日本人。我认识玛丽，玛丽是加拿大人。中村和玛丽也来中国学汉语。";
+const TF_DATA = [
+  {s:"我和大卫是同学，不是同屋。", a:false,
+   hz:"大卫是我的同学，也是我的同屋。", py:"Dàwèi shì wǒ de tóngxué, yě shì wǒ de tóngwū.", vi:"David là bạn học của tôi, cũng là bạn cùng phòng của tôi.",
+   why:"Đoạn văn nói David vừa là bạn học vừa là bạn cùng phòng, nên câu 'không phải bạn cùng phòng' là SAI (×)."},
+  {s:"我是留学生，大卫也是。", a:true,
+   hz:"大卫是美国留学生，我是越南留学生。", py:"Dàwèi shì Měiguó liúxuéshēng, wǒ shì Yuènán liúxuéshēng.", vi:"David là du học sinh Mỹ, tôi là du học sinh Việt Nam.",
+   why:"Cả hai đều là du học sinh (留学生) → ĐÚNG (√)."},
+  {s:"大卫是加拿大留学生。", a:false,
+   hz:"大卫是美国留学生。", py:"Dàwèi shì Měiguó liúxuéshēng.", vi:"David là du học sinh Mỹ.",
+   why:"David là người Mỹ (美国), không phải Canada. Người Canada trong đoạn văn là Mary: 玛丽是加拿大人 (Mǎlì shì Jiānádà rén) → SAI (×)."},
+  {s:"我认识中村，也认识玛丽。", a:true,
+   hz:"大卫认识中村……我认识玛丽。", py:"Dàwèi rènshi Zhōngcūn… Wǒ rènshi Mǎlì.", vi:"David quen Nakamura… Tôi quen Mary.",
+   why:"Theo đáp án gốc của bài tập: ĐÚNG (√).",
+   warn:"Cần giáo viên xác nhận: đoạn văn nói thẳng 我认识玛丽 nhưng không nói thẳng 我认识中村."},
+  {s:"中村是大卫的朋友。", a:true,
+   hz:"大卫认识中村，中村是日本人。", py:"Dàwèi rènshi Zhōngcūn, Zhōngcūn shì Rìběn rén.", vi:"David quen Nakamura, Nakamura là người Nhật.",
+   why:"Theo đáp án gốc của bài tập: ĐÚNG (√) — hiểu 认识 (quen biết) là bạn bè.",
+   warn:"Cần giáo viên xác nhận: đoạn văn không dùng chữ 朋友."},
+  {s:"玛丽是我和大卫的朋友。", a:false,
+   hz:"我认识玛丽，玛丽是加拿大人。", py:"Wǒ rènshi Mǎlì, Mǎlì shì Jiānádà rén.", vi:"Tôi quen Mary, Mary là người Canada.",
+   why:"Đoạn văn chỉ nói 'tôi' quen Mary, không nói David cũng quen/là bạn của Mary → SAI (×)."},
+  {s:"我学汉语和英语。", a:true,
+   hz:"我学汉语，也学英语。", py:"Wǒ xué Hànyǔ, yě xué Yīngyǔ.", vi:"Tôi học tiếng Hán, cũng học tiếng Anh.",
+   why:"Đúng như đoạn văn → ĐÚNG (√)."},
+  {s:"大卫学汉语和法语。", a:false,
+   hz:"大卫学汉语，也学日语。", py:"Dàwèi xué Hànyǔ, yě xué Rìyǔ.", vi:"David học tiếng Hán, cũng học tiếng Nhật.",
+   why:"David học tiếng Nhật (日语 Rìyǔ), không phải tiếng Pháp (法语 Fǎyǔ) → SAI (×)."},
+  {s:"他们的老师是李老师。", a:false,
+   hz:"我们的汉语老师是王老师和刘老师。", py:"Wǒmen de Hànyǔ lǎoshī shì Wáng lǎoshī hé Liú lǎoshī.", vi:"Giáo viên tiếng Hán của chúng tôi là thầy/cô Vương và thầy Lưu.",
+   why:"Giáo viên là 王老师 và 刘老师, không có 李老师 (Lǐ lǎoshī) → SAI (×)."},
+  {s:"中村和玛丽来中国学日语。", a:false,
+   hz:"中村和玛丽也来中国学汉语。", py:"Zhōngcūn hé Mǎlì yě lái Zhōngguó xué Hànyǔ.", vi:"Nakamura và Mary cũng đến Trung Quốc học tiếng Hán.",
+   why:"Họ đến Trung Quốc học tiếng Hán (汉语), không phải tiếng Nhật (日语) → SAI (×).",
+   warn:"Đáp án giáo viên gửi là √ nhưng đoạn văn ghi 学汉语 — đang để × theo đoạn văn; nếu muốn đổi, sửa a:false thành a:true ở câu 10."}
+];
+document.getElementById('tf-passage').textContent = TF_PASSAGE;
+const tfC = document.getElementById('tf-container');
+TF_DATA.forEach((d,i)=>{
+  const w = document.createElement('div');
+  w.className = 'listen-item';
+  w.innerHTML = `
+    <div class="hanzi" style="font-size:1.15rem;margin-bottom:8px;"><b style="color:var(--red-dark);font-family:'Baloo 2';">${i+1}.</b> ${d.s}</div>
+    <div class="mc-options" id="tf-opts-${i}" style="grid-template-columns:repeat(2,minmax(120px,160px));">
+      <button class="mc-opt" style="font-size:1rem;" onclick="checkTF(this,${i},true)">✔ Đúng (√)</button>
+      <button class="mc-opt" style="font-size:1rem;" onclick="checkTF(this,${i},false)">✘ Sai (×)</button>
+    </div>
+    <div id="tf-exp-${i}"></div>`;
+  tfC.appendChild(w);
+});
+addMax(TF_DATA.length);
+function checkTF(btn,i,val){
+  const d = TF_DATA[i];
+  document.querySelectorAll('#tf-opts-'+i+' .mc-opt').forEach((o,idx)=>{ o.disabled = true; if((idx===0)===d.a) o.classList.add('ok'); else o.classList.add('dim'); });
+  if(val===d.a){ btn.classList.remove('dim'); addScore(1); celebrate(btn,1); }
+  else { btn.classList.remove('dim'); btn.classList.add('bad'); fail(btn); }
+  document.getElementById('tf-exp-'+i).innerHTML = explainHTML(d);
+  ex3Done.tf.add(i);
+  if(ex3Done.tf.size===TF_DATA.length){ unlockBadge('read'); showToast('📖 Hoàn thành bài đọc hiểu!'); }
 }
 
 /* ============ TAB CHỮ HÁN (Hanzi Writer) ============ */
@@ -1497,29 +1657,6 @@ function hzOutline(){
 }
 // khởi tạo chữ đầu tiên
 selectHanzi(0);
-/* ============ TAB CON CHO BÀI TẬP (tự tạo nút theo số dạng) ============ */
-(function(){
-  const panel = document.getElementById('panel-write');
-  const blocks = panel.querySelectorAll('.ex-block');
-  if(!blocks.length) return;
-  const bar = document.createElement('div');
-  bar.className = 'ex-tabs';
-  const btns = [];
-  blocks.forEach((_,i)=>{
-    const b = document.createElement('button');
-    b.className = 'ex-tab-btn';
-    b.textContent = 'Dạng ' + (i+1);
-    b.addEventListener('click', ()=>showEx(i));
-    bar.appendChild(b);
-    btns.push(b);
-  });
-  blocks[0].parentNode.insertBefore(bar, blocks[0]);
-  function showEx(i){
-    blocks.forEach((b,idx)=>{ b.style.display = (idx===i) ? '' : 'none'; });
-    btns.forEach((b,idx)=>b.classList.toggle('active', idx===i));
-  }
-  showEx(0);
-})();
 </script>
 </body>
 </html>
