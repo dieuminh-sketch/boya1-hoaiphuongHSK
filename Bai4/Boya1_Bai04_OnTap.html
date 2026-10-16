@@ -455,6 +455,28 @@
   .ex-tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;}
   .ex-tab-btn{flex-shrink:0;min-height:42px;}
 }
+/* ===== Bổ sung cho tab Bài tập: hộp giải thích, chọn vị trí, đoạn văn ===== */
+  .exp-box{margin-top:10px;padding:12px 14px;border-radius:12px;border-left:4px solid var(--green);background:var(--green-bg);display:none;font-size:.92rem;line-height:1.7;}
+  .exp-box.show{display:block;animation:fade .3s;}
+  .exp-box.bad{border-left-color:var(--error);background:var(--error-bg);}
+  .exp-head{font-family:'Baloo 2',sans-serif;font-weight:700;margin-bottom:4px;}
+  .exp-hz{font-size:1.25rem;font-weight:700;color:var(--ink);}
+  .exp-py{color:var(--accent-dark);font-weight:700;font-size:.88rem;}
+  .exp-vi{color:var(--gray);}
+  .exp-why{margin-top:6px;font-family:'Be Vietnam Pro','Noto Sans SC',sans-serif;}
+  .pos-sentence{font-size:1.35rem;line-height:2.6;}
+  .pos-word{color:var(--red-dark);font-weight:700;font-size:1.05rem;margin-left:6px;}
+  .pos-btn{
+    font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;min-width:30px;height:30px;
+    border-radius:8px;border:2px solid var(--red-light);background:#fff;color:var(--red-dark);
+    cursor:pointer;margin:0 3px;vertical-align:middle;padding:0 8px;transition:.12s;
+  }
+  .pos-btn:hover:not(:disabled){background:var(--red-light);color:#fff;}
+  .pos-btn.ok{background:var(--green);border-color:var(--green);color:#fff;font-family:'Noto Sans SC',sans-serif;font-size:1rem;}
+  .pos-btn.bad{background:var(--error);border-color:var(--error);color:#fff;}
+  .pos-btn:disabled{cursor:default;}
+  .passage{background:var(--cream);border-left:5px solid var(--red-light);border-radius:12px;padding:14px 16px;font-size:1.2rem;line-height:2.3;}
+  .cz-n{font-size:.65rem;color:var(--gray);margin:0 2px;}
 </style>
 </head>
 <body>
@@ -580,37 +602,59 @@
     <!-- ================= TAB LUYỆN VIẾT CÂU ================= -->
     <div class="panel" id="panel-write">
       <div class="score-box"><span class="star">⭐</span> Điểm: <span id="total-score">0</span> / <span id="total-max">0</span></div>
-
+ 
       <div class="card ex-block">
         <div class="ex-title">Dạng 1 · Nghe và chọn từ vựng nghe được</div>
         <div class="ex-sub">Bấm 🔊 để nghe, sau đó chọn đúng chữ Hán vừa nghe.</div>
         <div id="listen-vocab-container"></div>
       </div>
-
+ 
       <div class="card ex-block">
-        <div class="ex-title">Dạng 2 · Nghe và chọn câu nghe được</div>
-        <div class="ex-sub">Bấm 🔊 để nghe, sau đó chọn đúng câu vừa nghe.</div>
-        <div id="listen-sentence-container"></div>
-      </div>
-
-      <div class="card ex-block">
-        <div class="ex-title">Dạng 3 · Điền từ vào đoạn văn</div>
+        <div class="ex-title">Dạng 2 · Điền từ vào đoạn văn</div>
         <div class="ex-sub">Chọn từ đúng trong danh sách thả xuống để hoàn thành hội thoại.</div>
         <div id="fill-container"></div>
         <button class="btn btn-check" onclick="checkFill()">Kiểm tra</button>
         <span id="fill-result"></span>
       </div>
-
+ 
       <div class="card ex-block">
-        <div class="ex-title">Dạng 4 · Sắp xếp từ thành câu</div>
+        <div class="ex-title">Dạng 3 · Sắp xếp từ thành câu</div>
         <div class="ex-sub">Nhấp vào các từ theo đúng thứ tự để tạo thành câu hoàn chỉnh.</div>
         <div id="order-container"></div>
       </div>
-
+ 
       <div class="card ex-block">
-        <div class="ex-title">Dạng 5 · Điền từ vào chỗ trống (ngân hàng từ)</div>
+        <div class="ex-title">Dạng 4 · Điền từ vào chỗ trống (ngân hàng từ)</div>
         <div class="ex-sub">Nhấp vào từ trong ngân hàng bên dưới để điền vào đúng chỗ trống trong câu.</div>
         <div id="blank-container"></div>
+      </div>
+ 
+      <div class="card ex-block">
+        <div class="ex-title">Dạng 5 · Chọn đáp án đúng</div>
+        <div class="ex-sub">Chọn từ thích hợp điền vào chỗ trống. Sau mỗi câu có giải thích (chữ Hán · pinyin · tiếng Việt).</div>
+        <div id="mc-container"></div>
+      </div>
+ 
+      <div class="card ex-block">
+        <div class="ex-title">Dạng 6 · Chọn vị trí đúng cho từ trong ngoặc</div>
+        <div class="ex-sub">Bấm vào chữ cái A / B / C / D là vị trí đúng để đặt từ trong ngoặc vào câu.</div>
+        <div id="pos-container"></div>
+      </div>
+ 
+      <div class="card ex-block">
+        <div class="ex-title">Dạng 7 · Chọn từ thích hợp điền vào đoạn văn</div>
+        <div class="ex-sub">Mỗi chỗ trống có 3 từ để lựa chọn. Bấm "Kiểm tra" để xem đáp án và giải thích từng chỗ.</div>
+        <div id="cloze-container"></div>
+        <button class="btn btn-check" onclick="checkCloze()">Kiểm tra</button>
+        <span id="cloze-result"></span>
+        <div id="cloze-explain"></div>
+      </div>
+ 
+      <div class="card ex-block">
+        <div class="ex-title">Dạng 8 · Đọc đoạn văn — phán đoán đúng sai</div>
+        <div class="ex-sub">Đọc đoạn văn rồi chọn 对 (đúng) hoặc 错 (sai) cho từng câu.</div>
+        <div class="passage hanzi" id="tf-passage" style="margin-bottom:16px;"></div>
+        <div id="tf-container"></div>
       </div>
     </div>
 
@@ -772,6 +816,10 @@ const BADGES = [
   {id:'fill', label:'🎯 Điền từ', need:'fillDone'},
   {id:'order', label:'🧩 Sắp câu', need:'orderDone'},
   {id:'listen', label:'🎧 Nghe hiểu', need:'listenDone'},
+  {id:'mc', label:'📝 Chọn đáp án'},
+  {id:'pos', label:'📍 Vị trí'},
+  {id:'cloze', label:'📖 Điền đoạn'},
+  {id:'tf', label:'✅ Đúng sai'},
   {id:'streak5', label:'🔥 Chuỗi 5', need:'streak5'},
   {id:'hanzi', label:'字 Viết chữ', need:'hanziDone'}
 ];
@@ -1255,12 +1303,84 @@ function toggleShuffleFC(){
 fcCard.addEventListener('click', flipCard);
 renderFC();
 
-/* ============ TAB LUYỆN VIẾT CÂU ============ */
+/* ============ TAB LUYỆN VIẾT CÂU (BÀI TẬP) ============ */
 let scoreTotal = 0, scoreMax = 0;
 function addScore(n){ scoreTotal += n; document.getElementById('total-score').textContent = scoreTotal; }
 function addMax(n){ scoreMax += n; document.getElementById('total-max').textContent = scoreMax; }
-
-/* --- Dạng 3: điền từ (dropdown) — luyện 在/是/请/知道/没关系/不用谢, bám sát bài khoá Bài 4 --- */
+ 
+/* --- tiện ích: xáo trộn mảng --- */
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+ 
+/* --- tiện ích: hộp giải thích dùng chung cho Dạng 5, 6, 7, 8 (chữ Hán · pinyin · tiếng Việt · giải thích) --- */
+const LETTERS = ['A','B','C','D'];
+function expInner(ok, head, full, why){
+  const t = String(full.hz).replace(/"/g,'&quot;');
+  return `
+    <div class="exp-head">${ok ? '✔ Chính xác!' : '✘ Chưa đúng.'} ${head}</div>
+    <div class="exp-hz hanzi">${full.hz} <button class="btn-speak" style="width:26px;height:26px;font-size:.75rem;" data-t="${t}" onclick="speak(this.dataset.t)">🔊</button></div>
+    <div class="exp-py">${full.py}</div>
+    <div class="exp-vi">${full.vi}</div>
+    <div class="exp-why">💡 ${why}</div>`;
+}
+function showExp(id, ok, head, full, why){
+  const box = document.getElementById(id);
+  box.className = 'exp-box show' + (ok ? '' : ' bad');
+  box.innerHTML = expInner(ok, head, full, why);
+}
+ 
+/* --- Dạng 1: nghe chọn từ vựng nghe được --- */
+const LISTEN_VOCAB_DATA = [
+  VOCAB.find(v=>v.hz==="图书馆"),
+  VOCAB.find(v=>v.hz==="学校"),
+  VOCAB.find(v=>v.hz==="知道"),
+  VOCAB.find(v=>v.hz==="宿舍"),
+  VOCAB.find(v=>v.hz==="左边"),
+  VOCAB.find(v=>v.hz==="右边")
+];
+const listenVocabContainer = document.getElementById('listen-vocab-container');
+let listenVocabScored = 0;
+LISTEN_VOCAB_DATA.forEach((item,idx)=>{
+  const distractors = shuffleArr(VOCAB.filter(v=>v.hz!==item.hz)).slice(0,3);
+  const options = shuffleArr([item, ...distractors]);
+  const div = document.createElement('div');
+  div.className = 'listen-item';
+  div.innerHTML = `
+    <div class="listen-head">
+      <span class="listen-num">Câu ${idx+1}.</span>
+      <button class="btn-listen" onclick="speak('${item.hz}')">🔊</button>
+    </div>
+    <div class="mc-options" id="lv-opts-${idx}">
+      ${options.map(o=>`<button class="mc-opt hanzi" onclick="checkListenVocab(this,${idx},'${o.hz}')">${o.hz}</button>`).join('')}
+    </div>`;
+  listenVocabContainer.appendChild(div);
+});
+addMax(LISTEN_VOCAB_DATA.length);
+function checkListenVocab(btn, idx, chosen){
+  const correct = LISTEN_VOCAB_DATA[idx].hz;
+  const opts = document.querySelectorAll('#lv-opts-'+idx+' .mc-opt');
+  opts.forEach(o=>{ o.disabled = true; if(o.textContent===correct) o.classList.add('ok'); else o.classList.add('dim'); });
+  if(chosen===correct){
+    btn.classList.remove('dim'); addScore(1); celebrate(btn,1);
+  } else {
+    btn.classList.remove('dim'); btn.classList.add('bad'); fail(btn);
+  }
+  listenVocabScored++;
+  if(listenVocabScored===LISTEN_VOCAB_DATA.length){ checkListenDone(); }
+}
+function checkListenDone(){
+  if(listenVocabScored===LISTEN_VOCAB_DATA.length){
+    unlockBadge('listen'); showToast('🎧 Hoàn thành bài nghe!');
+  }
+}
+ 
+/* --- Dạng 2: điền từ (dropdown) — luyện 在/是/请/知道/没关系/不用谢, bám sát bài khoá Bài 4 --- */
 const FILL_DATA = [
   {before:"1. A：", blank:"请", options:["请","在","是","知道","没关系","不用"], after:"问，图书馆在哪儿？", vi:"(Xin hỏi, thư viện ở đâu?)"},
   {before:"2. B：对不起，我不", blank:"知道", options:["请","在","是","知道","没关系","不用"], after:"。", vi:"(Xin lỗi, mình không biết.)"},
@@ -1295,10 +1415,10 @@ function checkFill(){
     ok===FILL_DATA.length ? `<span class="result-ok">Đúng ${ok}/${FILL_DATA.length} 🎉</span>`
                            : `<span class="result-bad">Đúng ${ok}/${FILL_DATA.length}</span>`;
   if(!fillScored){ addScore(ok); fillScored = true; }
-  if(ok===FILL_DATA.length){ unlockBadge('fill'); fireConfetti(); showToast('🎯 Hoàn thành Dạng 3 xuất sắc!'); }
+  if(ok===FILL_DATA.length){ unlockBadge('fill'); fireConfetti(); showToast('🎯 Hoàn thành Dạng 2 xuất sắc!'); }
 }
-
-/* --- Dạng 4: sắp xếp từ thành câu (bám sát bài khoá Bài 4) --- */
+ 
+/* --- Dạng 3: sắp xếp từ thành câu (bám sát bài khoá Bài 4) --- */
 const ORDER_DATA = [
   {words:["请问","，","图书馆","在","哪儿","？"], answer:"请问，图书馆在哪儿？", vi:"Xin hỏi, thư viện ở đâu?"},
   {words:["我","不是","这个","学校","的","学生","。"], answer:"我不是这个学校的学生。", vi:"Mình không phải học sinh trường này."},
@@ -1357,8 +1477,8 @@ function checkOrder(idx){
     zone.classList.add('bad'); fail(zone);
   }
 }
-
-/* --- Dạng 5: điền từ vào chỗ trống bằng ngân hàng từ — đúng bài 选词填空 gốc (在/是/这儿/哪儿/那儿), mỗi câu 1 chỗ trống --- */
+ 
+/* --- Dạng 4: điền từ vào chỗ trống bằng ngân hàng từ — đúng bài 选词填空 gốc (在/是/这儿/哪儿/那儿), mỗi câu 1 chỗ trống --- */
 const BLANK_DATA = [
   {parts:["1. ", "___", "是学生宿舍楼吗？"], answer:"这儿", bank:["在","是","这儿","哪儿","那儿"], vi:"(Đây có phải toà ký túc xá học sinh không?)"},
   {parts:["2. 这儿不是图书馆，图书馆在", "___", "。"], answer:"那儿", bank:["在","是","这儿","哪儿","那儿"], vi:"(Đây không phải thư viện, thư viện ở kia.)"},
@@ -1416,7 +1536,7 @@ function checkBlank(idx){
     slot.style.borderBottomColor = 'var(--green)'; slot.style.color = 'var(--green)';
     res.innerHTML = `<span class="result-ok">✔ Chính xác!</span>`;
     if(!blankCompleted.has(idx)){ blankCompleted.add(idx); celebrate(slot,3); }
-    if(blankCompleted.size===BLANK_DATA.length){ showToast('📝 Hoàn thành Dạng 5 xuất sắc!'); fireConfetti(); }
+    if(blankCompleted.size===BLANK_DATA.length){ showToast('📝 Hoàn thành Dạng 4 xuất sắc!'); fireConfetti(); }
   } else {
     slot.style.borderBottomColor = 'var(--error)'; slot.style.color = 'var(--error)';
     res.innerHTML = `<span class="result-bad">✘ Chưa đúng. Đáp án: ${correct}</span>`;
@@ -1431,103 +1551,242 @@ function resetBlank(idx){
   window['blankWords_'+idx] = shuffleArr(BLANK_DATA[idx].bank);
   renderBlank(idx);
 }
-
-/* --- tiện ích: xáo trộn mảng --- */
-function shuffleArr(arr){
-  const a = arr.slice();
-  for(let i=a.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
-  }
-  return a;
-}
-
-/* --- Dạng 1: nghe chọn từ vựng nghe được --- */
-const LISTEN_VOCAB_DATA = [
-  VOCAB.find(v=>v.hz==="图书馆"),
-  VOCAB.find(v=>v.hz==="学校"),
-  VOCAB.find(v=>v.hz==="知道"),
-  VOCAB.find(v=>v.hz==="宿舍"),
-  VOCAB.find(v=>v.hz==="左边"),
-  VOCAB.find(v=>v.hz==="右边")
+ 
+/* --- Dạng 5: Chọn đáp án đúng (9 câu) — mỗi câu có giải thích Hán · pinyin · Việt --- */
+const MC_DATA = [
+  {q:"你明天去图书馆______？", o:["吗","呢","吧","呀"], a:0,
+   full:{hz:"你明天去图书馆吗？", py:"Nǐ míngtiān qù túshūguǎn ma?", vi:"Ngày mai bạn có đi thư viện không?"},
+   why:"吗 (ma) đặt cuối câu trần thuật để tạo câu hỏi có/không. 呢 (ne) dùng để hỏi lại kiểu 你呢？(Nǐ ne? — Còn bạn thì sao?); 吧 (ba) dùng để đề nghị hoặc phỏng đoán; 呀 (ya) là trợ từ ngữ khí cảm thán/làm mềm giọng, không phải dấu hiệu của câu hỏi có/không."},
+  {q:"留学生宿舍______图书馆的北边。", o:["有","在","是","的"], a:1,
+   full:{hz:"留学生宿舍在图书馆的北边。", py:"Liúxuéshēng sùshè zài túshūguǎn de běibian.", vi:"Ký túc xá của lưu học sinh ở phía bắc thư viện."},
+   why:"Chủ ngữ là VẬT (留学生宿舍 liúxuéshēng sùshè) → dùng n. + 在 (zài) + phương vị (图书馆的北边 túshūguǎn de běibian) để nói vật đó Ở ĐÂU. Muốn dùng 是 (shì) phải đảo câu: 图书馆的北边是留学生宿舍 (Túshūguǎn de běibian shì liúxuéshēng sùshè — Phía bắc thư viện là ký túc xá lưu học sinh)."},
+  {q:"你在______个学校学习汉语？", o:["那儿","这儿","哪","哪儿"], a:2,
+   full:{hz:"你在哪个学校学习汉语？", py:"Nǐ zài nǎ ge xuéxiào xuéxí Hànyǔ?", vi:"Bạn học tiếng Hán ở trường nào?"},
+   why:"哪 (nǎ) + 个 (gè) + danh từ = 'nào' (hỏi chọn trong một nhóm): 哪个学校 (nǎ ge xuéxiào — trường nào). 哪儿 (nǎr — ở đâu) là từ hỏi nơi chốn, không đứng trước 个; 那儿/这儿 (nàr/zhèr — kia/đây) không phải từ nghi vấn."},
+  {q:"留学生的宿舍楼在______？", o:["这儿","那儿","吗","哪儿"], a:3,
+   full:{hz:"留学生的宿舍楼在哪儿？", py:"Liúxuéshēng de sùshè lóu zài nǎr?", vi:"Toà ký túc xá của lưu học sinh ở đâu?"},
+   why:"Hỏi vị trí dùng n. + 在 (zài) + 哪儿 (nǎr — ở đâu). 哪儿 đã là từ nghi vấn nên KHÔNG thêm 吗 (ma). 这儿/那儿 (zhèr/nàr) là từ chỉ nơi chốn dùng để TRẢ LỜI, không dùng để hỏi."},
+  {q:"日本在中国的______。", o:["里边","东边","上边","下边"], a:1,
+   full:{hz:"日本在中国的东边。", py:"Rìběn zài Zhōngguó de dōngbian.", vi:"Nhật Bản ở phía đông Trung Quốc."},
+   why:"Về địa lý, Nhật Bản nằm ở hướng đông của Trung Quốc → 东边 (dōngbian). 里边 (lǐbian — bên trong), 上边 (shàngbian — bên trên), 下边 (xiàbian — bên dưới) chỉ vị trí tương đối, không dùng để chỉ hướng địa lý giữa hai nước."},
+  {q:"图书馆的南边______宿舍楼。", o:["在","那儿","是","这儿"], a:2,
+   full:{hz:"图书馆的南边是宿舍楼。", py:"Túshūguǎn de nánbian shì sùshè lóu.", vi:"Phía nam thư viện là toà ký túc xá."},
+   why:"Cấu trúc phương vị/nơi chốn + 是 (shì) + danh từ: nói 'ở đó LÀ cái gì'. Chủ ngữ 图书馆的南边 là NƠI CHỐN nên dùng 是, không dùng 在 (zài). Muốn dùng 在 phải đảo: 宿舍楼在图书馆的南边 (Sùshè lóu zài túshūguǎn de nánbian)."},
+  {q:"你在______学习汉语？", o:["那","哪","哪儿","这"], a:2,
+   full:{hz:"你在哪儿学习汉语？", py:"Nǐ zài nǎr xuéxí Hànyǔ?", vi:"Bạn học tiếng Hán ở đâu?"},
+   why:"在 (zài) + địa điểm; để hỏi địa điểm dùng 哪儿 (nǎr — ở đâu). 哪 (nǎ) phải đi kèm lượng từ + danh từ (哪个学校 nǎ ge xuéxiào), không đứng một mình sau 在. 那/这 (nà/zhè) là đại từ chỉ thị, không phải từ để hỏi."},
+  {q:"玛丽的同学______大卫的左边。", o:["有","是","在","哪"], a:2,
+   full:{hz:"玛丽的同学在大卫的左边。", py:"Mǎlì de tóngxué zài Dàwèi de zuǒbian.", vi:"Bạn học của Mary ở bên trái David."},
+   why:"Chủ ngữ là NGƯỜI (玛丽的同学 Mǎlì de tóngxué) → dùng 在 (zài) + phương vị (大卫的左边 Dàwèi de zuǒbian). 是 (shì) chỉ dùng khi chủ ngữ là nơi chốn/phương vị: 大卫的左边是玛丽的同学 (Dàwèi de zuǒbian shì Mǎlì de tóngxué — Bên trái David là bạn học của Mary)."},
+  {q:"我们学校______北边是留学生宿舍。", o:["的","是","在","有"], a:0,
+   full:{hz:"我们学校的北边是留学生宿舍。", py:"Wǒmen xuéxiào de běibian shì liúxuéshēng sùshè.", vi:"Phía bắc trường chúng tôi là ký túc xá lưu học sinh."},
+   why:"Cấu trúc [mốc] + 的 (de) + phương vị từ: 学校的北边 (xuéxiào de běibian) = phía bắc của trường. Câu đã có 是 (shì) phía sau 北边, nên chỗ trống chỉ cần 的 để nối 我们学校 với 北边."}
 ];
-const listenVocabContainer = document.getElementById('listen-vocab-container');
-let listenVocabScored = 0;
-LISTEN_VOCAB_DATA.forEach((item,idx)=>{
-  const distractors = shuffleArr(VOCAB.filter(v=>v.hz!==item.hz)).slice(0,3);
-  const options = shuffleArr([item, ...distractors]);
+const mcC = document.getElementById('mc-container');
+const mcDone = new Set();
+MC_DATA.forEach((d,i)=>{
   const div = document.createElement('div');
   div.className = 'listen-item';
   div.innerHTML = `
-    <div class="listen-head">
-      <span class="listen-num">Câu ${idx+1}.</span>
-      <button class="btn-listen" onclick="speak('${item.hz}')">🔊</button>
+    <div class="hanzi" style="font-size:1.2rem;margin-bottom:10px;"><b style="color:var(--red-dark);font-family:'Baloo 2';">${i+1}.</b> ${d.q}</div>
+    <div class="mc-options" id="mc-opts-${i}">
+      ${d.o.map((o,k)=>`<button class="mc-opt hanzi" style="font-size:1.15rem;" onclick="checkMC(this,${i},${k})">${LETTERS[k]}. ${o}</button>`).join('')}
     </div>
-    <div class="mc-options" id="lv-opts-${idx}">
-      ${options.map(o=>`<button class="mc-opt hanzi" onclick="checkListenVocab(this,${idx},'${o.hz}')">${o.hz}</button>`).join('')}
-    </div>`;
-  listenVocabContainer.appendChild(div);
+    <div class="exp-box" id="mc-exp-${i}"></div>`;
+  mcC.appendChild(div);
 });
-addMax(LISTEN_VOCAB_DATA.length);
-function checkListenVocab(btn, idx, chosen){
-  const correct = LISTEN_VOCAB_DATA[idx].hz;
-  const opts = document.querySelectorAll('#lv-opts-'+idx+' .mc-opt');
-  opts.forEach(o=>{ o.disabled = true; if(o.textContent===correct) o.classList.add('ok'); else o.classList.add('dim'); });
-  if(chosen===correct){
-    btn.classList.remove('dim'); addScore(1); celebrate(btn,1);
-  } else {
-    btn.classList.remove('dim'); btn.classList.add('bad'); fail(btn);
-  }
-  listenVocabScored++;
-  if(listenVocabScored===LISTEN_VOCAB_DATA.length){ checkListenDone(); }
+addMax(MC_DATA.length);
+function checkMC(btn, i, k){
+  const d = MC_DATA[i];
+  const opts = document.querySelectorAll('#mc-opts-'+i+' .mc-opt');
+  opts.forEach((o,idx)=>{ o.disabled = true; if(idx===d.a) o.classList.add('ok'); else o.classList.add('dim'); });
+  const ok = (k===d.a);
+  btn.classList.remove('dim');
+  if(ok){ addScore(1); celebrate(btn,1); } else { btn.classList.add('bad'); fail(btn); }
+  showExp('mc-exp-'+i, ok, `Đáp án: <span class="hanzi">${LETTERS[d.a]}. ${d.o[d.a]}</span>`, d.full, d.why);
+  mcDone.add(i);
+  if(mcDone.size===MC_DATA.length){ unlockBadge('mc'); showToast('📝 Hoàn thành Dạng 5!'); }
 }
-
-/* --- Dạng 2: nghe chọn câu nghe được --- */
-const ALL_SENTENCES = [].concat(DIALOGUES.d1, DIALOGUES.d2);
-const LISTEN_SENTENCE_DATA = [
-  ALL_SENTENCES.find(s=>s.hz==="同学，请问，图书馆在哪儿？"),
-  ALL_SENTENCES.find(s=>s.hz==="对不起，我不是这个学校的学生，不知道。"),
-  ALL_SENTENCES.find(s=>s.hz==="同学，这儿是图书馆吗？"),
-  ALL_SENTENCES.find(s=>s.hz==="不是，这是教学楼，图书馆在那儿，宿舍楼的北边。"),
-  ALL_SENTENCES.find(s=>s.hz==="不，是右边的楼。")
+ 
+/* --- Dạng 6: Chọn vị trí đúng cho từ trong ngoặc (10 câu) ---
+   parts[0] [A] parts[1] [B] parts[2] [C] parts[3] [D] parts[4]  — a = vị trí đúng (0=A, 1=B, 2=C, 3=D) */
+const POS_DATA = [
+  {parts:["玛丽","在","宿舍","的","。"], word:"里边", a:3,
+   full:{hz:"玛丽在宿舍的里边。", py:"Mǎlì zài sùshè de lǐbian.", vi:"Mary ở bên trong ký túc xá."},
+   why:"Cấu trúc: n. + 在 (zài) + [mốc] + 的 (de) + phương vị từ. 里边 (lǐbian — bên trong) là phương vị từ nên đứng CUỐI cụm, sau 的: 宿舍的里边 (sùshè de lǐbian) = bên trong ký túc xá."},
+  {parts:["","玛丽","的","左边","大卫。"], word:"是", a:3,
+   full:{hz:"玛丽的左边是大卫。", py:"Mǎlì de zuǒbian shì Dàwèi.", vi:"Bên trái Mary là David."},
+   why:"Cấu trúc phương vị + 是 (shì) + n.: 玛丽的左边 (Mǎlì de zuǒbian — bên trái Mary) là vị trí, 是 nối với người đứng ở vị trí đó (大卫 Dàwèi) → 是 phải đứng giữa 左边 và 大卫."},
+  {parts:["刘老师","去","图书馆，","张红","去。"], word:"也", a:3,
+   full:{hz:"刘老师去图书馆，张红也去。", py:"Liú lǎoshī qù túshūguǎn, Zhāng Hóng yě qù.", vi:"Thầy Lưu đi thư viện, Trương Hồng cũng đi."},
+   why:"也 (yě — cũng) là phó từ, đứng SAU chủ ngữ và TRƯỚC động từ: 张红 (Zhāng Hóng) + 也 + 去 (qù). 也 ở đây nghĩa là Trương Hồng 'cũng' đi giống thầy Lưu."},
+  {parts:["","的","那座楼","是","我学校。"], word:"东边", a:0,
+   full:{hz:"东边的那座楼是我学校。", py:"Dōngbian de nà zuò lóu shì wǒ xuéxiào.", vi:"Toà nhà phía đông kia là trường của tôi."},
+   why:"Phương vị từ làm định ngữ đứng TRƯỚC danh từ và đi với 的 (de): 东边 (dōngbian) + 的 + 那座楼 (nà zuò lóu) = 'toà nhà ở phía đông'. Câu đang bắt đầu bằng chỗ trống A rồi tới 的 nên 东边 phải đặt ở A. (座 zuò là lượng từ của toà nhà.)"},
+  {parts:["他们","都","在","楼","。"], word:"下", a:3,
+   full:{hz:"他们都在楼下。", py:"Tāmen dōu zài lóuxià.", vi:"Họ đều ở dưới lầu (tầng dưới)."},
+   why:"下 (xià — dưới) đặt ngay SAU danh từ 楼 (lóu) thành 楼下 (lóuxià — dưới lầu), chỉ vị trí mà không cần thêm 边. Cấu trúc: 都 (dōu) + 在 (zài) + 楼下. Lưu ý: nếu đặt 下 trước 楼 → 在下楼 (zài xià lóu) nghĩa là 'đang xuống lầu' — nghĩa khác."},
+  {parts:["我的汉语书","那本词典","的","右边","。"], word:"在", a:0,
+   full:{hz:"我的汉语书在那本词典的右边。", py:"Wǒ de Hànyǔ shū zài nà běn cídiǎn de yòubian.", vi:"Sách tiếng Hán của tôi ở bên phải quyển từ điển kia."},
+   why:"n. + 在 (zài) + [mốc] + 的 + phương vị: 我的汉语书 (Wǒ de Hànyǔ shū — sách tiếng Hán của tôi) là VẬT cần nói vị trí → 在 đứng ngay sau chủ ngữ, trước 那本词典的右边 (nà běn cídiǎn de yòubian)."},
+  {parts:["学生们","教学楼","学","汉语","。"], word:"在", a:0,
+   full:{hz:"学生们在教学楼学汉语。", py:"Xuéshengmen zài jiàoxué lóu xué Hànyǔ.", vi:"Các học sinh học tiếng Hán ở toà giảng đường."},
+   why:"在 (zài) + địa điểm đứng TRƯỚC động từ để chỉ nơi diễn ra hành động: 在教学楼 (zài jiàoxué lóu) + 学汉语 (xué Hànyǔ). Vì vậy 在 đặt ngay sau chủ ngữ 学生们 (xuéshengmen)."},
+  {parts:["","这本英文","词典","是他","。"], word:"的", a:3,
+   full:{hz:"这本英文词典是他的。", py:"Zhè běn Yīngwén cídiǎn shì tā de.", vi:"Quyển từ điển tiếng Anh này là của anh ấy."},
+   why:"他的 (tā de) = 'của anh ấy': dùng 的 (de) đứng sau đại từ để thay cho cả cụm '词典 của anh ấy', tránh lặp lại danh từ. Mẫu: A + 是 + 他的. Vì vậy 的 đặt sau 他, ở cuối câu."},
+  {parts:["李军","左边","人","是大卫","。"], word:"的", a:1,
+   full:{hz:"李军左边的人是大卫。", py:"Lǐ Jūn zuǒbian de rén shì Dàwèi.", vi:"Người ở bên trái Lý Quân là David."},
+   why:"Phương vị từ làm định ngữ cho danh từ thì phải có 的 (de): 左边 (zuǒbian) + 的 + 人 (rén) = 'người ở bên trái'. Vậy 的 đặt giữa 左边 và 人."},
+  {parts:["玛丽","是","哪","国人","？"], word:"呢", a:3,
+   full:{hz:"玛丽是哪国人呢？", py:"Mǎlì shì nǎ guó rén ne?", vi:"Mary là người nước nào vậy?"},
+   why:"Câu đã có từ nghi vấn 哪 (nǎ — nào) nên không dùng 吗 (ma). Trợ từ 呢 (ne) đứng CUỐI câu để làm giọng hỏi mềm hơn, tự nhiên hơn: 哪国人 (nǎ guó rén) + 呢. Không được chèn 呢 vào giữa 哪 và 国人."}
 ];
-const listenSentenceContainer = document.getElementById('listen-sentence-container');
-let listenSentenceScored = 0;
-LISTEN_SENTENCE_DATA.forEach((item,idx)=>{
-  const distractors = shuffleArr(ALL_SENTENCES.filter(s=>s.hz!==item.hz)).slice(0,3);
-  const options = shuffleArr([item, ...distractors]);
+const posC = document.getElementById('pos-container');
+const posDone = new Set();
+POS_DATA.forEach((d,i)=>{
+  let line = d.parts[0];
+  for(let k=0;k<4;k++){
+    line += `<button class="pos-btn" onclick="checkPos(${i},${k})">${LETTERS[k]}</button>` + d.parts[k+1];
+  }
   const div = document.createElement('div');
   div.className = 'listen-item';
   div.innerHTML = `
-    <div class="listen-head">
-      <span class="listen-num">Câu ${idx+1}.</span>
-      <button class="btn-listen" onclick="speak('${item.hz}')">🔊</button>
-    </div>
-    <div class="mc-options" id="ls-opts-${idx}">
-      ${options.map(o=>`<button class="mc-opt hanzi" style="font-size:1.05rem;" onclick="checkListenSentence(this,${idx},'${o.hz}')">${o.hz}</button>`).join('')}
-    </div>`;
-  listenSentenceContainer.appendChild(div);
+    <div class="pos-sentence hanzi" id="pos-line-${i}"><b style="color:var(--red-dark);font-family:'Baloo 2';font-size:1rem;">${i+1}.</b> ${line}<span class="pos-word">（${d.word}）</span></div>
+    <div class="exp-box" id="pos-exp-${i}"></div>`;
+  posC.appendChild(div);
 });
-addMax(LISTEN_SENTENCE_DATA.length);
-function checkListenSentence(btn, idx, chosen){
-  const correct = LISTEN_SENTENCE_DATA[idx].hz;
-  const opts = document.querySelectorAll('#ls-opts-'+idx+' .mc-opt');
-  opts.forEach(o=>{ o.disabled = true; if(o.textContent===correct) o.classList.add('ok'); else o.classList.add('dim'); });
-  if(chosen===correct){
-    btn.classList.remove('dim'); addScore(1); celebrate(btn,1);
-  } else {
-    btn.classList.remove('dim'); btn.classList.add('bad'); fail(btn);
-  }
-  listenSentenceScored++;
-  if(listenSentenceScored===LISTEN_SENTENCE_DATA.length){ checkListenDone(); }
+addMax(POS_DATA.length);
+function checkPos(i, k){
+  const d = POS_DATA[i];
+  const btns = document.querySelectorAll('#pos-line-'+i+' .pos-btn');
+  btns.forEach(b=>{ b.disabled = true; });
+  const ok = (k===d.a);
+  btns[d.a].textContent = d.word; btns[d.a].classList.add('ok');
+  if(ok){ addScore(1); celebrate(btns[d.a],1); } else { btns[k].classList.add('bad'); fail(btns[k]); }
+  showExp('pos-exp-'+i, ok, `Đáp án: <b>${LETTERS[d.a]}</b> — đặt <span class="hanzi">${d.word}</span> vào vị trí ${LETTERS[d.a]}`, d.full, d.why);
+  posDone.add(i);
+  if(posDone.size===POS_DATA.length){ unlockBadge('pos'); showToast('📍 Hoàn thành Dạng 6!'); }
 }
-
-function checkListenDone(){
-  if(listenVocabScored===LISTEN_VOCAB_DATA.length && listenSentenceScored===LISTEN_SENTENCE_DATA.length){
-    unlockBadge('listen'); showToast('🎧 Hoàn thành bài nghe!');
-  }
+ 
+/* --- Dạng 7: Chọn từ thích hợp điền vào đoạn văn (8 chỗ trống, mỗi chỗ 3 lựa chọn) --- */
+const CLOZE_TEXT = ["我","中国学汉语，我","越南留学生。我们的学校","大。学校里边","图书馆，教学楼，宿舍楼。图书馆","左边是我们学校的教学楼，教学楼北边","中国学生的宿舍楼，南边","留学生宿舍楼。我们","教学楼学汉语。"];
+const CLOZE_BLANKS = [
+  {a:"在", o:["在","是","有"],
+   full:{hz:"我在中国学汉语。", py:"Wǒ zài Zhōngguó xué Hànyǔ.", vi:"Tôi học tiếng Hán ở Trung Quốc."},
+   why:"在 (zài) + địa điểm đứng trước động từ để chỉ nơi diễn ra hành động: 在中国 (zài Zhōngguó) + 学汉语 (xué Hànyǔ)."},
+  {a:"是", o:["是","在","很"],
+   full:{hz:"我是越南留学生。", py:"Wǒ shì Yuènán liúxuéshēng.", vi:"Tôi là lưu học sinh Việt Nam."},
+   why:"是 (shì) nối chủ ngữ với danh từ: A 是 B (A là B) → 我 (wǒ) 是 越南留学生 (Yuènán liúxuéshēng)."},
+  {a:"很", o:["很","吗","呢"],
+   full:{hz:"我们的学校很大。", py:"Wǒmen de xuéxiào hěn dà.", vi:"Trường của chúng tôi rất lớn."},
+   why:"Tính từ làm vị ngữ (大 dà — lớn) thường cần phó từ 很 (hěn — rất) đứng trước. 吗 (ma) và 呢 (ne) là trợ từ cuối câu, không đứng trước tính từ."},
+  {a:"有", o:["有","在","吗"],
+   full:{hz:"学校里边有图书馆，教学楼，宿舍楼。", py:"Xuéxiào lǐbian yǒu túshūguǎn, jiàoxué lóu, sùshè lóu.", vi:"Bên trong trường có thư viện, toà giảng đường, ký túc xá."},
+   why:"有 (yǒu — có) dùng để nói nơi chốn có những gì: nơi chốn + 有 + danh từ (học kỹ ở Bài 7). Ở đây liệt kê 3 toà nhà trong trường nên dùng 有; 在 (zài) cần chủ ngữ là vật cụ thể (图书馆在……)."},
+  {a:"的", o:["的","吗","呢"],
+   full:{hz:"图书馆的左边是我们学校的教学楼。", py:"Túshūguǎn de zuǒbian shì wǒmen xuéxiào de jiàoxué lóu.", vi:"Bên trái thư viện là toà giảng đường của trường chúng tôi."},
+   why:"Cấu trúc [mốc] + 的 (de) + phương vị từ: 图书馆的左边 (túshūguǎn de zuǒbian) = bên trái của thư viện."},
+  {a:"是", o:["是","在","吗"],
+   full:{hz:"教学楼北边是中国学生的宿舍楼。", py:"Jiàoxué lóu běibian shì Zhōngguó xuésheng de sùshè lóu.", vi:"Phía bắc toà giảng đường là ký túc xá của sinh viên Trung Quốc."},
+   why:"Phương vị/nơi chốn + 是 (shì) + danh từ: 教学楼北边 (vị trí) + 是 + 中国学生的宿舍楼 (cái nằm ở đó). Chủ ngữ là NƠI CHỐN nên dùng 是, không dùng 在."},
+  {a:"是", o:["是","在","很"],
+   full:{hz:"南边是留学生宿舍楼。", py:"Nánbian shì liúxuéshēng sùshè lóu.", vi:"Phía nam là ký túc xá lưu học sinh."},
+   why:"Cùng mẫu với chỗ trống (6): 南边 (nánbian — phía nam) là vị trí + 是 (shì) + 留学生宿舍楼 (cái nằm ở đó)."},
+  {a:"在", o:["在","是","的"],
+   full:{hz:"我们在教学楼学汉语。", py:"Wǒmen zài jiàoxué lóu xué Hànyǔ.", vi:"Chúng tôi học tiếng Hán ở toà giảng đường."},
+   why:"在 (zài) + địa điểm (教学楼 jiàoxué lóu) đứng trước động từ 学 (xué) để chỉ nơi học: 在教学楼学汉语 (zài jiàoxué lóu xué Hànyǔ)."}
+];
+(function(){
+  let html = '';
+  CLOZE_TEXT.forEach((t,i)=>{
+    html += t;
+    if(i<CLOZE_BLANKS.length){
+      const b = CLOZE_BLANKS[i];
+      html += `<sup class="cz-n">(${i+1})</sup><select class="blank hanzi" data-answer="${b.a}"><option value="">--</option>${shuffleArr(b.o).map(o=>`<option value="${o}">${o}</option>`).join('')}</select>`;
+    }
+  });
+  document.getElementById('cloze-container').innerHTML = `<div class="passage hanzi">${html}</div>`;
+})();
+addMax(CLOZE_BLANKS.length);
+const clozeOk = new Set();
+function checkCloze(){
+  let ok = 0, boxes = '';
+  document.querySelectorAll('#cloze-container select').forEach((sel,i)=>{
+    const b = CLOZE_BLANKS[i];
+    const good = (sel.value===b.a);
+    sel.classList.remove('ok','bad');
+    if(good){
+      ok++; sel.classList.add('ok');
+      if(!clozeOk.has(i)){ clozeOk.add(i); addScore(1); celebrate(sel,2); }
+    } else { sel.classList.add('bad'); fail(sel); }
+    const head = `Chỗ trống (${i+1}) — đáp án: <span class="hanzi">${b.a}</span>` + (good ? '' : (sel.value ? ` (bạn chọn: <span class="hanzi">${sel.value}</span>)` : ' (bạn chưa chọn)'));
+    boxes += `<div class="exp-box show${good?'':' bad'}">${expInner(good, head, b.full, b.why)}</div>`;
+  });
+  document.getElementById('cloze-result').innerHTML = ok===CLOZE_BLANKS.length
+    ? `<span class="result-ok">Đúng ${ok}/${CLOZE_BLANKS.length} 🎉</span>` : `<span class="result-bad">Đúng ${ok}/${CLOZE_BLANKS.length}</span>`;
+  document.getElementById('cloze-explain').innerHTML = boxes;
+  if(ok===CLOZE_BLANKS.length){ unlockBadge('cloze'); fireConfetti(); showToast('📖 Hoàn thành Dạng 7 xuất sắc!'); }
 }
-
+ 
+/* --- Dạng 8: Đọc đoạn văn — phán đoán đúng sai (对/错) --- */
+const TF_PASSAGE = "这是我们的留学生宿舍。里边有书、杂志、课本、词典。那是我同屋的书，他的书是中文的、英文的。我的书是中文的、越文的。这是我的汉语词典，词典左边是汉语课本。课本上边是音乐杂志。我的中文书和越文书在词典右边。我同屋的书在那儿，他的汉英词典在课本的左边，课本上边也是杂志。他的书不在词典右边，在课本和杂志下边。";
+const TF_DATA = [
+  {s:"“我们”宿舍里边有书和课本。", a:true,
+   quote:{hz:"里边有书、杂志、课本、词典。", py:"Lǐbian yǒu shū, zázhì, kèběn, cídiǎn.", vi:"Bên trong có sách, tạp chí, sách giáo khoa, từ điển."},
+   why:"Trong ký túc xá có 书 (shū — sách) và 课本 (kèběn — sách giáo khoa) → câu ĐÚNG (còn có thêm 杂志 và 词典 nhưng câu không phủ nhận điều đó)."},
+  {s:"“我的”书是中文的、英文的。", a:false,
+   quote:{hz:"我的书是中文的、越文的。", py:"Wǒ de shū shì Zhōngwén de, Yuèwén de.", vi:"Sách của tôi là tiếng Trung và tiếng Việt."},
+   why:"Sách của 'tôi' là 中文 (Zhōngwén — tiếng Trung) và 越文 (Yuèwén — tiếng Việt). 英文 (Yīngwén — tiếng Anh) là sách của bạn cùng phòng: 他的书是中文的、英文的 (Tā de shū shì Zhōngwén de, Yīngwén de) → câu SAI."},
+  {s:"“我”的汉语课本在词典的左边。", a:true,
+   quote:{hz:"这是我的汉语词典，词典左边是汉语课本。", py:"Zhè shì wǒ de Hànyǔ cídiǎn, cídiǎn zuǒbian shì Hànyǔ kèběn.", vi:"Đây là từ điển tiếng Hán của tôi, bên trái từ điển là sách giáo khoa tiếng Hán."},
+   why:"Bên trái (左边 zuǒbian) từ điển là sách giáo khoa tiếng Hán → 课本在词典的左边 (kèběn zài cídiǎn de zuǒbian) → câu ĐÚNG."},
+  {s:"“我”的音乐杂志在课本的下边。", a:false,
+   quote:{hz:"课本上边是音乐杂志。", py:"Kèběn shàngbian shì yīnyuè zázhì.", vi:"Phía trên sách giáo khoa là tạp chí âm nhạc."},
+   why:"Tạp chí âm nhạc ở TRÊN (上边 shàngbian) sách giáo khoa, không phải DƯỚI (下边 xiàbian) → câu SAI."},
+  {s:"词典右边是“我”的书。", a:true,
+   quote:{hz:"我的中文书和越文书在词典右边。", py:"Wǒ de Zhōngwén shū hé Yuèwén shū zài cídiǎn yòubian.", vi:"Sách tiếng Trung và sách tiếng Việt của tôi ở bên phải từ điển."},
+   why:"Sách của 'tôi' (中文书 và 越文书) nằm ở 词典右边 (cídiǎn yòubian — bên phải từ điển) → câu ĐÚNG."},
+  {s:"“我”同屋的汉日词典在课本的左边。", a:false,
+   quote:{hz:"他的汉英词典在课本的左边。", py:"Tā de Hàn-Yīng cídiǎn zài kèběn de zuǒbian.", vi:"Từ điển Hán–Anh của anh ấy ở bên trái sách giáo khoa."},
+   why:"Từ điển của bạn cùng phòng là 汉英词典 (Hàn-Yīng cídiǎn — Hán–Anh), không phải 汉日词典 (Hàn-Rì cídiǎn — Hán–Nhật) → câu SAI."},
+  {s:"“我”同屋的杂志也在课本上边。", a:true,
+   quote:{hz:"课本上边也是杂志。", py:"Kèběn shàngbian yě shì zázhì.", vi:"Phía trên sách giáo khoa cũng là tạp chí."},
+   why:"Đoạn nói về sách của bạn cùng phòng: 他的汉英词典在课本的左边，课本上边也是杂志. 也 (yě — cũng) cho thấy phía trên sách giáo khoa của bạn cùng phòng cũng có tạp chí giống của 'tôi' → câu ĐÚNG."},
+  {s:"“我”同屋的书在词典右边。", a:false,
+   quote:{hz:"他的书不在词典右边，在课本和杂志下边。", py:"Tā de shū bú zài cídiǎn yòubian, zài kèběn hé zázhì xiàbian.", vi:"Sách của anh ấy không ở bên phải từ điển, mà ở dưới sách giáo khoa và tạp chí."},
+   why:"Bài viết nói rõ 不在 (bú zài — KHÔNG ở) 词典右边. Bên phải từ điển là sách của 'tôi', không phải của bạn cùng phòng → câu SAI."},
+  {s:"“我”同屋的书在课本和杂志下边。", a:true,
+   quote:{hz:"他的书不在词典右边，在课本和杂志下边。", py:"Tā de shū bú zài cídiǎn yòubian, zài kèběn hé zázhì xiàbian.", vi:"Sách của anh ấy không ở bên phải từ điển, mà ở dưới sách giáo khoa và tạp chí."},
+   why:"Vế sau của câu: 在课本和杂志下边 (zài kèběn hé zázhì xiàbian — ở dưới sách giáo khoa và tạp chí) → câu ĐÚNG."}
+];
+document.getElementById('tf-passage').textContent = TF_PASSAGE;
+const tfC = document.getElementById('tf-container');
+const tfDone = new Set();
+TF_DATA.forEach((d,i)=>{
+  const w = document.createElement('div');
+  w.className = 'listen-item';
+  w.innerHTML = `
+    <div class="hanzi" style="font-size:1.15rem;margin-bottom:8px;"><b style="color:var(--red-dark);font-family:'Baloo 2';">${i+1}.</b> ${d.s}</div>
+    <div class="mc-options" id="tf-opts-${i}" style="grid-template-columns:repeat(2,minmax(120px,160px));">
+      <button class="mc-opt hanzi" style="font-size:1.05rem;" onclick="checkTF(this,${i},true)">✔ 对 (Đúng)</button>
+      <button class="mc-opt hanzi" style="font-size:1.05rem;" onclick="checkTF(this,${i},false)">✘ 错 (Sai)</button>
+    </div>
+    <div class="exp-box" id="tf-exp-${i}"></div>`;
+  tfC.appendChild(w);
+});
+addMax(TF_DATA.length);
+function checkTF(btn, i, val){
+  const d = TF_DATA[i];
+  const opts = document.querySelectorAll('#tf-opts-'+i+' .mc-opt');
+  opts.forEach((o,idx)=>{ o.disabled = true; const isTrueBtn = (idx===0); if(isTrueBtn===d.a) o.classList.add('ok'); else o.classList.add('dim'); });
+  const ok = (val===d.a);
+  btn.classList.remove('dim');
+  if(ok){ addScore(1); celebrate(btn,1); } else { btn.classList.add('bad'); fail(btn); }
+  showExp('tf-exp-'+i, ok, `Đáp án: <span class="hanzi">${d.a ? '对 (Đúng)' : '错 (Sai)'}</span> — trong bài:`, d.quote, d.why);
+  tfDone.add(i);
+  if(tfDone.size===TF_DATA.length){ unlockBadge('tf'); showToast('✅ Hoàn thành bài đọc hiểu!'); }
+}
 /* ============ TAB CHỮ HÁN (Hanzi Writer) ============ */
 let hanziWriterInstance = null;
 let currentHanziIdx = 0;
