@@ -1547,29 +1547,33 @@ LIS_DATA.forEach((g,gi)=>{
       <div class="pinyin" style="font-size:.8rem;margin-bottom:8px;">${q.py}</div>
       <div class="mc-options" id="lis-opts-${id}">
         ${order.map(o=>`<button class="mc-opt hanzi" style="font-size:1.05rem;" data-ok="${o.ok?1:0}" onclick="checkLis(this,'${id}',${gi},${qi})">${o.t}</button>`).join('')}
-      </div>
-      <div class="reveal-box" id="lis-exp-${id}"></div>`;
+      </div>`;
     box.appendChild(item);
   });
+  /* Nút xem văn bản bài nghe — đặt cuối mỗi đoạn */
+  const textHtml = g.dlg.map(l=>`<div class="hanzi" style="font-size:1.05rem;line-height:1.9;">${l[0]}: ${l[1]}</div>`).join('');
+  const tail = document.createElement('div');
+  tail.innerHTML = `
+    <button class="btn secondary" id="lis-script-btn-${gi}" onclick="toggleLisScript(${gi})">📜 Xem văn bản bài nghe</button>
+    <div class="reveal-box" id="lis-script-${gi}" style="margin-top:10px;">${textHtml}</div>`;
+  box.appendChild(tail);
   lisC.appendChild(box);
 });
 addMax(lisTotal);
+function toggleLisScript(gi){
+  const box = document.getElementById('lis-script-'+gi);
+  const btn = document.getElementById('lis-script-btn-'+gi);
+  const open = box.classList.toggle('show');
+  btn.textContent = open ? '🙈 Ẩn văn bản bài nghe' : '📜 Xem văn bản bài nghe';
+}
 function checkLis(btn, id, gi, qi){
-  const key = id;
-  if(doneSets.lis.has(key)) return;
-  doneSets.lis.add(key);
-  const g = LIS_DATA[gi], q = g.qs[qi];
+  if(doneSets.lis.has(id)) return;
+  doneSets.lis.add(id);
   const opts = document.querySelectorAll('#lis-opts-'+id+' .mc-opt');
   opts.forEach(o=>{ o.disabled = true; if(o.dataset.ok==='1') o.classList.add('ok'); else o.classList.add('dim'); });
   btn.classList.remove('dim');
   if(btn.dataset.ok==='1'){ addScore(1); celebrate(btn,1); }
   else { btn.classList.add('bad'); fail(btn); }
-  const correct = q.o[q.a];
-  const text = g.dlg.map((l,li)=>`<div class="hanzi" style="${q.hl.includes(li)?'background:#fff3c4;border-radius:6px;padding:0 4px;font-weight:700;':''}">${l[0]}: ${l[1]}</div>`).join('');
-  const exp = document.getElementById('lis-exp-'+id);
-  exp.innerHTML = `<div style="margin-bottom:6px;"><b>Đáp án đúng:</b> <span class="hanzi">${correct}</span></div>
-    <div style="font-size:.78rem;color:var(--gray);margin-bottom:4px;">📜 Văn bản bài nghe (câu chứa đáp án được tô sáng):</div>${text}`;
-  exp.classList.add('show');
   if(doneSets.lis.size===lisTotal){ unlockBadge('lis'); fireConfetti(); showToast('🎧 Hoàn thành bài nghe hiểu!'); }
 }
 
