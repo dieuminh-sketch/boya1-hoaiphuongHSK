@@ -623,11 +623,11 @@
       <div class="subtabs">
         <button class="subtab-btn active" data-sub="mc">1 · 🎯 Chọn đáp án</button>
         <button class="subtab-btn" data-sub="price">2 · 🎧 Nghe viết giá</button>
-        <button class="subtab-btn" data-sub="fill">3 · 🎧 Nghe điền từ</button>
-        <button class="subtab-btn" data-sub="ask">4 · ❓ Đặt câu hỏi</button>
-        <button class="subtab-btn" data-sub="listen">5 · 👂 Nghe chọn đáp án</button>
-        <button class="subtab-btn" data-sub="read">6 · 📖 Đọc hiểu</button>
-        <button class="subtab-btn" data-sub="say">7 · 💰 Đọc giá tiền</button>
+        <button class="subtab-btn" data-sub="say">3 · 💰 Đọc giá tiền</button>
+        <button class="subtab-btn" data-sub="fill">4 · 🎧 Nghe điền từ</button>
+        <button class="subtab-btn" data-sub="ask">5 · ❓ Đặt câu hỏi</button>
+        <button class="subtab-btn" data-sub="listen">6 · 👂 Nghe chọn đáp án</button>
+        <button class="subtab-btn" data-sub="read">7 · 📖 Đọc hiểu</button>
       </div>
 
       <div class="card ex-block sub-panel active" id="sub-mc">
@@ -645,8 +645,14 @@
         <span id="price-result"></span>
       </div>
 
+      <div class="card ex-block sub-panel" id="sub-say">
+        <div class="ex-title">Bài 3 · 读出价钱 — Đọc giá tiền</div>
+        <div class="ex-sub">Nhìn hình, đọc to giá tiền bằng tiếng Trung (khẩu ngữ: 块、毛、分), rồi bấm "Hiện cách đọc" để đối chiếu.</div>
+        <div id="say-container" class="pic-grid"></div>
+      </div>
+
       <div class="card ex-block sub-panel" id="sub-fill">
-        <div class="ex-title">Bài 3 · 听录音，填空 — Nghe và điền vào chỗ trống</div>
+        <div class="ex-title">Bài 4 · 听录音，填空 — Nghe và điền vào chỗ trống</div>
         <div class="ex-sub">Có thể viết chữ Hán hoặc pinyin (không cần ghi dấu thanh cũng được).</div>
         <audio class="ex-audio" controls preload="auto" src="10-6.mp3"></audio>
         <div id="fill9-container"></div>
@@ -655,31 +661,25 @@
       </div>
 
       <div class="card ex-block sub-panel" id="sub-ask">
-        <div class="ex-title">Bài 4 · Đặt câu hỏi cho phần gạch chân</div>
+        <div class="ex-title">Bài 5 · Đặt câu hỏi cho phần gạch chân</div>
         <div class="ex-sub">Viết lại cả câu hỏi (dùng 多少、什么、哪儿、谁、几、怎么…).</div>
         <div id="ask-container"></div>
       </div>
 
       <div class="card ex-block sub-panel" id="sub-listen">
-        <div class="ex-title">Bài 5 · Nghe hội thoại, chọn đáp án đúng</div>
+        <div class="ex-title">Bài 6 · Nghe hội thoại, chọn đáp án đúng</div>
         <div class="ex-sub">Nghe từng đoạn ghi âm rồi trả lời câu hỏi. Bấm "Xem lời thoại" để đối chiếu sau khi làm xong.</div>
         <div id="listen9-container"></div>
       </div>
 
       <div class="card ex-block sub-panel" id="sub-read">
-        <div class="ex-title">Bài 6 · Đọc đoạn văn</div>
+        <div class="ex-title">Bài 7 · Đọc đoạn văn</div>
         <div class="passage hanzi" id="tf-passage" style="margin-bottom:16px;"></div>
         <div class="ex-title" style="font-size:.98rem;">A. Phán đoán đúng sai</div>
         <div id="tf-container"></div>
         <div class="ex-title" style="font-size:.98rem;margin-top:10px;">B. Trả lời câu hỏi</div>
         <div class="ex-sub">Viết câu trả lời, bấm "Hiện đáp án" để đối chiếu rồi tự chấm.</div>
         <div id="qa-container"></div>
-      </div>
-
-      <div class="card ex-block sub-panel" id="sub-say">
-        <div class="ex-title">Bài 7 · 读出价钱 — Đọc giá tiền</div>
-        <div class="ex-sub">Nhìn hình, đọc to giá tiền bằng tiếng Trung (khẩu ngữ: 块、毛、分), rồi bấm "Hiện cách đọc" để đối chiếu.</div>
-        <div id="say-container" class="pic-grid"></div>
       </div>
     </div>
 
