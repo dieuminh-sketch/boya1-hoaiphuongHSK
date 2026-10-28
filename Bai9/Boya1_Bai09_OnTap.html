@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boya Sơ cấp 1 - Bài 9: 多少钱一瓶 - Ôn tập tương tác</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Quicksand:wght@600;700&family=Noto+Sans+SC:wght@500;700;900&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#D98A80;
+    --red-dark:#B35D52;
+    --red-light:#F0B8AE;
+    --accent:#E0A85C;
+    --accent-dark:#BD8636;
+    --accent-light:#F3D9A8;
+    --cream:#FBF7F1;
+    --cream-2:#F3EBDD;
+    --white:#FFFFFF;
+    --ink:#2A2622;
+    --gray:#8A8577;
+    --green:#4FAE82;
+    --green-bg:#DCF5E9;
+    --error:#C0392B;
+    --error-bg:#fbe6e3;
+    --red-bg:#fdecdf;
+    --gold:#E8B86B;
+    --gold-dark:#C4913F;
+    --purple:#9B85C9;
+    --shadow: 0 4px 14px rgba(185,133,120,0.14);
+    --shadow-pop: 0 10px 26px rgba(185,133,120,0.24);
+    --radius: 16px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Be Vietnam Pro',sans-serif;
+    background:
+      radial-gradient(circle at 8% 12%, #def5ea 0%, transparent 40%),
+      radial-gradient(circle at 95% 0%, #f8dad5 0%, transparent 35%),
+      radial-gradient(circle at 90% 90%, #f6e4c0 0%, transparent 40%),
+      radial-gradient(circle at 50% 100%, #e6def2 0%, transparent 45%),
+      var(--cream);
+    color:var(--ink);
+    min-height:100vh;
+  }
+  h1,h2,h3,.font-title{font-family:'Baloo 2',sans-serif;}
+  .hanzi{font-family:'Noto Sans SC','Microsoft YaHei','PingFang SC','SimHei',sans-serif;}
+  ::selection{background:var(--gold);color:#fff;}
+
+  .app{display:flex;min-height:100vh;}
+
+  /* XP / gamification bar */
+  .xp-box{
+    background:linear-gradient(135deg,var(--red) 0%,var(--red-dark) 100%);
+    color:#fff;border-radius:var(--radius);padding:14px 18px;box-shadow:var(--shadow);
+  }
+  .xp-box .lvl-row{display:flex;justify-content:space-between;align-items:center;font-family:'Baloo 2';font-size:.85rem;margin-bottom:6px;}
+  .xp-bar-bg{width:100%;height:10px;border-radius:8px;background:rgba(255,255,255,.25);overflow:hidden;}
+  .xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),#ffd76b);border-radius:8px;transition:width .5s ease;width:0%;}
+  .streak-row{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:.8rem;}
+  .streak-flame{font-size:1.1rem;}
+
+  /* Main */
+  .main{flex:1;padding:26px 34px;max-width:1050px;}
+  .topbar{
+    text-align:center;background:linear-gradient(135deg,var(--red) 0%,var(--red-dark) 100%);
+    color:#fff;border-radius:var(--radius);padding:26px 24px 22px;margin-bottom:18px;
+    box-shadow:var(--shadow-pop);
+  }
+  .topbar-brand{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.85rem;opacity:.85;margin-bottom:6px;}
+  .topbar h2{margin:0;color:#fff;font-size:1.8rem;}
+  .topbar .desc{color:rgba(255,255,255,.85);font-size:.88rem;margin-top:8px;}
+  .topbar-actions{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:16px;}
+  .badge-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;}
+  .badge-pill{
+    font-family:'Baloo 2';font-size:.78rem;background:#fff;border:2px solid var(--cream-2);
+    color:var(--gray);padding:4px 12px;border-radius:999px;transition:.2s;
+  }
+  .badge-pill.earned{background:linear-gradient(135deg,var(--gold),#ffcf6b);border-color:var(--gold-dark);color:#7a4d05;box-shadow:0 3px 8px rgba(240,169,58,.4);}
+
+  .tabs{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;}
+  .tab-btn{
+    font-family:'Baloo 2',sans-serif;font-weight:700;
+    background:var(--white);border:2px solid var(--cream-2);color:var(--red-dark);
+    padding:10px 20px;border-radius:999px;cursor:pointer;font-size:.95rem;transition:.18s;
+    box-shadow:0 2px 6px rgba(47,122,92,.08);
+  }
+  .tab-btn.active{background:linear-gradient(135deg,var(--red),var(--red-light));color:#fff;border-color:var(--red);transform:translateY(-2px);box-shadow:var(--shadow-pop);}
+  .tab-btn:hover:not(.active){border-color:var(--red-light);transform:translateY(-1px);}
+
+  .panel{display:none;animation:fade .3s;}
+  .panel.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes pop{0%{transform:scale(1);}40%{transform:scale(1.06);}100%{transform:scale(1);}}
+  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+  @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6);}20%{opacity:1;transform:translateY(-10px) scale(1.1);}100%{opacity:0;transform:translateY(-46px) scale(1);}}
+
+  .card{
+    background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:20px;margin-bottom:18px;border:2px solid transparent;transition:.2s;
+  }
+  .card:hover{box-shadow:var(--shadow-pop);}
+
+  /* Bài khoá / hội thoại */
+  .dialogue-group{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;margin-bottom:18px;}
+  .dialogue-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+  .dialogue-title{font-family:'Baloo 2',sans-serif;color:var(--red-dark);font-size:1.05rem;}
+  .dlg-line{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;}
+  .dlg-line:last-child{margin-bottom:0;}
+  .dlg-avatar-wrap{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:58px;}
+  .dlg-avatar{
+    width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:1.5rem;background:var(--cream-2);border:3px solid var(--red-light);box-shadow:var(--shadow);
+  }
+  .dlg-who{text-align:center;font-size:.66rem;color:var(--gray);margin-top:4px;line-height:1.2;}
+  .dlg-who .hz-mini{font-size:.72rem;font-weight:700;color:var(--red-dark);}
+  .dlg-bubble{
+    position:relative;background:#fff;border:2px solid var(--red);border-radius:14px;
+    padding:10px 40px 10px 16px;flex:1;box-shadow:0 2px 6px rgba(0,0,0,.06);min-width:0;
+  }
+  .dlg-bubble::before{content:'';position:absolute;left:-10px;top:16px;width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-right:10px solid var(--red);}
+  .dlg-bubble::after{content:'';position:absolute;left:-7px;top:16px;width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-right:8px solid #fff;}
+  .dlg-py{font-size:.85rem;color:var(--accent-dark);font-weight:700;margin-bottom:3px;letter-spacing:.2px;}
+  .dlg-hz{font-size:1.5rem;font-weight:700;line-height:1.3;}
+  .dlg-bubble .btn-speak{position:absolute;top:8px;right:8px;width:30px;height:30px;font-size:.85rem;}
+  .btn-play-all{margin-left:auto;}
+
+
+  /* Mục tiêu bài học */
+  .goals-card{
+    background:var(--white);border:2px solid var(--red-light);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:20px 22px;margin-bottom:18px;
+  }
+  .goals-head{
+    font-family:'Baloo 2',sans-serif;font-weight:700;color:var(--red);font-size:1.1rem;
+    display:flex;align-items:center;gap:6px;margin-bottom:14px;
+  }
+  .goal-item{
+    display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;cursor:pointer;
+    font-size:.92rem;line-height:1.6;color:var(--ink);
+  }
+  .goal-item:last-child{margin-bottom:0;}
+  .goal-item input[type="checkbox"]{
+    appearance:none;-webkit-appearance:none;flex-shrink:0;width:20px;height:20px;margin-top:2px;
+    border:2px solid var(--red);border-radius:5px;cursor:pointer;position:relative;background:#fff;
+  }
+  .goal-item input[type="checkbox"]:checked{background:var(--red);}
+  .goal-item input[type="checkbox"]:checked::after{
+    content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:#fff;font-size:.85rem;font-weight:700;
+  }
+  .goal-item .hanzi{color:var(--red-dark);font-weight:700;margin-right:4px;}
+
+  /* Ngữ pháp */
+  .grammar-point{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;margin-bottom:18px;border-left:6px solid var(--red);}
+  .grammar-point .gp-title{font-family:'Baloo 2',sans-serif;color:var(--red-dark);font-size:1.1rem;margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+  .grammar-point .gp-title .gp-num{background:var(--red);color:#fff;width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+  .grammar-point .gp-key{color:var(--ink);font-size:.98rem;margin:10px 0 14px;padding:10px 14px;background:var(--cream-2);border-radius:10px;}
+  .gp-form{margin-bottom:12px;}
+  .gp-form .gp-label{font-family:'Baloo 2';font-weight:700;color:var(--accent-dark);font-size:.88rem;margin-bottom:6px;}
+  .gp-ex-list{margin:0;padding:0;list-style:none;}
+  .gp-ex-list li{display:flex;align-items:baseline;gap:10px;padding:6px 0;font-size:.98rem;border-bottom:1px dashed var(--cream-2);}
+  .gp-ex-list li:last-child{border-bottom:none;}
+  .gp-ex-num{color:var(--gray);font-size:.82rem;flex-shrink:0;width:18px;}
+  .gp-ex-hz{font-weight:700;color:var(--ink);}
+  .gp-ex-py{color:var(--accent-dark);font-size:.82rem;}
+  .gp-ex-arrow{color:var(--gray);margin:0 4px;}
+  .gp-note{margin-top:10px;font-size:.85rem;color:var(--gray);background:var(--green-bg);border-left:4px solid var(--green);padding:8px 12px;border-radius:8px;}
+
+  /* Sơ đồ phương vị từ (compass diagram) */
+  .compass-wrap{display:flex;gap:28px;flex-wrap:wrap;align-items:center;margin:16px 0 20px;}
+  .compass-grid{
+    display:grid;grid-template-columns:repeat(3,84px);grid-template-rows:repeat(3,84px);
+    gap:8px;flex-shrink:0;
+  }
+  .compass-cell{
+    border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:'Baloo 2';text-align:center;line-height:1.2;padding:4px;
+  }
+  .compass-cell.dir{background:linear-gradient(135deg,var(--red),var(--red-light));color:#fff;box-shadow:0 3px 8px rgba(185,133,120,.35);}
+  .compass-cell.dir .cc-hz{font-size:1.35rem;font-weight:700;}
+  .compass-cell.dir .cc-py{font-size:.72rem;opacity:.95;margin-top:1px;}
+  .compass-cell.center{background:var(--cream-2);color:var(--red-dark);border:2px dashed var(--red-light);font-weight:700;font-size:1rem;}
+  .compass-cell.center .cc-icon{font-size:1.5rem;}
+  .compass-cell.empty{background:transparent;}
+  .pair-legend{display:flex;flex-direction:column;gap:8px;flex:1;min-width:280px;}
+  .pair-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .vl-item{
+    display:flex;align-items:center;gap:8px;background:var(--white);border:2px solid var(--cream-2);
+    border-radius:12px;padding:9px 14px;font-family:'Baloo 2';color:var(--red-dark);
+    box-shadow:0 2px 6px rgba(0,0,0,.05);
+  }
+  .vl-item .vl-icon{font-size:1.4rem;flex-shrink:0;}
+  .vl-item .vl-text{display:flex;flex-direction:column;line-height:1.25;}
+  .vl-item .vl-hz{font-size:1.15rem;font-weight:700;}
+  .vl-item .vl-py{color:var(--gray);font-weight:400;font-size:.78rem;}
+  @media(max-width:800px){
+    .compass-wrap{justify-content:center;}
+    .compass-grid{grid-template-columns:repeat(3,72px);grid-template-rows:repeat(3,72px);}
+    .pair-row{grid-template-columns:1fr;}
+    .pair-legend{min-width:0;width:100%;}
+  }
+
+  table.vocab{width:100%;border-collapse:collapse;}
+  table.vocab th{
+    text-align:left;font-family:'Baloo 2',sans-serif;background:var(--cream-2);color:var(--red-dark);
+    padding:10px;font-size:.85rem;
+  }
+  table.vocab.hide-py td.pinyin{visibility:hidden;}
+  #dialogue-container.hide-py .dlg-py{visibility:hidden;}
+  #grammar-container.hide-py .gp-ex-py{visibility:hidden;}
+  #grammar-container.hide-vi .gp-ex-vi{visibility:hidden;}
+  table.vocab td{padding:10px;border-bottom:1px solid var(--cream-2);vertical-align:middle;font-size:.92rem;}
+  table.vocab tr{transition:.15s;}
+  table.vocab tr:hover{background:#fdf3ef;transform:scale(1.005);}
+  .hz{font-size:1.4rem;font-weight:700;}
+  table.vocab .hz{font-size:2.1rem;color:var(--red-dark);letter-spacing:.5px;}
+  table.vocab td:nth-child(2){width:1%;white-space:nowrap;}
+  .pinyin{color:var(--accent-dark);font-weight:700;}
+  .pos{display:inline-block;background:var(--cream-2);color:var(--gray);font-size:.7rem;padding:2px 8px;border-radius:8px;}
+  .btn-speak{
+    border:none;background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;width:34px;height:34px;border-radius:50%;
+    cursor:pointer;font-size:1rem;display:inline-flex;align-items:center;justify-content:center;transition:.15s;
+    box-shadow:0 2px 6px rgba(193,80,63,.35);
+  }
+  .btn-speak:hover{transform:scale(1.15) rotate(-6deg);}
+  .btn-speak:active{transform:scale(.92);}
+
+  /* Flashcards */
+  .fc-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;position:relative;}
+  .fc-progress{color:var(--gray);font-size:.85rem;font-family:'Baloo 2';}
+  .fc-stars{font-size:.85rem;color:var(--gold-dark);}
+  .flashcard{
+    width:320px;height:220px;perspective:1200px;cursor:pointer;
+  }
+  .fc-inner{position:relative;width:100%;height:100%;transition:transform .5s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d;}
+  .flashcard.flipped .fc-inner{transform:rotateY(180deg);}
+  .fc-face{
+    position:absolute;inset:0;border-radius:20px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;backface-visibility:hidden;
+    box-shadow:var(--shadow-pop);padding:14px;text-align:center;
+  }
+  .fc-front{background:linear-gradient(150deg,var(--red) 0%,var(--red-light) 60%,var(--accent-light) 100%);color:#fff;}
+  .fc-front .hz{font-size:2.6rem;text-shadow:0 3px 8px rgba(0,0,0,.2);}
+  .fc-front .hint{position:absolute;bottom:14px;font-size:.72rem;opacity:.75;}
+  .fc-back{background:var(--white);transform:rotateY(180deg);border:3px solid var(--gold);}
+  .fc-back .pinyin{font-size:1.35rem;}
+  .fc-back .mean{margin-top:6px;font-size:1.05rem;}
+  .fc-controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+  .btn{
+    font-family:'Baloo 2',sans-serif;font-weight:700;border:none;border-radius:12px;
+    padding:10px 20px;cursor:pointer;font-size:.9rem;background:linear-gradient(135deg,var(--red),var(--red-light));
+    color:#fff;box-shadow:0 3px 0 var(--red-dark);transition:.12s;
+  }
+  .btn.secondary{background:var(--cream-2);color:var(--red-dark);box-shadow:0 3px 0 #d8c3a5;}
+  .btn.gold{background:linear-gradient(135deg,var(--gold),#ffcf6b);color:#7a4d05;box-shadow:0 3px 0 var(--gold-dark);}
+  .btn.secondary.active{background:linear-gradient(135deg,var(--purple),#c3b3e6);color:#fff;box-shadow:0 3px 0 #6f5aa3;}
+  .btn:hover{filter:brightness(1.06);transform:translateY(-1px);}
+  .btn:active{transform:translateY(2px);box-shadow:none;}
+
+  /* Exercises */
+  .ex-block{margin-bottom:26px;}
+  .ex-title{font-family:'Baloo 2',sans-serif;color:var(--red);font-size:1.05rem;margin-bottom:4px;}
+  .ex-sub{color:var(--gray);font-size:.82rem;margin-bottom:12px;}
+  .fill-line{margin-bottom:12px;font-size:1rem;line-height:1.8;}
+  select.blank{
+    font-family:'Be Vietnam Pro';font-size:.95rem;padding:5px 10px;border:2px solid var(--red-light);
+    border-radius:10px;background:#fff;color:var(--red-dark);font-weight:700;cursor:pointer;
+  }
+  select.blank.ok{border-color:var(--green);background:var(--green-bg);animation:pop .3s;}
+  select.blank.bad{border-color:var(--error);background:var(--error-bg);animation:shake .3s;}
+  .order-item{
+    display:inline-block;background:linear-gradient(135deg,#fff,var(--cream-2));border:2px solid #e9d7bd;
+    padding:7px 14px;margin:4px;border-radius:10px;cursor:pointer;font-size:1.15rem;user-select:none;
+    box-shadow:0 2px 4px rgba(0,0,0,.06);transition:.12s;
+  }
+  .order-item:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.1);}
+  .order-item.chosen{background:linear-gradient(135deg,var(--red),var(--red-light));color:#fff;border-color:var(--red-dark);}
+  .order-zone{min-height:50px;border:2px dashed var(--red-light);border-radius:12px;padding:8px;margin-bottom:8px;background:#fffaf3;transition:.2s;}
+  .order-zone.ok{border-style:solid;border-color:var(--green);background:var(--green-bg);animation:pop .35s;}
+  .order-zone.bad{border-style:solid;border-color:var(--error);background:var(--error-bg);animation:shake .35s;}
+  .order-bank{min-height:50px;border-radius:12px;padding:8px;margin-bottom:8px;}
+  textarea.ans{
+    width:100%;min-height:56px;border:2px solid var(--cream-2);border-radius:12px;padding:10px;
+    font-family:'Be Vietnam Pro';font-size:.95rem;resize:vertical;transition:.15s;
+  }
+  textarea.ans:focus{outline:none;border-color:var(--red-light);box-shadow:0 0 0 3px rgba(47,122,92,.15);}
+  .reveal-box{
+    margin-top:8px;background:var(--green-bg);border-left:4px solid var(--green);padding:10px 14px;
+    border-radius:10px;display:none;font-size:.92rem;
+  }
+  .reveal-box.show{display:block;animation:fade .3s;}
+  .self-grade{display:none;gap:6px;margin-top:6px;}
+  .self-grade.show{display:inline-flex;}
+  .btn-mini{
+    font-family:'Baloo 2';font-weight:700;border:none;border-radius:8px;padding:5px 12px;
+    cursor:pointer;font-size:.8rem;
+  }
+  .btn-mini.yes{background:var(--green-bg);color:var(--green);}
+  .btn-mini.no{background:var(--error-bg);color:var(--error);}
+  .btn-check{margin-right:8px;}
+  .result-ok{color:var(--green);font-weight:700;}
+  .result-bad{color:var(--error);font-weight:700;}
+  .score-box{
+    background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;padding:10px 18px;border-radius:14px;
+    font-family:'Baloo 2';font-weight:700;display:inline-flex;align-items:center;gap:8px;margin-bottom:16px;
+    box-shadow:0 10px 26px rgba(193,80,63,.25);
+  }
+  .score-box .star{color:var(--gold);}
+
+  /* Nghe - trắc nghiệm */
+  .listen-item{margin-bottom:20px;padding-bottom:18px;border-bottom:1px dashed var(--cream-2);}
+  .listen-item:last-child{border-bottom:none;margin-bottom:0;}
+  .listen-head{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+  .listen-num{font-family:'Baloo 2';font-weight:700;color:var(--red-dark);font-size:.95rem;}
+  .btn-listen{
+    border:none;background:linear-gradient(135deg,var(--red),var(--red-light));color:#fff;
+    width:42px;height:42px;border-radius:50%;cursor:pointer;font-size:1.15rem;
+    display:inline-flex;align-items:center;justify-content:center;transition:.15s;
+    box-shadow:0 3px 8px rgba(185,133,120,.35);flex-shrink:0;
+  }
+  .btn-listen:hover{transform:scale(1.1);}
+  .btn-listen:active{transform:scale(.92);}
+  .mc-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;}
+  .mc-opt{
+    font-family:'Be Vietnam Pro';background:#fff;border:2px solid var(--cream-2);border-radius:12px;
+    padding:12px 10px;cursor:pointer;text-align:center;transition:.15s;font-size:1.3rem;
+  }
+  .mc-opt:hover:not(:disabled){border-color:var(--red-light);transform:translateY(-2px);}
+  .mc-opt:disabled{cursor:default;}
+  .mc-opt.ok{border-color:var(--green);background:var(--green-bg);color:var(--green);animation:pop .3s;}
+  .mc-opt.bad{border-color:var(--error);background:var(--error-bg);color:var(--error);animation:shake .3s;}
+  .mc-opt.dim{opacity:.5;}
+  .mc-opt .mc-py{display:block;font-size:.72rem;color:var(--gray);font-weight:400;margin-top:2px;}
+
+  /* Hanzi tab */
+  .hz-picker{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+  .hz-chip{
+    font-size:1.3rem;padding:6px 14px;border-radius:10px;background:var(--cream-2);
+    cursor:pointer;border:2px solid transparent;
+  }
+  .hz-chip.active{background:var(--red);color:#fff;}
+  .hz-stage{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;}
+  #hanzi-target{
+    background-color:#fff;border-radius:14px;box-shadow:var(--shadow);
+    border:2px solid var(--red-light);overflow:hidden;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cline x1='100' y1='0' x2='100' y2='200' stroke='%23F0B8AE' stroke-width='1.5' stroke-dasharray='6,6'/%3E%3Cline x1='0' y1='100' x2='200' y2='100' stroke='%23F0B8AE' stroke-width='1.5' stroke-dasharray='6,6'/%3E%3Cline x1='0' y1='0' x2='200' y2='200' stroke='%23F0B8AE' stroke-width='1' stroke-dasharray='4,5'/%3E%3Cline x1='200' y1='0' x2='0' y2='200' stroke='%23F0B8AE' stroke-width='1' stroke-dasharray='4,5'/%3E%3C/svg%3E");
+    background-size:100% 100%;background-repeat:no-repeat;
+  }
+  .hz-info{flex:1;min-width:220px;}
+  .hz-info .row{margin-bottom:10px;}
+  .hz-info .label{font-size:.75rem;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;}
+  .hz-info .val{font-size:1rem;}
+  .hz-actions{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;}
+
+  .locked-msg{color:var(--gray);font-style:italic;padding:30px;text-align:center;}
+  .mobile-bar{display:none;}
+
+  /* Gamification overlay */
+  #confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999;}
+  .float-pts{
+    position:fixed;font-family:'Baloo 2';font-weight:800;font-size:1.3rem;color:var(--gold-dark);
+    pointer-events:none;z-index:1000;animation:floatUp 1s ease-out forwards;text-shadow:0 2px 4px rgba(0,0,0,.15);
+  }
+  .toast{
+    position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-20px);
+    background:linear-gradient(135deg,var(--red),var(--red-light));color:#fff;
+    font-family:'Baloo 2';font-weight:700;padding:12px 24px;border-radius:14px;
+    box-shadow:0 8px 20px rgba(47,122,92,.35);z-index:1001;opacity:0;transition:.35s;font-size:.95rem;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .toast.gold{background:linear-gradient(135deg,var(--gold),#ffcf6b);color:#7a4d05;}
+
+  @media(max-width:800px){
+    .mobile-bar{
+      display:flex;align-items:center;justify-content:space-between;
+      position:sticky;top:0;z-index:300;background:var(--cream);
+      padding:10px 14px;border-bottom:2px solid var(--cream-2);margin:-18px -18px 14px;
+    }
+    .mobile-bar .icon-btn{
+      background:var(--red);color:#fff;border:none;border-radius:10px;
+      width:42px;height:42px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;
+    }
+    .app{flex-direction:column;}
+    .main{padding:18px;}
+    .topbar h2{font-size:1.25rem;}
+    .tabs{
+      flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;
+      padding-bottom:4px;margin-left:-18px;margin-right:-18px;padding-left:18px;padding-right:18px;
+    }
+    .tab-btn{flex-shrink:0;padding:10px 16px;min-height:44px;}
+    .dialogue-group{padding:14px;}
+    .dlg-avatar-wrap{width:46px;}
+    .dlg-avatar{width:40px;height:40px;font-size:1.15rem;}
+    .dlg-who{font-size:.6rem;}
+    .dlg-hz{font-size:1.2rem;}
+    .dlg-bubble{padding:8px 34px 8px 12px;}
+
+    .btn, .btn-speak, .btn-mini, .order-item, select.blank{min-height:42px;}
+    .btn-speak{width:40px;height:40px;}
+    .order-item{padding:10px 15px;font-size:1.2rem;}
+    table.vocab thead{display:none;}
+    table.vocab, table.vocab tbody, table.vocab tr, table.vocab td{display:block;width:100%;}
+    table.vocab tr{
+      background:#fff;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,.06);
+      margin-bottom:10px;padding:10px 12px;border-bottom:none;position:relative;
+    }
+    table.vocab td{border:none;padding:3px 0;}
+    table.vocab td:first-child{position:absolute;top:10px;right:10px;padding:0;}
+    table.vocab td:nth-child(2){font-size:2rem;padding-right:50px;width:auto;}
+    table.vocab td:nth-child(4){font-size:.88rem;color:var(--gray);}
+    .flashcard{width:100%;max-width:320px;height:200px;}
+    .hz-stage{flex-direction:column;align-items:center;}
+    #hanzi-target{width:220px !important;height:220px !important;}
+    .hz-picker{justify-content:center;}
+  }
+
+  /* Chế độ trình chiếu (giáo viên) — phóng to toàn bộ nội dung cho máy chiếu */
+  body.present .main{zoom:1.35;}
+  body.present .mobile-bar{display:none;}
+  body.present .topbar{display:none;}
+  body.present .goals-card{display:none;}
+  body.present .xp-box{background:none;box-shadow:none;padding:0;margin-bottom:14px;color:var(--ink);}
+  body.present .xp-box .lvl-row,
+  body.present .xp-box .xp-bar-bg{display:none;}
+  body.present .xp-box .streak-row{
+    justify-content:center;font-family:'Baloo 2';font-weight:700;font-size:1.15rem;
+    color:var(--red-dark);margin-top:0;
+  }
+  #present-exit-btn{
+    display:none;position:fixed;top:14px;right:14px;z-index:2000;
+    font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.85rem;
+    background:var(--red-dark);color:#fff;border:none;border-radius:999px;
+    padding:10px 18px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3);
+  }
+  #present-exit-btn:hover{filter:brightness(1.1);}
+  body.present #present-exit-btn{display:block;}
+  .present-toggle{
+    font-family:'Baloo 2';font-weight:700;background:var(--white);border:2px solid var(--cream-2);
+    color:var(--red-dark);border-radius:999px;padding:8px 16px;cursor:pointer;font-size:.85rem;
+    display:inline-flex;align-items:center;gap:6px;transition:.15s;
+  }
+  .present-toggle.active{background:var(--red);color:#fff;border-color:var(--red);}
+  /* Bài 6: tab nhỏ trong Bài tập + bảng giờ/số + bài tập */
+  .subtabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+  .subtab-btn{font-family:'Baloo 2',sans-serif;font-weight:700;background:var(--white);border:2px solid var(--cream-2);color:var(--red-dark);padding:8px 14px;border-radius:12px;cursor:pointer;font-size:.88rem;transition:.15s;}
+  .subtab-btn.active{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;border-color:var(--accent);box-shadow:var(--shadow);}
+  .sub-panel{display:none;} .sub-panel.active{display:block;animation:fade .3s;}
+  .time-table{width:100%;border-collapse:collapse;margin:14px 0 18px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+  .time-table th{background:var(--cream-2);color:var(--red-dark);font-family:'Baloo 2';padding:8px 12px;text-align:left;font-size:.85rem;}
+  .time-table td{padding:9px 12px;border-bottom:1px solid var(--cream-2);font-size:1.05rem;}
+  .time-table td:first-child{font-family:'Baloo 2';font-weight:700;color:var(--accent-dark);white-space:nowrap;width:1%;}
+  .num-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;}
+  .num-tile{background:#fff;border:2px solid var(--cream-2);border-radius:14px;padding:12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+  .num-n{font-family:'Baloo 2';font-size:2.2rem;font-weight:800;color:var(--red-dark);margin-bottom:6px;}
+  .fx-item{margin-bottom:18px;padding-bottom:14px;border-bottom:1px dashed var(--cream-2);}
+  .fx-item:last-child{border-bottom:none;}
+  input.ans-in{width:100%;max-width:460px;border:2px solid var(--cream-2);border-radius:12px;padding:9px 12px;font-size:1.1rem;margin:0 8px 8px 0;transition:.15s;}
+  input.ans-in:focus{outline:none;border-color:var(--red-light);box-shadow:0 0 0 3px rgba(217,138,128,.2);}
+  input.ans-in.ok{border-color:var(--green);background:var(--green-bg);}
+  input.ans-in.bad{border-color:var(--error);background:var(--error-bg);}
+  u.ul-part{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px;color:var(--red-dark);font-weight:700;}
+  .sub-hint{font-size:.95rem;color:var(--gray);font-family:'Be Vietnam Pro';}
+  .wrong-s{color:var(--error);}
+  .passage{background:var(--cream);border-left:5px solid var(--red-light);border-radius:12px;padding:14px 16px;font-size:1.2rem;line-height:2.3;}
+  .cz-n{font-size:.65rem;color:var(--gray);margin:0 2px;}
+  /* Bài 9: bài tập nghe, hình món hàng, giá tiền */
+  .subtabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+  .subtab-btn{font-family:'Baloo 2',sans-serif;font-weight:700;background:var(--white);border:2px solid var(--cream-2);color:var(--red-dark);padding:8px 14px;border-radius:12px;cursor:pointer;font-size:.88rem;transition:.15s;}
+  .subtab-btn.active{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;border-color:var(--accent);box-shadow:var(--shadow);}
+  .sub-panel{display:none;} .sub-panel.active{display:block;animation:fade .3s;}
+  input.ans-in{width:100%;max-width:460px;border:2px solid var(--cream-2);border-radius:12px;padding:9px 12px;font-size:1.1rem;margin:0 8px 8px 0;transition:.15s;}
+  input.ans-in:focus{outline:none;border-color:var(--red-light);box-shadow:0 0 0 3px rgba(217,138,128,.2);}
+  input.ans-in.ok{border-color:var(--green);background:var(--green-bg);}
+  input.ans-in.bad{border-color:var(--error);background:var(--error-bg);}
+  input.blank-in{width:110px;border:none;border-bottom:2px solid var(--red);background:var(--cream);padding:3px 6px;font-size:1.1rem;text-align:center;color:var(--red-dark);font-weight:700;border-radius:6px 6px 0 0;margin:0 4px;}
+  input.blank-in:focus{outline:none;background:#fff;}
+  input.blank-in.ok{border-bottom-color:var(--green);background:var(--green-bg);color:var(--green);}
+  input.blank-in.bad{border-bottom-color:var(--error);background:var(--error-bg);color:var(--error);}
+  u.ul-part{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px;color:var(--red-dark);font-weight:700;}
+  .wrong-s{color:var(--error);}
+  .passage{background:var(--cream);border-left:5px solid var(--red-light);border-radius:12px;padding:14px 16px;font-size:1.2rem;line-height:2.1;}
+  audio.ex-audio{width:100%;max-width:520px;margin:0 0 16px;display:block;}
+  .pic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;margin-bottom:14px;}
+  .pic-tile{background:#fff;border:2px solid var(--cream-2);border-radius:16px;padding:12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+  .pic-num{font-family:'Baloo 2';font-weight:700;color:var(--gray);font-size:.8rem;text-align:left;}
+  .pic-emoji{font-size:3.6rem;line-height:1.15;}
+  .pic-name{font-weight:700;font-size:1.05rem;color:var(--red-dark);}
+  .pic-name small{display:block;font-weight:400;font-size:.75rem;color:var(--accent-dark);}
+  .pic-tile input.ans-in{max-width:100%;margin:8px 0 4px;font-size:1rem;text-align:center;}
+  .price-tag{display:inline-block;background:var(--accent-light);border:2px solid var(--accent);border-radius:6px;padding:3px 14px;font-weight:800;font-family:'Baloo 2';font-size:1.05rem;color:#7a4d05;margin-top:6px;}
+  .pic-tile .reveal-box{text-align:left;}
+  .script-box{background:var(--cream);border-left:4px solid var(--red-light);border-radius:10px;padding:10px 14px;margin:8px 0 12px;display:none;font-size:1.05rem;line-height:1.9;}
+  .script-box.show{display:block;}
+  .qa-ta{width:100%;max-width:560px;}
+
+  /* Pinyin: font hỗ trợ đủ dấu thanh (ǎ ǐ ǒ ǔ ě…) + cỡ chữ lớn hơn */
+  .pinyin,.dlg-py,.gp-ex-py,.mc-py,.pic-name small,.hz-info #hz-pinyin,td.pinyin,.gp-key .pinyin{
+    font-family:'Noto Sans','Segoe UI','Helvetica Neue',Arial,sans-serif !important;
+    font-variant-ligatures:none;letter-spacing:.2px;
+  }
+  td.pinyin{font-size:1.15rem;}
+  .dlg-py{font-size:1.05rem;}
+  .gp-ex-py{font-size:1rem;}
+  .gp-key .pinyin{font-size:1.05rem !important;}
+  .fc-back .pinyin{font-size:1.7rem;}
+  .mc-opt .mc-py{font-size:.92rem;}
+  .pic-name small{font-size:.92rem;}
+  .hz-info #hz-pinyin{font-size:1.25rem;}
+  #listen9-container .pinyin{font-size:.98rem !important;}
+</style>
+</head>
+<body>
+<audio id="audio-tuvung" src="tuvung9.mp3" preload="auto"></audio>
+<audio id="audio-baikhoa1" src="baikhoa9_1.mp3" preload="auto"></audio>
+<audio id="audio-baikhoa2" src="baikhoa9_2.mp3" preload="auto"></audio>
+<button id="present-exit-btn" onclick="togglePresent()" aria-label="Thoát chế độ trình chiếu">✕ Thoát trình chiếu</button>
+<div class="app">
+  <div class="main">
+    <div class="mobile-bar">
+      <strong style="font-family:'Baloo 2';color:var(--red);">HoaiphuongHSK · Boya SC1 · Bài 9</strong>
+      <button class="icon-btn" id="present-toggle-mobile" aria-label="Chế độ trình chiếu">🖥</button>
+    </div>
+    <div class="topbar">
+      <div class="topbar-brand">🐼 HoaiphuongHSK · Boya Chinese Sơ cấp 1</div>
+      <h2>Bài 9 · 多少钱一瓶 (Một chai bao nhiêu tiền)</h2>
+      <div class="desc">2 hội thoại: David mua bia và nước · Mary mua từ điển</div>
+      <div class="topbar-actions">
+        <button class="present-toggle" id="present-toggle-desktop">🖥 Chế độ trình chiếu</button>
+        <div class="badge-row" id="badge-row"></div>
+      </div>
+    </div>
+
+    <div class="goals-card">
+      <div class="goals-head">🎯 <span class="hanzi">目标</span> Mục tiêu</div>
+      <label class="goal-item"><input type="checkbox"><span><span class="hanzi">掌握“几”和“多少”的区别（2）。</span>Phân biệt “几” (hỏi số lượng dưới 10) và “多少” (hỏi số lượng trên 10).</span></label>
+      <label class="goal-item"><input type="checkbox"><span><span class="hanzi">掌握“二”和“两”的用法。</span>Nắm cách dùng “二” và “两”.</span></label>
+      <label class="goal-item"><input type="checkbox"><span><span class="hanzi">掌握常用量词。</span>Nắm các lượng từ thông dụng.</span></label>
+      <label class="goal-item"><input type="checkbox"><span><span class="hanzi">掌握人民币钱数表达法。</span>Nắm cách đọc và nói số tiền Nhân dân tệ.</span></label>
+      <label class="goal-item"><input type="checkbox"><span><span class="hanzi">能用汉语买东西、问价钱。</span>Có thể mua đồ và hỏi giá bằng tiếng Trung.</span></label>
+    </div>
+
+    <div class="xp-box" style="margin-bottom:18px;">
+      <div class="lvl-row"><span id="lvl-label">Cấp 1 🌱</span><span id="xp-label">0 XP</span></div>
+      <div class="xp-bar-bg"><div class="xp-bar-fill" id="xp-bar"></div></div>
+      <div class="streak-row"><span class="streak-flame">🔥</span><span id="streak-label">Chuỗi đúng: 0</span></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="vocab">📖 Từ vựng</button>
+      <button class="tab-btn" data-tab="flash">🃏 Flashcard</button>
+      <button class="tab-btn" data-tab="dialogue">💬 Bài khoá</button>
+      <button class="tab-btn" data-tab="grammar">📐 Ngữ pháp</button>
+      <button class="tab-btn" data-tab="write">📝 Bài tập</button>
+      <button class="tab-btn" data-tab="hanzi">字 Chữ Hán</button>
+    </div>
+
+    <!-- ================= TAB TỪ VỰNG ================= -->
+    <div class="panel active" id="panel-vocab">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+        <button class="btn secondary" id="vocab-py-toggle" onclick="toggleVocabPinyin()">🙈 Ẩn phiên âm</button>
+      </div>
+      <div class="card">
+        <table class="vocab">
+          <thead><tr><th></th><th>Chữ Hán</th><th>Pinyin</th><th>Từ loại</th><th>Nghĩa</th></tr></thead>
+          <tbody id="vocab-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ================= TAB BÀI KHOÁ (HỘI THOẠI) ================= -->
+    <div class="panel" id="panel-dialogue">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+        <button class="btn secondary" id="dialogue-py-toggle" onclick="toggleDialoguePinyin()">🙈 Ẩn phiên âm</button>
+      </div>
+      <div id="dialogue-container"></div>
+      <div class="ex-sub" style="margin-top:-6px;">🔊 Bấm "Nghe cả đoạn" để nghe trọn hội thoại bằng audio gốc Boya — bấm lại để tạm dừng, bấm tiếp để nghe tiếp từ chỗ đã dừng.</div>
+    </div>
+
+    <!-- ================= TAB NGỮ PHÁP ================= -->
+    <div class="panel" id="panel-grammar">
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+        <button class="btn secondary" id="grammar-py-toggle" onclick="toggleGrammarPinyin()">🙈 Ẩn pinyin</button>
+        <button class="btn secondary" id="grammar-vi-toggle" onclick="toggleGrammarVi()">🙈 Ẩn nghĩa</button>
+      </div>
+      <div id="grammar-container"></div>
+    </div>
+
+    <!-- ================= TAB FLASHCARD ================= -->
+    <div class="panel" id="panel-flash">
+      <div class="card fc-wrap">
+        <div class="fc-progress" id="fc-progress">1 / 12</div>
+        <div class="fc-stars">⭐ Đã thuộc: <span id="fc-known-count">0</span>/<span id="fc-total">31</span></div>
+        <div class="flashcard" id="flashcard">
+          <div class="fc-inner">
+            <div class="fc-face fc-front"><div class="hz" id="fc-hz"></div><div class="hint">👆 Nhấp để lật thẻ</div></div>
+            <div class="fc-face fc-back">
+              <div class="pinyin" id="fc-pinyin"></div>
+              <div class="mean" id="fc-mean"></div>
+            </div>
+          </div>
+        </div>
+        <div class="fc-controls">
+          <button class="btn secondary" onclick="fcPrev()">◀ Trước</button>
+          <button class="btn secondary" onclick="flipCard()">🔄 Lật thẻ</button>
+          <button class="btn" onclick="fcNext()">Sau ▶</button>
+        </div>
+        <div class="fc-controls">
+          <button class="btn gold" onclick="fcKnown(true)">✅ Đã thuộc</button>
+          <button class="btn secondary" onclick="fcKnown(false)">🔁 Ôn lại</button>
+        </div>
+        <div class="fc-controls">
+          <button class="btn secondary" id="fc-shuffle-btn" onclick="toggleShuffleFC()">🔀 Trộn thẻ</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB LUYỆN VIẾT CÂU ================= -->
+    <div class="panel" id="panel-write">
+      <div class="score-box"><span class="star">⭐</span> Điểm: <span id="total-score">0</span> / <span id="total-max">0</span></div>
+
+      <div class="subtabs">
+        <button class="subtab-btn active" data-sub="mc">1 · 🎯 Chọn đáp án</button>
+        <button class="subtab-btn" data-sub="price">2 · 🎧 Nghe viết giá</button>
+        <button class="subtab-btn" data-sub="fill">3 · 🎧 Nghe điền từ</button>
+        <button class="subtab-btn" data-sub="ask">4 · ❓ Đặt câu hỏi</button>
+        <button class="subtab-btn" data-sub="listen">5 · 👂 Nghe chọn đáp án</button>
+        <button class="subtab-btn" data-sub="read">6 · 📖 Đọc hiểu</button>
+        <button class="subtab-btn" data-sub="say">7 · 💰 Đọc giá tiền</button>
+      </div>
+
+      <div class="card ex-block sub-panel active" id="sub-mc">
+        <div class="ex-title">Bài 1 · Chọn đáp án đúng</div>
+        <div class="ex-sub">Chọn từ thích hợp điền vào chỗ trống.</div>
+        <div id="mc-container"></div>
+      </div>
+
+      <div class="card ex-block sub-panel" id="sub-price">
+        <div class="ex-title">Bài 2 · 听录音，写价钱 — Nghe và viết giá tiền</div>
+        <div class="ex-sub">Nghe ghi âm (nghe nhiều lần được), viết giá tiền cạnh mỗi món. Viết bằng chữ Hán (VD: 三块二) hoặc bằng số (VD: 3.2) đều được.</div>
+        <audio class="ex-audio" controls preload="auto" src="10-4.mp3"></audio>
+        <div id="price-container" class="pic-grid"></div>
+        <button class="btn btn-check" onclick="checkPrice()">Kiểm tra</button>
+        <span id="price-result"></span>
+      </div>
+
+      <div class="card ex-block sub-panel" id="sub-fill">
+        <div class="ex-title">Bài 3 · 听录音，填空 — Nghe và điền vào chỗ trống</div>
+        <div class="ex-sub">Có thể viết chữ Hán hoặc pinyin (không cần ghi dấu thanh cũng được).</div>
+        <audio class="ex-audio" controls preload="auto" src="10-6.mp3"></audio>
+        <div id="fill9-container"></div>
+        <button class="btn btn-check" onclick="checkFill9()">Kiểm tra</button>
+        <span id="fill9-result"></span>
+      </div>
+
+      <div class="card ex-block sub-panel" id="sub-ask">
+        <div class="ex-title">Bài 4 · Đặt câu hỏi cho phần gạch chân</div>
+        <div class="ex-sub">Viết lại cả câu hỏi (dùng 多少、什么、哪儿、谁、几、怎么…).</div>
+        <div id="ask-container"></div>
+      </div>
+
+      <div class="card ex-block sub-panel" id="sub-listen">
+        <div class="ex-title">Bài 5 · Nghe hội thoại, chọn đáp án đúng</div>
+        <div class="ex-sub">Nghe từng đoạn ghi âm rồi trả lời câu hỏi. Bấm "Xem lời thoại" để đối chiếu sau khi làm xong.</div>
+        <div id="listen9-container"></div>
+      </div>
+
+      <div class="card ex-block sub-panel" id="sub-read">
+        <div class="ex-title">Bài 6 · Đọc đoạn văn</div>
+        <div class="passage hanzi" id="tf-passage" style="margin-bottom:16px;"></div>
+        <div class="ex-title" style="font-size:.98rem;">A. Phán đoán đúng sai</div>
+        <div id="tf-container"></div>
+        <div class="ex-title" style="font-size:.98rem;margin-top:10px;">B. Trả lời câu hỏi</div>
+        <div class="ex-sub">Viết câu trả lời, bấm "Hiện đáp án" để đối chiếu rồi tự chấm.</div>
+        <div id="qa-container"></div>
+      </div>
+
+      <div class="card ex-block sub-panel" id="sub-say">
+        <div class="ex-title">Bài 7 · 读出价钱 — Đọc giá tiền</div>
+        <div class="ex-sub">Nhìn hình, đọc to giá tiền bằng tiếng Trung (khẩu ngữ: 块、毛、分), rồi bấm "Hiện cách đọc" để đối chiếu.</div>
+        <div id="say-container" class="pic-grid"></div>
+      </div>
+    </div>
+
+    
+<!-- ================= TAB CHỮ HÁN ================= -->
+    <div class="panel" id="panel-hanzi">
+      <div class="card">
+        <div class="hz-picker" id="hz-picker"></div>
+        <div class="hz-stage">
+          <div>
+            <div id="hanzi-target" style="width:260px;height:260px;"></div>
+            <div class="hz-actions">
+              <button class="btn secondary" onclick="hzAnimate()">▶ Xem thứ tự nét</button>
+              <button class="btn secondary" onclick="hzQuiz()">✍️ Tự viết (đố nét)</button>
+              <button class="btn secondary" onclick="hzOutline()">🖊 Tô nét mờ</button>
+            </div>
+          </div>
+          <div class="hz-info">
+            <div class="row"><div class="label">Pinyin</div><div class="val" id="hz-pinyin"></div></div>
+            <div class="row"><div class="label">Bộ thủ</div><div class="val" id="hz-radical"></div></div>
+            <div class="row"><div class="label">Số nét</div><div class="val" id="hz-strokes"></div></div>
+            <div class="row"><div class="label">Nghĩa</div><div class="val" id="hz-mean"></div></div>
+            <div class="row"><div class="label">Mẹo nhớ</div><div class="val" id="hz-tip"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<canvas id="confetti-canvas"></canvas>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ DỮ LIỆU BÀI 9 (Boya Sơ cấp 1 - 《多少钱一瓶》) ============ */
+const VOCAB = [
+  {hz:"师傅", py:"shīfu", pos:"dt.", mean:"sư phụ, bác thợ (cách gọi người làm nghề dịch vụ)"},
+  {hz:"买", py:"mǎi", pos:"đgt.", mean:"mua"},
+  {hz:"啤酒", py:"píjiǔ", pos:"dt.", mean:"bia"},
+  {hz:"售货员", py:"shòuhuòyuán", pos:"dt.", mean:"nhân viên bán hàng"},
+  {hz:"瓶", py:"píng", pos:"dt.", mean:"chai, bình"},
+  {hz:"钱", py:"qián", pos:"dt.", mean:"tiền"},
+  {hz:"块", py:"kuài", pos:"lượng từ", mean:"đồng (khẩu ngữ của 元, đơn vị tiền tệ cơ bản của Trung Quốc)"},
+  {hz:"两", py:"liǎng", pos:"số từ", mean:"hai (của một vật nào đó)"},
+  {hz:"再", py:"zài", pos:"phó.", mean:"lại, nữa, thêm"},
+  {hz:"水", py:"shuǐ", pos:"dt.", mean:"nước"},
+  {hz:"一共", py:"yígòng", pos:"phó.", mean:"tổng cộng, tất cả"},
+  {hz:"毛", py:"máo", pos:"lượng từ", mean:"hào (khẩu ngữ, = 1/10 đồng)"},
+  {hz:"给", py:"gěi", pos:"đgt.", mean:"đưa, cho"},
+  {hz:"小姐", py:"xiǎojie", pos:"dt.", mean:"cô, chị (cách gọi lịch sự phụ nữ trẻ)"},
+  {hz:"看", py:"kàn", pos:"đgt.", mean:"nhìn, xem"},
+  {hz:"这些", py:"zhèxiē", pos:"đt.", mean:"những cái này"},
+  {hz:"要", py:"yào", pos:"đgt.", mean:"muốn, cần (lấy một thứ gì đó)"},
+  {hz:"本", py:"běn", pos:"lượng từ", mean:"quyển, cuốn (dùng cho sách vở đóng thành tập)"},
+  {hz:"小", py:"xiǎo", pos:"tt.", mean:"nhỏ"},
+  {hz:"零钱", py:"língqián", pos:"dt.", mean:"tiền lẻ"},
+  /* --- Từ bổ sung (xuất hiện trong phần Bài tập, ngoài danh sách từ mới của sách) --- */
+  {hz:"西瓜", py:"xīguā", pos:"dt.", mean:"dưa hấu · từ bổ sung"},
+  {hz:"苹果", py:"píngguǒ", pos:"dt.", mean:"táo · từ bổ sung"},
+  {hz:"香蕉", py:"xiāngjiāo", pos:"dt.", mean:"chuối · từ bổ sung"},
+  {hz:"面包", py:"miànbāo", pos:"dt.", mean:"bánh mì · từ bổ sung"},
+  {hz:"付", py:"fù", pos:"đgt.", mean:"trả (tiền) · từ bổ sung"},
+  {hz:"付钱", py:"fù qián", pos:"cụm từ", mean:"trả tiền · từ bổ sung"},
+  {hz:"现金", py:"xiànjīn", pos:"dt.", mean:"tiền mặt · từ bổ sung"},
+  {hz:"刷卡", py:"shuā kǎ", pos:"cụm từ", mean:"quẹt thẻ, thanh toán bằng thẻ · từ bổ sung"},
+  {hz:"扫", py:"sǎo", pos:"đgt.", mean:"quét · từ bổ sung"},
+  {hz:"扫码", py:"sǎo mǎ", pos:"cụm từ", mean:"quét mã (QR) · từ bổ sung"},
+  {hz:"斤", py:"jīn", pos:"lượng từ", mean:"cân (1 斤 = 500g) · từ bổ sung"}
+];
+
+/* Chữ MỚI trong phần Từ mới (đã bỏ 零 — có ở Bài 6; 一 — đã học trước) */
+const HANZI_LIST = [
+  {char:"师", py:"shī", radical:"巾(cân)", strokes:6, mean:"thầy; người có nghề", tip:"Gặp trong 师傅 (bác thợ / sư phụ) — cách gọi người làm nghề dịch vụ."},
+  {char:"傅", py:"fù", radical:"亻(nhân)", strokes:12, mean:"thầy, người dạy nghề", tip:"Thường đi cặp với 师: 师傅 shīfu. Ở trình độ sơ cấp hầu như chỉ gặp trong từ này."},
+  {char:"买", py:"mǎi", radical:"乙(ất)", strokes:6, mean:"mua", tip:"Đối lập với 卖 (bán). 我买啤酒 = tôi mua bia."},
+  {char:"啤", py:"pí", radical:"口(khẩu)", strokes:11, mean:"(trong 啤酒) bia", tip:"Chỉ dùng trong 啤酒 (bia): 口 + 卑 (gợi âm)."},
+  {char:"酒", py:"jiǔ", radical:"酉(dậu)", strokes:10, mean:"rượu", tip:"氵(nước) + 酉(vò rượu) — chất lỏng đựng trong vò. 啤酒 = bia."},
+  {char:"售", py:"shòu", radical:"口(khẩu)", strokes:11, mean:"bán", tip:"Trong 售货员 = người bán hàng."},
+  {char:"货", py:"huò", radical:"贝(bối)", strokes:8, mean:"hàng hoá", tip:"贝(vỏ sò — tiền thời xưa) + 化: liên quan buôn bán. 售货员 = nhân viên bán hàng."},
+  {char:"员", py:"yuán", radical:"口(khẩu)", strokes:7, mean:"nhân viên, thành viên", tip:"Hậu tố chỉ người làm một công việc: 售货员, 服务员."},
+  {char:"瓶", py:"píng", radical:"瓦(ngõa)", strokes:10, mean:"chai, bình", tip:"瓦(đồ gốm) — chai lọ ngày xưa làm bằng gốm. 一瓶水 = một chai nước."},
+  {char:"钱", py:"qián", radical:"钅(kim)", strokes:10, mean:"tiền", tip:"钅(kim loại) — tiền xưa bằng kim loại. 多少钱 = bao nhiêu tiền."},
+  {char:"块", py:"kuài", radical:"土(thổ)", strokes:7, mean:"đồng (tiền); cục, miếng", tip:"Nghĩa gốc là 'cục đất'. Khẩu ngữ dùng như 元: 三块五 = 3,5 đồng."},
+  {char:"两", py:"liǎng", radical:"一(nhất)", strokes:7, mean:"hai (trước lượng từ)", tip:"Dùng trước lượng từ: 两瓶, 两块, 两本. Số 22 vẫn nói 二十二."},
+  {char:"再", py:"zài", radical:"冂(quynh)", strokes:6, mean:"lại, nữa", tip:"再买两瓶水 = mua thêm hai chai nước. Dùng cho hành động sẽ lặp lại/tiếp tục."},
+  {char:"水", py:"shuǐ", radical:"水(thuỷ)", strokes:4, mean:"nước", tip:"Hình dòng nước chảy. 两瓶水 = hai chai nước."},
+  {char:"共", py:"gòng", radical:"八(bát)", strokes:6, mean:"cùng, tổng cộng", tip:"一共 = tổng cộng. 一共是九块四毛钱。"},
+  {char:"毛", py:"máo", radical:"毛(mao)", strokes:4, mean:"lông; hào (1/10 đồng)", tip:"Khẩu ngữ: 毛 = 角 (hào). 九块四毛 = 9 đồng 4 hào."},
+  {char:"给", py:"gěi", radical:"纟(mịch)", strokes:9, mean:"đưa, cho", tip:"给你钱 = đưa tiền cho bạn."},
+  {char:"小", py:"xiǎo", radical:"小(tiểu)", strokes:3, mean:"nhỏ", tip:"小词典 = từ điển cỡ nhỏ; 零钱 là 'tiền nhỏ lẻ'."},
+  {char:"姐", py:"jiě", radical:"女(nữ)", strokes:8, mean:"chị", tip:"小姐 xiǎojie = cô/chị (cách gọi lịch sự phụ nữ trẻ)."},
+  {char:"看", py:"kàn", radical:"目(mục)", strokes:9, mean:"nhìn, xem", tip:"Hình bàn tay đưa lên che trên mắt để nhìn xa. 你看 = bạn xem."},
+  {char:"些", py:"xiē", radical:"二(nhị)", strokes:8, mean:"một số, những", tip:"这些 = những cái này (số nhiều của 这)."},
+  {char:"要", py:"yào", radical:"襾(á)", strokes:9, mean:"muốn, cần, lấy", tip:"我要这本小词典 = tôi lấy quyển từ điển nhỏ này."},
+  {char:"本", py:"běn", radical:"木(mộc)", strokes:5, mean:"quyển (lượng từ cho sách); gốc", tip:"木 + một nét ở gốc → 'gốc cây'; mở rộng thành lượng từ sách: 一本词典."},
+  /* --- Chữ của từ bổ sung --- */
+  {char:"西", py:"xī", radical:"襾(á)", strokes:6, mean:"phía tây", tip:"Trong 西瓜 (dưa hấu — dưa từ phương Tây truyền vào)."},
+  {char:"瓜", py:"guā", radical:"瓜(qua)", strokes:5, mean:"dưa, bầu bí", tip:"Hình dây leo có quả lủng lẳng. 西瓜 = dưa hấu."},
+  {char:"苹", py:"píng", radical:"艹(thảo)", strokes:8, mean:"(trong 苹果) táo", tip:"艹(cỏ cây) + 平 (gợi âm). Chỉ dùng trong 苹果."},
+  {char:"果", py:"guǒ", radical:"木(mộc)", strokes:8, mean:"quả, trái cây", tip:"Hình quả trên cây (木). 苹果 = táo."},
+  {char:"香", py:"xiāng", radical:"香(hương)", strokes:9, mean:"thơm", tip:"禾(lúa) + 日: mùi thơm của lúa chín. 香蕉 = chuối."},
+  {char:"蕉", py:"jiāo", radical:"艹(thảo)", strokes:15, mean:"(trong 香蕉) chuối", tip:"艹(cỏ cây) + 焦 (gợi âm). Chỉ dùng trong 香蕉."},
+  {char:"面", py:"miàn", radical:"面(diện)", strokes:9, mean:"mặt; bột mì, mì", tip:"Trong 面包 = bánh mì (bột mì + bọc nướng)."},
+  {char:"包", py:"bāo", radical:"勹(bao)", strokes:5, mean:"bọc, gói; bánh bao", tip:"勹(bao bọc) + 巳: ôm bọc lại. 面包 = bánh mì."},
+  {char:"付", py:"fù", radical:"亻(nhân)", strokes:5, mean:"trả (tiền); giao", tip:"亻(người) + 寸(tay): người đưa tiền/đồ ra. 付钱 = trả tiền."},
+  {char:"金", py:"jīn", radical:"金(kim)", strokes:8, mean:"vàng; kim loại; tiền", tip:"Hình quặng vàng dưới lòng đất. 现金 = tiền mặt."},
+  {char:"刷", py:"shuā", radical:"刂(đao)", strokes:8, mean:"chải, quẹt, cọ", tip:"Nghĩa gốc là cái bàn chải. 刷卡 = quẹt thẻ."},
+  {char:"卡", py:"kǎ", radical:"卜(bốc)", strokes:5, mean:"thẻ (card)", tip:"Từ mượn âm 'card'. 刷卡 = quẹt thẻ."},
+  {char:"扫", py:"sǎo", radical:"扌(thủ)", strokes:6, mean:"quét", tip:"扌(tay) + 帚 (cái chổi) rút gọn: tay cầm chổi quét. 扫码 = quét mã."},
+  {char:"码", py:"mǎ", radical:"石(thạch)", strokes:8, mean:"mã, con số", tip:"石 + 马 (gợi âm). 扫码 = quét mã QR."},
+  {char:"斤", py:"jīn", radical:"斤(cân)", strokes:4, mean:"cân (500g)", tip:"Hình cái rìu — sau mượn làm đơn vị cân. 一斤 = 500g."}
+];
+
+/* ============ GAME HOÁ: XP / STREAK / BADGE / CONFETTI / ÂM THANH ============ */
+const GAME = { xp:0, streak:0, bestStreak:0, level:1, badges:{} };
+const BADGES = [
+  {id:'mc', label:'🎯 Chọn đáp án'},
+  {id:'price', label:'💰 Giá tiền'},
+  {id:'fill', label:'🎧 Điền từ'},
+  {id:'ask', label:'❓ Đặt câu hỏi'},
+  {id:'listen', label:'👂 Nghe hiểu'},
+  {id:'read', label:'📖 Đọc hiểu'},
+  {id:'say', label:'🗣 Đọc giá'},
+  {id:'streak5', label:'🔥 Chuỗi 5'},
+  {id:'hanzi', label:'字 Viết chữ'}
+];
+function renderBadges(){
+  const row = document.getElementById('badge-row');
+  row.innerHTML = BADGES.map(b=>`<span class="badge-pill ${GAME.badges[b.id]?'earned':''}">${b.label}</span>`).join('');
+}
+renderBadges();
+function unlockBadge(id){
+  if(!GAME.badges[id]){ GAME.badges[id]=true; renderBadges(); showToast('🏅 Mở khoá huy hiệu mới!','gold'); }
+}
+function updateXpBar(){
+  const needed = GAME.level*50;
+  document.getElementById('xp-label').textContent = GAME.xp+' XP';
+  document.getElementById('lvl-label').textContent = 'Cấp '+GAME.level+' '+(GAME.level<3?'🌱':GAME.level<6?'🌿':'🌳');
+  document.getElementById('xp-bar').style.width = Math.min(100,(GAME.xp % needed)/needed*100)+'%';
+  document.getElementById('streak-label').textContent = 'Chuỗi đúng: '+GAME.streak;
+}
+function gainXp(n, correct){
+  if(correct){
+    GAME.streak++; GAME.bestStreak = Math.max(GAME.bestStreak,GAME.streak);
+    if(GAME.streak>=5) unlockBadge('streak5');
+  } else {
+    GAME.streak = 0;
+  }
+  GAME.xp += n;
+  const needed = GAME.level*50;
+  if(GAME.xp >= GAME.level*50 + (GAME.level-1)*0){/*noop*/}
+  while(GAME.xp >= levelThreshold(GAME.level)){ GAME.level++; showToast('🎉 Lên cấp '+GAME.level+'!','gold'); }
+  updateXpBar();
+}
+function levelThreshold(lvl){ let t=0; for(let i=1;i<=lvl;i++) t+=i*50; return t; }
+function showToast(msg, kind){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show'+(kind==='gold'?' gold':'');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=>{ t.classList.remove('show'); }, 1800);
+}
+function floatPoints(x,y,text){
+  const el = document.createElement('div');
+  el.className = 'float-pts'; el.textContent = text;
+  el.style.left = x+'px'; el.style.top = y+'px';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1000);
+}
+/* âm thanh đơn giản bằng Web Audio API (không cần file mp3) */
+let audioCtx;
+function beep(freqs, dur){
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    freqs.forEach((f,i)=>{
+      const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+      o.type='sine'; o.frequency.value=f;
+      o.connect(g); g.connect(audioCtx.destination);
+      const start = audioCtx.currentTime + i*dur;
+      g.gain.setValueAtTime(0.001,start);
+      g.gain.exponentialRampToValueAtTime(0.18,start+0.02);
+      g.gain.exponentialRampToValueAtTime(0.001,start+dur);
+      o.start(start); o.stop(start+dur);
+    });
+  }catch(e){}
+}
+function soundCorrect(){ beep([523,659,784],0.11); }
+function soundWrong(){ beep([220,180],0.14); }
+function soundLevelUp(){ beep([523,659,784,1046],0.13); }
+
+/* confetti canvas đơn giản */
+const cvs = document.getElementById('confetti-canvas');
+const ctx = cvs.getContext('2d');
+function resizeCanvas(){ cvs.width = innerWidth; cvs.height = innerHeight; }
+resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+const COLORS = ['#D98A80','#E0A85C','#E8B86B','#9B85C9','#4FAE82','#F0B8AE'];
+let confettiParticles = [];
+function fireConfetti(x,y,count){
+  count = count || 60;
+  x = x !== undefined ? x : cvs.width/2;
+  y = y !== undefined ? y : cvs.height/3;
+  for(let i=0;i<count;i++){
+    confettiParticles.push({
+      x, y,
+      vx:(Math.random()-0.5)*9,
+      vy:Math.random()*-9-3,
+      g:0.28,
+      size:4+Math.random()*4,
+      color:COLORS[Math.floor(Math.random()*COLORS.length)],
+      rot:Math.random()*360,
+      vr:(Math.random()-0.5)*12,
+      life:0, maxLife:70+Math.random()*30
+    });
+  }
+  if(!window._confettiLoop){ window._confettiLoop = true; requestAnimationFrame(confettiTick); }
+}
+function confettiTick(){
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  confettiParticles.forEach(p=>{
+    p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life++;
+    ctx.save();
+    ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = Math.max(0, 1 - p.life/p.maxLife);
+    ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*0.6);
+    ctx.restore();
+  });
+  confettiParticles = confettiParticles.filter(p=>p.life < p.maxLife);
+  if(confettiParticles.length){ requestAnimationFrame(confettiTick); }
+  else { window._confettiLoop = false; ctx.clearRect(0,0,cvs.width,cvs.height); }
+}
+function celebrate(el, points){
+  soundCorrect();
+  const rect = el.getBoundingClientRect();
+  fireConfetti(rect.left+rect.width/2, rect.top+rect.height/2, 45);
+  floatPoints(rect.left+rect.width/2, rect.top, '+'+points+' XP');
+  gainXp(points, true);
+}
+function fail(el){
+  soundWrong();
+  gainXp(0, false);
+}
+updateXpBar();
+
+/* ============ CHẾ ĐỘ TRÌNH CHIẾU ============ */
+function togglePresent(){
+  document.body.classList.toggle('present');
+  const on = document.body.classList.contains('present');
+  document.getElementById('present-toggle-desktop').classList.toggle('active', on);
+  document.getElementById('present-toggle-desktop').textContent = on ? '🖥 Đang trình chiếu' : '🖥 Chế độ trình chiếu';
+  try{ localStorage.setItem('huonghsk_present', on ? '1':'0'); }catch(e){}
+}
+document.getElementById('present-toggle-desktop').addEventListener('click', togglePresent);
+document.getElementById('present-toggle-mobile')?.addEventListener('click', togglePresent);
+try{
+  if(localStorage.getItem('huonghsk_present')==='1'){ togglePresent(); }
+}catch(e){}
+
+/* ============ TABS ============ */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ============ PHÁT ÂM: AUDIO THẬT (mp3 gốc Boya) theo timestamp ============ */
+/* Từ vựng: tra theo đúng chữ Hán -> {audio: id thẻ <audio>, start, end (giây)}.
+   Bài khoá: KHÔNG dùng timestamp từng câu — chỉ phát trọn vẹn cả đoạn qua nút "Nghe cả đoạn" (xem playDialogueFull).
+   Timestamp xác định bằng silencedetect trên tuvung9.mp3 (26 mục). 北京大学 không có trong mp3 → fallback giọng máy. */
+const AUDIO_MAP = {
+  "师傅": {audio:"audio-tuvung", start:0.00, end:1.27},
+  "买": {audio:"audio-tuvung", start:2.77, end:3.55},
+  "啤酒": {audio:"audio-tuvung", start:5.03, end:6.16},
+  "售货员": {audio:"audio-tuvung", start:8.17, end:9.45},
+  "瓶": {audio:"audio-tuvung", start:11.22, end:12.04},
+  "钱": {audio:"audio-tuvung", start:13.68, end:14.57},
+  "块": {audio:"audio-tuvung", start:16.59, end:17.24},
+  "两": {audio:"audio-tuvung", start:18.70, end:19.57},
+  "再": {audio:"audio-tuvung", start:21.15, end:21.75},
+  "水": {audio:"audio-tuvung", start:23.04, end:23.98},
+  "一共": {audio:"audio-tuvung", start:25.05, end:25.85},
+  "毛": {audio:"audio-tuvung", start:27.19, end:27.94},
+  "给": {audio:"audio-tuvung", start:29.32, end:30.00},
+  "小姐": {audio:"audio-tuvung", start:31.48, end:32.36},
+  "看": {audio:"audio-tuvung", start:33.58, end:34.17},
+  "这些": {audio:"audio-tuvung", start:36.11, end:37.04},
+  "要": {audio:"audio-tuvung", start:38.55, end:39.11},
+  "本": {audio:"audio-tuvung", start:40.53, end:41.24},
+  "小": {audio:"audio-tuvung", start:42.26, end:43.13},
+  "零钱": {audio:"audio-tuvung", start:44.67, end:45.68}
+};
+let currentPlayingAudio = null;
+let currentPlayingEl = null, currentPlayingBtn = null;
+function stopAllAudio(){
+  ['audio-tuvung','audio-baikhoa1','audio-baikhoa2'].forEach(id=>{
+    const el = document.getElementById(id);
+    el.pause();
+  });
+  if(currentPlayingAudio){ clearTimeout(currentPlayingAudio); currentPlayingAudio = null; }
+  if(currentPlayingBtn){ currentPlayingBtn.textContent = '▶ Nghe cả đoạn'; currentPlayingBtn = null; }
+  currentPlayingEl = null;
+}
+/* key: chữ Hán tra trong AUDIO_MAP. dialogKey (tuỳ chọn): dùng khi 2 câu trùng chữ Hán (VD 你好！ xuất hiện 2 lần trong 1 hội thoại) */
+function playClip(key, dialogKey){
+  const entry = AUDIO_MAP[dialogKey || key];
+  if(!entry){ speak(key); return; } // fallback Web Speech API nếu không có trong audio gốc
+  stopAllAudio();
+  const el = document.getElementById(entry.audio);
+  el.currentTime = entry.start;
+  el.play();
+  currentPlayingAudio = setTimeout(()=>{ el.pause(); }, (entry.end - entry.start)*1000 + 60);
+}
+
+/* ============ PHÁT ÂM DỰ PHÒNG (Web Speech API - dùng khi không có audio gốc) ============ */
+function speak(text){
+  if(!('speechSynthesis' in window)){ alert('Trình duyệt không hỗ trợ phát âm.'); return; }
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'zh-CN';
+  u.rate = 0.85;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+
+/* ============ ẨN/HIỆN PHIÊN ÂM ============ */
+function toggleVocabPinyin(){
+  const table = document.querySelector('table.vocab');
+  const btn = document.getElementById('vocab-py-toggle');
+  const hidden = table.classList.toggle('hide-py');
+  btn.textContent = hidden ? '👁 Hiện phiên âm' : '🙈 Ẩn phiên âm';
+}
+function toggleDialoguePinyin(){
+  const container = document.getElementById('dialogue-container');
+  const btn = document.getElementById('dialogue-py-toggle');
+  const hidden = container.classList.toggle('hide-py');
+  btn.textContent = hidden ? '👁 Hiện phiên âm' : '🙈 Ẩn phiên âm';
+}
+function toggleGrammarPinyin(){
+  const container = document.getElementById('grammar-container');
+  const btn = document.getElementById('grammar-py-toggle');
+  const hidden = container.classList.toggle('hide-py');
+  btn.textContent = hidden ? '👁 Hiện pinyin' : '🙈 Ẩn pinyin';
+}
+function toggleGrammarVi(){
+  const container = document.getElementById('grammar-container');
+  const btn = document.getElementById('grammar-vi-toggle');
+  const hidden = container.classList.toggle('hide-vi');
+  btn.textContent = hidden ? '👁 Hiện nghĩa' : '🙈 Ẩn nghĩa';
+}
+
+/* ============ TAB TỪ VỰNG ============ */
+const vocabBody = document.getElementById('vocab-body');
+VOCAB.forEach(v=>{
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><button class="btn-speak" onclick="playClip('${v.hz}')">🔊</button></td>
+    <td class="hz hanzi">${v.hz}</td>
+    <td class="pinyin">${v.py}</td>
+    <td>${v.pos?`<span class="pos">${v.pos}</span>`:''}</td>
+    <td>${v.mean}</td>`;
+  vocabBody.appendChild(tr);
+});
+/* ============ TAB BÀI KHOÁ (HỘI THOẠI) ============ */
+const DLG_GROUPS = [
+  { title:"1. David mua bia và nước", audioSrc:"audio-baikhoa1", lines:[
+    {who:'male1',  name:'Dàwèi', hzName:'大卫', py:'Shīfu, wǒ mǎi píjiǔ.', hz:'师傅，我买啤酒。'},
+    {who:'seller', name:'Shòuhuòyuán', hzName:'售货员', py:'Nǐ mǎi jǐ píng?', hz:'你买几瓶？'},
+    {who:'male1',  name:'Dàwèi', hzName:'大卫', py:'Duōshao qián yì píng?', hz:'多少钱一瓶？'},
+    {who:'seller', name:'Shòuhuòyuán', hzName:'售货员', py:'Sān kuài wǔ.', hz:'三块五。'},
+    {who:'male1',  name:'Dàwèi', hzName:'大卫', py:'Wǒ mǎi liǎng píng, zài mǎi liǎng píng shuǐ.', hz:'我买两瓶，再买两瓶水。'},
+    {who:'seller', name:'Shòuhuòyuán', hzName:'售货员', py:'Liǎng píng píjiǔ qī kuài, liǎng píng shuǐ liǎng kuài sì, yígòng shì jiǔ kuài sì máo qián.', hz:'两瓶啤酒七块，两瓶水两块四，一共是九块四毛钱。'},
+    {who:'male1',  name:'Dàwèi', hzName:'大卫', py:'Gěi nǐ qián.', hz:'给你钱。'}
+  ]},
+  { title:"2. Mary mua từ điển", audioSrc:"audio-baikhoa2", lines:[
+    {who:'female1', name:'Mǎlì', hzName:'玛丽', py:'Xiǎojie, yǒu Yīng-Hàn cídiǎn ma?', hz:'小姐，有英汉词典吗？'},
+    {who:'seller',  name:'Shòuhuòyuán', hzName:'售货员', py:'Yǒu. Nǐ kàn, zhèxiē dōu shì, nǐ yào nǎ běn ne?', hz:'有。你看，这些都是，你要哪本呢？'},
+    {who:'female1', name:'Mǎlì', hzName:'玛丽', py:'Wǒ yào zhè běn xiǎo cídiǎn. Duōshao qián yì běn?', hz:'我要这本小词典。多少钱一本？'},
+    {who:'seller',  name:'Shòuhuòyuán', hzName:'售货员', py:"Èrshí'èr kuài.", hz:'二十二块。'},
+    {who:'female1', name:'Mǎlì', hzName:'玛丽', py:'Duìbuqǐ, wǒ méiyǒu língqián.', hz:'对不起，我没有零钱。'},
+    {who:'seller',  name:'Shòuhuòyuán', hzName:'售货员', py:'Méi guānxi.', hz:'没关系。'}
+  ]}
+];
+const DLG_AVATAR = {male1:'🧑', female1:'👩', seller:'🧑‍💼'};
+
+const dialogueContainer = document.getElementById('dialogue-container');
+DLG_GROUPS.forEach((grp, gi)=>{
+  const group = document.createElement('div');
+  group.className = 'dialogue-group';
+  group.innerHTML = `
+    <div class="dialogue-head">
+      <span class="dialogue-title">${grp.title}</span>
+      <button class="btn secondary btn-play-all" id="play-all-${gi}" onclick="toggleDialogueFull(${gi}, this)">▶ Nghe cả đoạn</button>
+    </div>
+    <div class="dlg-lines" id="dlg-lines-${gi}"></div>`;
+  dialogueContainer.appendChild(group);
+  const linesEl = group.querySelector(`#dlg-lines-${gi}`);
+  grp.lines.forEach(l=>{
+    const row = document.createElement('div');
+    row.className = 'dlg-line';
+    row.innerHTML = `
+      <div class="dlg-avatar-wrap">
+        <div class="dlg-avatar">${DLG_AVATAR[l.who]}</div>
+        <div class="dlg-who">${l.name}<br><span class="hz-mini hanzi">${l.hzName}</span></div>
+      </div>
+      <div class="dlg-bubble">
+        <div class="dlg-py">${l.py}</div>
+        <div class="dlg-hz hanzi">${l.hz}</div>
+      </div>`;
+    linesEl.appendChild(row);
+  });
+});
+
+/* Phát trọn vẹn 1 file mp3 hội thoại; bấm lại để Tạm dừng/Tiếp tục. Nếu chưa có file mp3 → đọc cả đoạn bằng giọng máy (tạm thời) */
+function toggleDialogueFull(idx, btn){
+  const grp = DLG_GROUPS[idx];
+  const el = document.getElementById(grp.audioSrc);
+  if(el.error || el.networkState===3){
+    stopAllAudio();
+    speak(grp.lines.map(l=>l.hz).join(' '));
+    return;
+  }
+  if(currentPlayingEl && currentPlayingEl !== el){
+    currentPlayingEl.pause();
+    if(currentPlayingBtn){ currentPlayingBtn.textContent = '▶ Nghe cả đoạn'; }
+  }
+  if(el.paused){
+    if(el.ended || el.currentTime >= el.duration - 0.05){ el.currentTime = 0; }
+    el.play();
+    btn.textContent = '⏸ Tạm dừng';
+    currentPlayingEl = el; currentPlayingBtn = btn;
+  } else {
+    el.pause();
+    btn.textContent = '▶ Nghe cả đoạn';
+  }
+}
+
+['audio-baikhoa1','audio-baikhoa2'].forEach(id=>{
+  const el = document.getElementById(id);
+  el.addEventListener('ended', ()=>{
+    if(currentPlayingBtn){ currentPlayingBtn.textContent = '▶ Nghe cả đoạn'; }
+    currentPlayingEl = null; currentPlayingBtn = null;
+  });
+});
+
+/* ============ TAB NGỮ PHÁP ============ */
+const GRAMMAR_POINTS = [
+  {
+    title: `“几”和“多少”(2) — Hỏi số lượng`,
+    key: `你买几瓶？/ 多少钱一瓶？`,
+    keyPy: `Nǐ mǎi jǐ píng? / Duōshao qián yì píng?`,
+    forms: [
+      { label: "① 几 + lượng từ + N — hỏi số lượng DƯỚI 10", examples: [
+        {arrow:true, hz:"我要五本汉语书。", hz2:"你要几本汉语书？", py2:"Nǐ yào jǐ běn Hànyǔ shū?", vi:"Tôi cần 5 quyển sách Hán ngữ → Bạn cần mấy quyển sách Hán ngữ?"},
+        {arrow:true, hz:"他要三瓶啤酒。", hz2:"他要几瓶啤酒？", py2:"Tā yào jǐ píng píjiǔ?", vi:"Anh ấy cần 3 chai bia → Anh ấy cần mấy chai bia?"}
+      ]},
+      { label: "② 多少 + (lượng từ) + N — hỏi số lượng TRÊN 10", examples: [
+        {arrow:true, hz:"玛丽有五十本书。", hz2:"玛丽有多少本书？", py2:"Mǎlì yǒu duōshao běn shū?", vi:"Mary có 50 quyển sách → Mary có bao nhiêu quyển sách?"},
+        {arrow:true, hz:"一本词典八十块钱。", hz2:"一本词典多少钱？", py2:"Yì běn cídiǎn duōshao qián?", vi:"Một quyển từ điển 80 đồng → Một quyển từ điển bao nhiêu tiền?"}
+      ]}
+    ],
+    note: `Ghi chú: 几 thường hỏi số lượng nhỏ hơn 10; số lượng lớn hơn 10 dùng 多少. Công thức: “几” + lượng từ + N (bắt buộc có lượng từ); “多少” + (lượng từ) + N (có thể bỏ lượng từ).`
+  },
+  {
+    title: `“二”和“两” — Hai`,
+    key: `我买两瓶，再买两瓶水。`,
+    keyPy: `Wǒ mǎi liǎng píng, zài mǎi liǎng píng shuǐ.`,
+    forms: [
+      { label: "① Chỉ dùng “二” (đọc èr) — số đếm, số thứ tự, số hiệu", examples: [
+        {hz:"十二", py:"shí'èr", vi:"12"},
+        {hz:"二十", py:"èrshí", vi:"20"},
+        {hz:"二十二", py:"èrshí'èr", vi:"22"},
+        {hz:"一百二十", py:"yìbǎi èrshí", vi:"120"},
+        {hz:"第二", py:"dì'èr", vi:"thứ hai"},
+        {hz:"二号楼", py:"èr hào lóu", vi:"toà số 2"},
+        {hz:"二路公共汽车", py:"èr lù gōnggòng qìchē", vi:"xe buýt tuyến số 2"}
+      ]},
+      { label: "② “二” hoặc “两” đều được (hàng trăm, nghìn, vạn, trăm triệu)", examples: [
+        {hz:"两百 / 二百", py:"liǎngbǎi / èrbǎi", vi:"200"},
+        {hz:"两千 / 二千", py:"liǎngqiān / èrqiān", vi:"2.000 (千 qiān: nghìn)"},
+        {hz:"两万 / 二万", py:"liǎngwàn / èrwàn", vi:"20.000 (万 wàn: mười nghìn)"},
+        {hz:"两亿 / 二亿", py:"liǎngyì / èryì", vi:"200 triệu (亿 yì: trăm triệu)"}
+      ]},
+      { label: "③ TRƯỚC LƯỢNG TỪ thường dùng “两” (hai của một vật gì đó)", examples: [
+        {hz:"两本", py:"liǎng běn", vi:"2 quyển"},
+        {hz:"两块", py:"liǎng kuài", vi:"2 đồng"},
+        {hz:"两瓶", py:"liǎng píng", vi:"2 chai"},
+        {hz:"两毛", py:"liǎng máo", vi:"2 hào"},
+        {hz:"两个", py:"liǎng ge", vi:"2 cái"}
+      ]}
+    ],
+    note: `Ghi chú: Trong bài khoá: 两瓶 (trước lượng từ), 两块四 (2,4 đồng), nhưng 二十二块 (số 22 → dùng 二).`
+  },
+  {
+    title: `量词 — Lượng từ`,
+    key: `再买两瓶水。/ 两瓶啤酒七块。`,
+    keyPy: `Zài mǎi liǎng píng shuǐ. / Liǎng píng píjiǔ qī kuài.`,
+    forms: [
+      { label: "Nhiều danh từ có lượng từ riêng; một số danh từ cũng tạm dùng làm lượng từ (như 瓶)", examples: [
+        {hz:"一瓶水", py:"yì píng shuǐ", vi:"một chai nước"},
+        {hz:"一本书", py:"yì běn shū", vi:"một quyển sách"},
+        {hz:"一个车棚", py:"yí ge chēpéng", vi:"một nhà để xe"},
+        {hz:"一块钱", py:"yí kuài qián", vi:"một đồng"},
+        {hz:"21路公共汽车", py:"èrshíyī lù gōnggòng qìchē", vi:"xe buýt tuyến 21"},
+        {hz:"一辆自行车", py:"yí liàng zìxíngchē", vi:"một chiếc xe đạp"},
+        {hz:"一把钥匙", py:"yì bǎ yàoshi", vi:"một chiếc chìa khoá"},
+        {hz:"一位老师", py:"yí wèi lǎoshī", vi:"một thầy/cô giáo"}
+      ]}
+    ],
+    note: `Chú ý cách dùng một số lượng từ thông dụng: 本 (sách vở), 辆 (xe cộ), 把 (vật có cán/tay cầm), 张 (vật phẳng), 个 (lượng từ chung).`
+  },
+  {
+    title: `钱数表达法 — Cách nói số tiền (人民币)`,
+    key: `一共是九块四毛钱。`,
+    keyPy: `Yígòng shì jiǔ kuài sì máo qián.`,
+    forms: [
+      { label: "Văn viết: 元 · 角 · 分 → Khẩu ngữ: 块 · 毛 · 分", examples: [
+        {arrow:true, hz:"五元", hz2:"五块", py2:"wǔ kuài", vi:"5 đồng"},
+        {arrow:true, hz:"十二元五角", hz2:"十二块五（毛）", py2:"shí'èr kuài wǔ (máo)", vi:"12 đồng 5 hào"},
+        {arrow:true, hz:"六角二分", hz2:"六毛二（分）", py2:"liù máo èr (fēn)", vi:"6 hào 2 xu"},
+        {arrow:true, hz:"七十四元八角二分", hz2:"七十四块八毛二", py2:"qīshísì kuài bā máo èr", vi:"74 đồng 8 hào 2 xu"}
+      ]}
+    ],
+    note: `Ghi chú: Đơn vị chính thức của Nhân dân tệ là 元 (yuán), 角 (jiǎo), 分 (fēn); khi nói thường dùng 块 (kuài), 毛 (máo), 分 (fēn). Đơn vị cuối cùng có thể lược bỏ (十二块五, 七十四块八毛二).`
+  }
+];
+
+const grammarContainer = document.getElementById('grammar-container');
+GRAMMAR_POINTS.forEach((gp, idx)=>{
+  const div = document.createElement('div');
+  div.className = 'grammar-point';
+  const formsHtml = gp.forms.map(f=>{
+    const exHtml = f.examples.map((e,i)=>{
+      if(e.arrow){
+        return `<li><span class="gp-ex-num">${i+1}.</span>
+          <span><span class="gp-ex-hz hanzi">${e.hz}</span></span>
+          <span class="gp-ex-arrow">→</span>
+          <span><span class="gp-ex-hz hanzi">${e.hz2}</span> <span class="gp-ex-py">${e.py2}</span></span>
+          <button class="btn-speak" style="width:26px;height:26px;font-size:.75rem;" onclick="playClip('${e.hz2.replace(/'/g,"\\'")}')">🔊</button>
+          <span class="gp-ex-vi" style="color:var(--gray);font-size:.82rem;">${e.vi}</span></li>`;
+      }
+      return `<li><span class="gp-ex-num">${i+1}.</span>
+        <span class="gp-ex-hz hanzi">${e.hz}</span>
+        <span class="gp-ex-py">${e.py}</span>
+        <button class="btn-speak" style="width:26px;height:26px;font-size:.75rem;" onclick="playClip('${e.hz.replace(/'/g,"\\'")}')">🔊</button>
+        <span class="gp-ex-vi" style="color:var(--gray);font-size:.82rem;">${e.vi}</span></li>`;
+    }).join('');
+    return `<div class="gp-form"><div class="gp-label">${f.label}</div><ul class="gp-ex-list">${exHtml}</ul></div>`;
+  }).join('');
+  div.innerHTML = `
+    <div class="gp-title"><span class="gp-num">${idx+1}</span>${gp.title}</div>
+    <div class="gp-key hanzi">${gp.key} <span class="pinyin" style="font-size:.85rem;">${gp.keyPy}</span></div>
+    ${gp.diagram || ''}
+    ${formsHtml}
+    ${gp.note ? `<div class="gp-note">${gp.note}</div>` : ''}
+  `;
+  grammarContainer.appendChild(div);
+});
+
+/* ============ TAB FLASHCARD ============ */
+let fcPos = 0; // vị trí hiện tại trong fcOrder
+let fcOrder = VOCAB.map((_,i)=>i); // mảng thứ tự hiển thị (ánh xạ -> index gốc trong VOCAB)
+let fcShuffled = false;
+const fcKnownSet = new Set(); // lưu theo index GỐC trong VOCAB
+const fcCard = document.getElementById('flashcard');
+function renderFC(){
+  const realIdx = fcOrder[fcPos];
+  const v = VOCAB[realIdx];
+  document.getElementById('fc-hz').textContent = v.hz;
+  document.getElementById('fc-pinyin').textContent = v.py;
+  document.getElementById('fc-mean').textContent = v.mean;
+  document.getElementById('fc-progress').textContent = (fcPos+1)+' / '+VOCAB.length;
+  fcCard.classList.remove('flipped');
+}
+function flipCard(){ fcCard.classList.toggle('flipped'); }
+function fcNext(){ fcPos = (fcPos+1)%VOCAB.length; renderFC(); }
+function fcPrev(){ fcPos = (fcPos-1+VOCAB.length)%VOCAB.length; renderFC(); }
+function fcKnown(yes){
+  const realIdx = fcOrder[fcPos];
+  if(yes && !fcKnownSet.has(realIdx)){
+    fcKnownSet.add(realIdx);
+    document.getElementById('fc-known-count').textContent = fcKnownSet.size;
+    celebrate(fcCard, 2);
+    if(fcKnownSet.size === VOCAB.length){ showToast('⭐ Thuộc hết từ vựng Bài 9!','gold'); fireConfetti(); }
+  } else if(!yes){
+    fcKnownSet.delete(realIdx);
+    document.getElementById('fc-known-count').textContent = fcKnownSet.size;
+  }
+  fcNext();
+}
+function toggleShuffleFC(){
+  fcShuffled = !fcShuffled;
+  const btn = document.getElementById('fc-shuffle-btn');
+  if(fcShuffled){
+    fcOrder = shuffleArr(VOCAB.map((_,i)=>i));
+    btn.textContent = '🔀 Đang trộn (bấm để về thứ tự gốc)';
+    btn.classList.add('active');
+    showToast('🔀 Đã trộn thứ tự thẻ!');
+  } else {
+    fcOrder = VOCAB.map((_,i)=>i);
+    btn.textContent = '🔀 Trộn thẻ';
+    btn.classList.remove('active');
+    showToast('↺ Về thứ tự gốc');
+  }
+  fcPos = 0;
+  renderFC();
+}
+fcCard.addEventListener('click', flipCard);
+renderFC();
+
+/* ============ TAB LUYỆN VIẾT CÂU ============ */
+let scoreTotal = 0, scoreMax = 0;
+function addScore(n){ scoreTotal += n; document.getElementById('total-score').textContent = scoreTotal; }
+function addMax(n){ scoreMax += n; document.getElementById('total-max').textContent = scoreMax; }
+
+/* ============ BÀI TẬP BÀI 9 — lấy đúng từ tài liệu giáo viên cung cấp, chia thành các tab nhỏ ============ */
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; }
+  return a;
+}
+function norm(s){ return s.replace(/[\s。，、！？,.!?；;：:《》“”"'（）()]/g,''); }
+function toneless(s){ return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[\s'’.,!?，。]/g,'').toLowerCase(); }
+const done = {mc:new Set(), price:new Set(), fill:new Set(), ask:new Set(), listen:new Set(), tf:new Set(), qa:new Set(), say:new Set()};
+function checkAllDone(key,total,badge,msg){
+  if(done[key].size===total){ unlockBadge(badge); fireConfetti(); showToast(msg); }
+}
+/* khi bật 1 audio của bài tập thì tạm dừng các audio khác */
+document.querySelectorAll('audio').forEach(a=>{
+  a.addEventListener('play', ()=>{ document.querySelectorAll('audio').forEach(b=>{ if(b!==a) b.pause(); }); });
+});
+
+/* --- sub-tab bên trong tab Bài tập --- */
+document.querySelectorAll('.subtab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.subtab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.sub-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('sub-'+btn.dataset.sub).classList.add('active');
+    document.querySelectorAll('.ex-audio').forEach(a=>a.pause());
+  });
+});
+
+/* --- Bài 1: Chọn đáp án đúng --- */
+const MC_DATA = [
+  {q:"你要买几______咖啡？", o:["个","节","杯","本"], a:2},
+  {q:"师傅，我______买水。", o:["都","要","跟","很"], a:1},
+  {q:"这瓶啤酒______钱？", o:["少","多","几","多少"], a:3},
+  {q:"他买的那本词典______。", o:["二十块五毛","二十毛五块","二十毛五块","二十分五毛"], a:0},
+  {q:"请问，三杯奶茶和一瓶啤酒______多少钱？", o:["买","给","想","一共"], a:3},
+  {q:"他买一杯咖啡，______两瓶水。", o:["很","再","都","去"], a:1},
+  {q:"你______我买两杯咖啡，好不好？", o:["去","叫","给","都"], a:2},
+  {q:"这些______书多少钱？", o:["本","个","（不填）","几"], a:2},
+  {q:"这都是服务员______我看的汉英词典。", o:["的","也","买","给"], a:3},
+  {q:"你______有多少个中国朋友？", o:["一共","一个","一本","一杯"], a:0}
+];
+const mcC = document.getElementById('mc-container');
+const LET = ['A','B','C','D'];
+MC_DATA.forEach((d,i)=>{
+  const div = document.createElement('div');
+  div.className = 'listen-item';
+  div.innerHTML = `
+    <div class="hanzi" style="font-size:1.2rem;margin-bottom:10px;"><b style="color:var(--red-dark);font-family:'Baloo 2';">${i+1}.</b> ${d.q}</div>
+    <div class="mc-options" id="mc-opts-${i}">
+      ${d.o.map((o,k)=>`<button class="mc-opt hanzi" style="font-size:1.15rem;" onclick="checkMC(this,${i},${k})">${LET[k]}. ${o}</button>`).join('')}
+    </div>`;
+  mcC.appendChild(div);
+});
+addMax(MC_DATA.length);
+function checkMC(btn,i,k){
+  const d = MC_DATA[i];
+  const opts = document.querySelectorAll('#mc-opts-'+i+' .mc-opt');
+  opts.forEach((o,idx)=>{ o.disabled = true; if(idx===d.a) o.classList.add('ok'); else o.classList.add('dim'); });
+  btn.classList.remove('dim');
+  if(k===d.a){ addScore(1); celebrate(btn,1); }
+  else { btn.classList.add('bad'); fail(btn); }
+  done.mc.add(i);
+  if(done.mc.size===MC_DATA.length){ unlockBadge('mc'); showToast('🎯 Hoàn thành Bài 1!'); }
+}
+
+/* --- tiện ích: kiểm tra giá tiền (chữ Hán hoặc số) --- */
+function priceMatch(input, item){
+  const t = input.trim().replace(/\s/g,'');
+  if(!t) return false;
+  if(/^[\d.,]+$/.test(t)){ return Math.abs(parseFloat(t.replace(',','.')) - item.num) < 0.001; }
+  const n = t.replace(/[钱元。，,.]/g,'');
+  return item.hz.some(h=>h.replace(/[钱元]/g,'')===n);
+}
+
+/* --- Bài 2: nghe viết giá tiền (10-4.mp3) --- */
+const PRICE_DATA = [
+  {name:"面包", py:"miànbāo", emoji:"🍞", num:3.2,  hz:["三块二","三块二毛"], show:"三块二（3,2 tệ）"},
+  {name:"西瓜", py:"xīguā", emoji:"🍉", num:12.5, hz:["十二块五","十二块五毛"], show:"十二块五（12,5 tệ）"},
+  {name:"牛奶", py:"niúnǎi", emoji:"🥛", num:6.3, hz:["六块三","六块三毛"], show:"六块三（6,3 tệ）"},
+  {name:"水", py:"shuǐ", emoji:"💧", num:1.5, hz:["一块五","一块五毛"], show:"一块五（1,5 tệ）"},
+  {name:"香蕉", py:"xiāngjiāo", emoji:"🍌", num:17.2, hz:["十七块零两毛","十七块两毛","十七块零二毛","十七块二","十七块二毛"], show:"十七块零两毛（17,2 tệ）"},
+  {name:"苹果", py:"píngguǒ", emoji:"🍎", num:6.8, hz:["六块八毛","六块八"], show:"六块八毛钱（6,8 tệ）"},
+  {name:"一共", py:"yígòng", emoji:"🧾", num:47.5, hz:["四十七块五","四十七块五毛"], show:"四十七块五（47,5 tệ）"}
+];
+const priceC = document.getElementById('price-container');
+PRICE_DATA.forEach((d,i)=>{
+  const t = document.createElement('div');
+  t.className = 'pic-tile';
+  t.innerHTML = `
+    <div class="pic-num">${i+1}</div>
+    <div class="pic-emoji">${d.emoji}</div>
+    <div class="pic-name hanzi">${d.name}<small>${d.py}</small></div>
+    <input class="ans-in hanzi" id="price-in-${i}" placeholder="…… 元" autocomplete="off">
+    <div id="price-res-${i}" style="font-size:.85rem;"></div>`;
+  priceC.appendChild(t);
+});
+addMax(PRICE_DATA.length);
+function checkPrice(){
+  let ok = 0;
+  PRICE_DATA.forEach((d,i)=>{
+    const inp = document.getElementById('price-in-'+i), res = document.getElementById('price-res-'+i);
+    inp.classList.remove('ok','bad');
+    if(priceMatch(inp.value, d)){
+      ok++; inp.classList.add('ok'); res.innerHTML = `<span class="result-ok">✔ ${d.show}</span>`;
+      if(!done.price.has(i)){ done.price.add(i); addScore(1); celebrate(inp,2); }
+    } else {
+      inp.classList.add('bad'); res.innerHTML = `<span class="result-bad">✘ Đáp án: ${d.show}</span>`; fail(inp);
+    }
+  });
+  document.getElementById('price-result').innerHTML = ok===PRICE_DATA.length
+    ? `<span class="result-ok">Đúng ${ok}/${PRICE_DATA.length} 🎉</span>` : `<span class="result-bad">Đúng ${ok}/${PRICE_DATA.length}</span>`;
+  checkAllDone('price',PRICE_DATA.length,'price','💰 Nghe giá tiền hoàn hảo!');
+}
+
+/* --- Bài 3: nghe điền từ (10-6.mp3) — chấp nhận chữ Hán hoặc pinyin --- */
+const FILL9_DATA = [
+  {parts:["我 ","","一瓶水。"], b:[{hz:["要"], py:["yao"], show:"要 (yào)"}]},
+  {parts:["苹果 ","","卖？"], b:[{hz:["怎么"], py:["zenme"], show:"怎么 (zěnme)"}]},
+  {parts:["牛奶 ","", " 面包一共 ","","。"], b:[{hz:["和"], py:["he"], show:"和 (hé)"},{hz:["十六块五","十六块五毛"], py:["shiliukuaiwu","shiliukuaiwumao"], num:16.5, show:"十六块五 (shíliù kuài wǔ)"}]},
+  {parts:["师傅，香蕉多少钱一 ","","？"], b:[{hz:["斤"], py:["jin"], show:"斤 (jīn)"}]},
+  {parts:["买 ","","啤酒，","","买一瓶可乐。"], b:[{hz:["两瓶"], py:["liangping"], show:"两瓶 (liǎng píng)"},{hz:["再"], py:["zai"], show:"再 (zài)"}]},
+  {parts:["","","苹果一共多少钱？"], b:[{hz:["这些"], py:["zhexie"], show:"这些 (zhèxiē)"}]},
+  {parts:["咖啡多少钱 ","","？"], b:[{hz:["一杯"], py:["yibei"], show:"一杯 (yì bēi)"}]},
+  {parts:["我没有现金，","","吧。"], b:[{hz:["刷卡"], py:["shuaka"], show:"刷卡 (shuā kǎ)"}]}
+];
+const fill9C = document.getElementById('fill9-container');
+let fill9Total = 0;
+FILL9_DATA.forEach((f,i)=>{
+  let html = `<b style="color:var(--red-dark);font-family:'Baloo 2';">${i+1}.</b> `, bi = 0;
+  f.parts.forEach((p,k)=>{
+    if(k%2===1){ html += `<input class="blank-in hanzi" id="f9-${i}-${bi}" autocomplete="off">`; bi++; fill9Total++; }
+    else html += p;
+  });
+  const div = document.createElement('div');
+  div.className = 'fill-line hanzi';
+  div.style.fontSize = '1.2rem';
+  div.innerHTML = html + ` <span id="f9-res-${i}" style="font-size:.85rem;font-family:'Be Vietnam Pro';"></span>`;
+  fill9C.appendChild(div);
+});
+addMax(fill9Total);
+function checkFill9(){
+  let ok = 0;
+  FILL9_DATA.forEach((f,i)=>{
+    const bad = [];
+    f.b.forEach((b,j)=>{
+      const inp = document.getElementById(`f9-${i}-${j}`);
+      const v = inp.value.trim();
+      let good = false;
+      if(v){
+        if(b.num!==undefined && /^[\d.,]+$/.test(v)) good = Math.abs(parseFloat(v.replace(',','.'))-b.num)<0.001;
+        else good = b.hz.includes(v.replace(/\s/g,'')) || b.py.includes(toneless(v));
+      }
+      inp.classList.remove('ok','bad');
+      if(good){ inp.classList.add('ok'); ok++; const key=i+'-'+j; if(!done.fill.has(key)){ done.fill.add(key); addScore(1); celebrate(inp,2); } }
+      else { inp.classList.add('bad'); bad.push(b.show); fail(inp); }
+    });
+    document.getElementById('f9-res-'+i).innerHTML = bad.length ? `<span class="result-bad">✘ Đáp án: ${bad.join(' · ')}</span>` : `<span class="result-ok">✔</span>`;
+  });
+  document.getElementById('fill9-result').innerHTML = ok===fill9Total
+    ? `<span class="result-ok">Đúng ${ok}/${fill9Total} 🎉</span>` : `<span class="result-bad">Đúng ${ok}/${fill9Total}</span>`;
+  checkAllDone('fill',fill9Total,'fill','🎧 Nghe điền từ xuất sắc!');
+}
+
+/* --- Bài 4: đặt câu hỏi cho phần gạch chân --- */
+const ASK_DATA = [
+  {pre:"这本书", ul:"二十块钱", post:"。", ans:["这本书多少钱？"], show:"这本书多少钱？"},
+  {pre:"我有", ul:"三十个", post:"中国朋友。", ans:["你有多少个中国朋友？","你有多少中国朋友？"], show:"你有多少个中国朋友？"},
+  {pre:"昨天大卫去", ul:"超市", post:"买啤酒。", ans:["昨天大卫去哪儿买啤酒？","昨天大卫去哪里买啤酒？"], show:"昨天大卫去哪儿买啤酒？"},
+  {pre:"我要买", ul:"一杯咖啡", post:"，喝两瓶水。", ans:["你要买什么？"], show:"你要买什么？"},
+  {pre:"玛丽要喝", ul:"奶茶", post:"。", ans:["玛丽要喝什么？"], show:"玛丽要喝什么？"},
+  {pre:"一瓶啤酒", ul:"十块五毛", post:"。", ans:["一瓶啤酒多少钱？"], show:"一瓶啤酒多少钱？"},
+  {pre:"", ul:"你", post:"买的可乐很好喝。", ans:["谁买的可乐很好喝？"], show:"谁买的可乐很好喝？"},
+  {pre:"我坐", ul:"20路", post:"公共汽车去玩儿。", ans:["你坐几路公共汽车去玩儿？","你坐多少路公共汽车去玩儿？"], show:"你坐几路公共汽车去玩儿？"},
+  {pre:"这些词典都是", ul:"我的", post:"。", ans:["这些词典都是谁的？"], show:"这些词典都是谁的？"},
+  {pre:"他", ul:"骑自行车", post:"去学校。", ans:["他怎么去学校？"], show:"他怎么去学校？"}
+];
+const askC = document.getElementById('ask-container');
+ASK_DATA.forEach((d,i)=>{
+  const w = document.createElement('div');
+  w.className = 'fx-item';
+  w.style.cssText = 'margin-bottom:18px;padding-bottom:14px;border-bottom:1px dashed var(--cream-2);';
+  w.innerHTML = `
+    <div class="hanzi" style="font-size:1.3rem;margin-bottom:8px;"><b style="color:var(--red-dark);font-family:'Baloo 2';">${i+1}.</b> ${d.pre}<u class="ul-part">${d.ul}</u>${d.post}</div>
+    <input class="ans-in hanzi" id="ask-in-${i}" placeholder="Viết câu hỏi…" autocomplete="off">
+    <button class="btn btn-check" onclick="checkAsk(${i})">Kiểm tra</button>
+    <span id="ask-res-${i}"></span>`;
+  askC.appendChild(w);
+});
+addMax(ASK_DATA.length);
+function checkAsk(i){
+  const inp = document.getElementById('ask-in-'+i), res = document.getElementById('ask-res-'+i);
+  if(!inp.value.trim()) return;
+  if(ASK_DATA[i].ans.some(a=>norm(a)===norm(inp.value))){
+    inp.classList.remove('bad'); inp.classList.add('ok');
+    res.innerHTML = `<span class="result-ok">✔ Chính xác! ${ASK_DATA[i].show}</span>`;
+    if(!done.ask.has(i)){ done.ask.add(i); addScore(1); celebrate(inp,2); }
+    checkAllDone('ask',ASK_DATA.length,'ask','❓ Đặt câu hỏi hoàn hảo!');
+  } else {
+    inp.classList.remove('ok'); inp.classList.add('bad');
+    res.innerHTML = `<span class="result-bad">✘ Chưa đúng. Gợi ý: ${ASK_DATA[i].show}</span>`; fail(inp);
+  }
+}
+
+/* --- Bài 5: nghe hội thoại chọn đáp án (10-10, 10-11, 10-12) --- */
+const LISTEN_DATA = [
+  {title:"Đoạn 1 · 买西瓜", audio:"10-10.mp3",
+   script:[["A","师傅，西瓜怎么卖？"],["B","西瓜两块五一斤，您要多少？"],["A","我要这半个西瓜，多少钱？"],["B","八斤，二十块。"],["A","给您钱。"]],
+   qs:[
+    {q:"西瓜怎么卖？", py:"Xīguā zěnme mài?", o:[["两块五一斤","liǎng kuài wǔ yì jīn"],["四块钱一个","sì kuài qián yí gè"],["五块钱三斤","wǔ kuài qián sān jīn"]], a:0},
+    {q:"半个西瓜多少钱？", py:"Bàn ge xīguā duōshao qián?", o:[["两块五","liǎng kuài wǔ"],["二十块","èrshí kuài"],["八块钱","bā kuài qián"]], a:1},
+    {q:"女的要买多少西瓜？", py:"Nǚ de yào mǎi duōshao xīguā?", o:[["两个","liǎng ge"],["八公斤","bā gōngjīn"],["半个","bàn ge"]], a:2}
+   ]},
+  {title:"Đoạn 2 · 我也要一杯咖啡", audio:"10-11.mp3",
+   script:[["A","你要什么？一杯啤酒？"],["B","我不要酒，要一杯咖啡吧。"],["C","我也要一杯咖啡。服务员，两杯咖啡。"],["A","好，您的两杯咖啡。"],["B","多少钱？我扫微信吧。"],["A","好的，二十五块钱一杯，一共五十。"]],
+   qs:[
+    {q:"他们要几杯咖啡？", py:"Tāmen yào jǐ bēi kāfēi?", o:[["一杯","yì bēi"],["两杯","liǎng bēi"],["不要咖啡","bú yào kāfēi"]], a:1},
+    {q:"一杯咖啡多少钱？", py:"Yì bēi kāfēi duōshao qián?", o:[["二十块","èrshí kuài"],["二十五块","èrshíwǔ kuài"],["五十块","wǔshí kuài"]], a:1},
+    {q:"男的怎么付钱？", py:"Nán de zěnme fù qián?", o:[["扫微信","sǎo wēixìn"],["付现金","fù xiànjīn"],["刷卡","shuā kǎ"]], a:0}
+   ]},
+  {title:"Đoạn 3 · 再买两大瓶可乐", audio:"10-12.mp3",
+   script:[["A","明天晚上小王和他的女朋友来我们家玩儿。"],["B","他们几点来？"],["A","六点。家里没有啤酒吧？"],["B","明天上午我去买，买几瓶？"],["A","买五瓶吧，再买两大瓶可乐。"],["B","好，我再买一些苹果和香蕉。"]],
+   qs:[
+    {q:"明天晚上谁来他们家玩儿？", py:"Míngtiān wǎnshang shéi lái tāmen jiā wánr?", o:[["小王的朋友们","Xiǎo Wáng de péngyoumen"],["小王和他的女朋友","Xiǎo Wáng hé tā de nǚpéngyou"],["小王和他的同学","Xiǎo Wáng hé tā de tóngxué"]], a:1},
+    {q:"家里有啤酒吗？", py:"Jiā lǐ yǒu píjiǔ ma?", o:[["有一瓶","yǒu yì píng"],["没有啤酒","méiyǒu píjiǔ"],["有五瓶","yǒu wǔ píng"]], a:1},
+    {q:"他们要买些什么？", py:"Tāmen yào mǎixiē shénme?", o:[["啤酒、可乐、苹果、香蕉","píjiǔ、kělè、píngguǒ、xiāngjiāo"],["五瓶可乐、苹果、香蕉","wǔ píng kělè、píngguǒ、xiāngjiāo"],["五瓶啤酒和两瓶可乐","wǔ píng píjiǔ hé liǎng píng kělè"]], a:0}
+   ]}
+];
+const listenC = document.getElementById('listen9-container');
+let listenTotal = 0;
+LISTEN_DATA.forEach((g,gi)=>{
+  const grp = document.createElement('div');
+  grp.style.cssText = 'margin-bottom:26px;';
+  let qhtml = g.qs.map((q,qi)=>{
+    listenTotal++;
+    return `<div class="listen-item">
+      <div class="hanzi" style="font-size:1.15rem;margin-bottom:2px;"><b style="color:var(--red-dark);font-family:'Baloo 2';">${qi+1}.</b> ${q.q}</div>
+      <div class="pinyin" style="font-size:.8rem;margin-bottom:8px;">${q.py}</div>
+      <div class="mc-options" id="ls9-opts-${gi}-${qi}">
+        ${q.o.map((o,k)=>`<button class="mc-opt hanzi" style="font-size:1.1rem;" onclick="checkListen9(this,${gi},${qi},${k})">${LET[k]}. ${o[0]}<span class="mc-py">${o[1]}</span></button>`).join('')}
+      </div></div>`;
+  }).join('');
+  grp.innerHTML = `
+    <div class="ex-title" style="font-size:1rem;">${g.title}</div>
+    <audio class="ex-audio" controls preload="auto" src="${g.audio}"></audio>
+    ${qhtml}
+    <button class="btn secondary" onclick="document.getElementById('script-${gi}').classList.toggle('show')">📄 Xem lời thoại</button>
+    <div class="script-box hanzi" id="script-${gi}">${g.script.map(s=>`<div><b style="color:var(--red-dark);">${s[0]}：</b>${s[1]}</div>`).join('')}</div>`;
+  listenC.appendChild(grp);
+});
+addMax(listenTotal);
+function checkListen9(btn,gi,qi,k){
+  const d = LISTEN_DATA[gi].qs[qi];
+  const opts = document.querySelectorAll(`#ls9-opts-${gi}-${qi} .mc-opt`);
+  opts.forEach((o,idx)=>{ o.disabled = true; if(idx===d.a) o.classList.add('ok'); else o.classList.add('dim'); });
+  btn.classList.remove('dim');
+  if(k===d.a){ addScore(1); celebrate(btn,1); } else { btn.classList.add('bad'); fail(btn); }
+  done.listen.add(gi+'-'+qi);
+  if(done.listen.size===listenTotal){ unlockBadge('listen'); showToast('👂 Hoàn thành bài nghe!'); }
+}
+
+/* --- Bài 6: đọc hiểu --- */
+const TF_PASSAGE = "上个周末我和玛丽都有空儿，我们就去商店买东西。那是学校里边的商店，可是商店很大，里边有很多东西（dōngxi：đồ dùng）。商店旁边有一个超市（chāoshì：siêu thị）和一个咖啡店（kāfēidiàn：tiệm cà phê）。我们进商店的时候，售货员小姐问我们：“两位要买什么？”玛丽要买一本汉英词典，三本汉语杂志和两瓶水。我要买一本汉越词典，一本汉语课本，一杯奶茶和一杯咖啡，奶茶是给我买的，咖啡是给大卫买的。玛丽一共要给售货员三十九块五毛，我要给售货员四十二块八毛四分。那天我们都很高兴。";
+document.getElementById('tf-passage').textContent = TF_PASSAGE;
+const TF_DATA = [
+  {s:"他们这个周末有空儿。", a:false, exp:"Đoạn văn viết 上个周末我和玛丽都有空儿 — là cuối tuần TRƯỚC, không phải cuối tuần này."},
+  {s:"商店是在学校里边的。", a:true, exp:"Đoạn văn viết 那是学校里边的商店 — cửa hàng ở trong trường."},
+  {s:"商店的旁边有很多东西。", a:false, exp:"Bên TRONG cửa hàng mới có nhiều đồ (里边有很多东西); bên cạnh cửa hàng là siêu thị và tiệm cà phê (商店旁边有一个超市和一个咖啡店)."},
+  {s:"商店的售货员是女的。", a:true, exp:"Đoạn văn viết 售货员小姐 — cô nhân viên bán hàng."},
+  {s:"商店里没有水。", a:false, exp:"Mary mua 2 chai nước (两瓶水)."},
+  {s:"玛丽买一杯咖啡。", a:false, exp:"Mary mua từ điển, tạp chí và nước: 一本汉英词典，三本汉语杂志和两瓶水."},
+  {s:"我买的奶茶是给大卫的。", a:false, exp:"Trà sữa là “tôi” mua cho mình (奶茶是给我买的); cà phê mới là mua cho David."},
+  {s:"玛丽买东西的钱多，我买的少。", a:false, exp:"Mary trả 39,5 tệ (三十九块五毛), “tôi” trả 42,84 tệ (四十二块八毛四分) → Mary trả ít hơn."},
+  {s:"我一共给售货员四十二块八毛钱。", a:false, exp:"“Tôi” trả 42,84 tệ (四十二块八毛四分), không phải 42,8 tệ."},
+  {s:"他们那天太高兴了。", a:true, exp:"Câu cuối: 那天我们都很高兴 (hôm đó chúng tôi đều rất vui)."}
+];
+const tfC = document.getElementById('tf-container');
+TF_DATA.forEach((d,i)=>{
+  const w = document.createElement('div');
+  w.className = 'listen-item';
+  w.innerHTML = `
+    <div class="hanzi" style="font-size:1.15rem;margin-bottom:8px;"><b style="color:var(--red-dark);font-family:'Baloo 2';">${i+1}.</b> ${d.s}</div>
+    <div class="mc-options" id="tf-opts-${i}" style="grid-template-columns:repeat(2,minmax(120px,160px));">
+      <button class="mc-opt" style="font-size:1rem;" onclick="checkTF(this,${i},true)">✔ Đúng</button>
+      <button class="mc-opt" style="font-size:1rem;" onclick="checkTF(this,${i},false)">✘ Sai</button>
+    </div>
+    <div class="reveal-box" id="tf-exp-${i}">${d.exp}</div>`;
+  tfC.appendChild(w);
+});
+addMax(TF_DATA.length);
+function checkTF(btn,i,val){
+  const d = TF_DATA[i];
+  const opts = document.querySelectorAll('#tf-opts-'+i+' .mc-opt');
+  opts.forEach((o,idx)=>{ o.disabled = true; if((idx===0)===d.a) o.classList.add('ok'); else o.classList.add('dim'); });
+  btn.classList.remove('dim');
+  if(val===d.a){ addScore(1); celebrate(btn,1); } else { btn.classList.add('bad'); fail(btn); }
+  document.getElementById('tf-exp-'+i).classList.add('show');
+  done.tf.add(i);
+  checkReadDone();
+}
+const QA_DATA = [
+  {q:"他们在哪个商店买东西？", ans:"他们在学校里边的商店买东西。"},
+  {q:"商店的旁边有什么？", ans:"商店旁边有一个超市和一个咖啡店。"},
+  {q:"玛丽要买什么？", ans:"玛丽要买一本汉英词典，三本汉语杂志和两瓶水。"},
+  {q:"“我”要买什么？", ans:"“我”要买一本汉越词典，一本汉语课本，一杯奶茶和一杯咖啡。"},
+  {q:"“我”给大卫买什么？", ans:"“我”给大卫买一杯咖啡。"}
+];
+const qaC = document.getElementById('qa-container');
+QA_DATA.forEach((d,i)=>{
+  const w = document.createElement('div');
+  w.className = 'listen-item';
+  w.id = 'qa-item-'+i;
+  w.innerHTML = `
+    <div class="hanzi" style="font-size:1.15rem;margin-bottom:8px;"><b style="color:var(--red-dark);font-family:'Baloo 2';">${i+1}.</b> ${d.q}</div>
+    <textarea class="ans hanzi qa-ta" placeholder="Viết câu trả lời…"></textarea><br>
+    <button class="btn secondary" onclick="document.getElementById('qa-rev-${i}').classList.add('show');this.style.display='none'">👁 Hiện đáp án</button>
+    <div class="reveal-box hanzi" id="qa-rev-${i}" style="font-size:1.1rem;">${d.ans}
+      <div style="margin-top:6px;"><button class="btn-mini yes" onclick="gradeQA(${i})">✅ Mình trả lời đúng</button></div>
+    </div>`;
+  qaC.appendChild(w);
+});
+addMax(QA_DATA.length);
+function gradeQA(i){
+  if(done.qa.has(i)) return;
+  done.qa.add(i); addScore(1); celebrate(document.getElementById('qa-item-'+i),1);
+  checkReadDone();
+}
+function checkReadDone(){
+  if(done.tf.size===TF_DATA.length && done.qa.size===QA_DATA.length){ unlockBadge('read'); fireConfetti(); showToast('📖 Hoàn thành bài đọc hiểu!'); }
+}
+
+/* --- Bài 7: đọc giá tiền (hình trong sách) --- */
+const SAY_DATA = [
+  {emoji:"👕", name:"áo phông", price:"153", hz:"一百五十三块", py:"yìbǎi wǔshísān kuài"},
+  {emoji:"👞", name:"giày", price:"98", hz:"九十八块", py:"jiǔshíbā kuài"},
+  {emoji:"🚲", name:"xe đạp", price:"254.6", hz:"二百五十四块六（毛）", py:"èrbǎi wǔshísì kuài liù (máo)"},
+  {emoji:"🧣", name:"khăn", price:"12.38", hz:"十二块三毛八（分）", py:"shí'èr kuài sān máo bā (fēn)"},
+  {emoji:"⏰", name:"đồng hồ", price:"82.75", hz:"八十二块七毛五（分）", py:"bāshí'èr kuài qī máo wǔ (fēn)"},
+  {emoji:"🧢", name:"mũ", price:"64.53", hz:"六十四块五毛三（分）", py:"liùshísì kuài wǔ máo sān (fēn)"},
+  {emoji:"📘", name:"từ điển", price:"24.76", hz:"二十四块七毛六（分）", py:"èrshísì kuài qī máo liù (fēn)"}
+];
+const sayC = document.getElementById('say-container');
+SAY_DATA.forEach((d,i)=>{
+  const t = document.createElement('div');
+  t.className = 'pic-tile'; t.id = 'say-tile-'+i;
+  t.innerHTML = `
+    <div class="pic-emoji">${d.emoji}</div>
+    <div class="pic-name">${d.name}</div>
+    <div class="price-tag">${d.price}元</div>
+    <div style="margin-top:8px;"><button class="btn secondary" style="padding:6px 12px;" onclick="document.getElementById('say-rev-${i}').classList.add('show')">👁 Hiện cách đọc</button></div>
+    <div class="reveal-box" id="say-rev-${i}">
+      <div><span class="hanzi" style="font-size:1.15rem;font-weight:700;">${d.hz}</span>
+        <button class="btn-speak" style="width:28px;height:28px;font-size:.8rem;" onclick="speak('${d.hz.replace(/[（）()]/g,'')}')">🔊</button></div>
+      <div class="pinyin" style="font-size:.8rem;">${d.py}</div>
+      <div style="margin-top:6px;"><button class="btn-mini yes" onclick="gradeSay(${i})">✅ Mình đọc đúng</button></div>
+    </div>`;
+  sayC.appendChild(t);
+});
+addMax(SAY_DATA.length);
+function gradeSay(i){
+  if(done.say.has(i)) return;
+  done.say.add(i); addScore(1); celebrate(document.getElementById('say-tile-'+i),1);
+  checkAllDone('say',SAY_DATA.length,'say','💰 Đọc đúng hết giá tiền!');
+}
+
+/* ============ TAB CHỮ HÁN (Hanzi Writer) ============ */
+let hanziWriterInstance = null;
+let currentHanziIdx = 0;
+
+const hzPicker = document.getElementById('hz-picker');
+HANZI_LIST.forEach((h,idx)=>{
+  const chip = document.createElement('div');
+  chip.className = 'hz-chip hanzi' + (idx===0?' active':'');
+  chip.textContent = h.char;
+  chip.onclick = ()=>selectHanzi(idx);
+  hzPicker.appendChild(chip);
+});
+
+function loadHanziWriterScript(cb){
+  if(window.HanziWriter){ cb(); return; }
+  const sources = [
+    'https://cdn.jsdelivr.net/npm/hanzi-writer@3/dist/hanzi-writer.min.js',
+    'https://unpkg.com/hanzi-writer@3/dist/hanzi-writer.min.js'
+  ];
+  let i=0;
+  function tryLoad(){
+    if(i>=sources.length){ document.getElementById('hanzi-target').innerHTML = '<div class="locked-msg">Không tải được thư viện Hanzi Writer (kiểm tra kết nối mạng).</div>'; return; }
+    const s = document.createElement('script');
+    s.src = sources[i];
+    s.onload = cb;
+    s.onerror = ()=>{ i++; tryLoad(); };
+    document.head.appendChild(s);
+  }
+  tryLoad();
+}
+
+function selectHanzi(idx){
+  currentHanziIdx = idx;
+  document.querySelectorAll('.hz-chip').forEach((c,i)=>c.classList.toggle('active', i===idx));
+  const h = HANZI_LIST[idx];
+  document.getElementById('hz-pinyin').textContent = h.py;
+  document.getElementById('hz-radical').textContent = h.radical;
+  document.getElementById('hz-strokes').textContent = h.strokes;
+  document.getElementById('hz-mean').textContent = h.mean;
+  document.getElementById('hz-tip').textContent = h.tip;
+  drawHanzi(h.char);
+}
+
+function drawHanzi(char){
+  const target = document.getElementById('hanzi-target');
+  target.innerHTML = '';
+  loadHanziWriterScript(()=>{
+    try{
+      hanziWriterInstance = HanziWriter.create('hanzi-target', char, {
+        width: 260, height: 260,
+        padding: 12,
+        strokeColor: '#B35D52',
+        radicalColor: '#D98A80',
+        showOutline: true,
+        strokeAnimationSpeed: 1,
+        delayBetweenStrokes: 200
+      });
+    }catch(e){
+      target.innerHTML = '<div class="locked-msg">Không tải được nét chữ "'+char+'".</div>';
+    }
+  });
+}
+function hzAnimate(){ if(hanziWriterInstance) hanziWriterInstance.animateCharacter(); }
+function hzQuiz(){
+  if(!hanziWriterInstance) return;
+  hanziWriterInstance.quiz({
+    onComplete: (summary)=>{
+      const target = document.getElementById('hanzi-target');
+      celebrate(target, 5);
+      unlockBadge('hanzi');
+      showToast('字 Viết đúng chữ '+HANZI_LIST[currentHanziIdx].char+'!','gold');
+    }
+  });
+}
+function hzOutline(){
+  if(!hanziWriterInstance) return;
+  hanziWriterInstance.hideCharacter();
+  hanziWriterInstance.showOutline();
+}
+// khởi tạo chữ đầu tiên
+selectHanzi(0);
+</script>
+</body>
+</html>
