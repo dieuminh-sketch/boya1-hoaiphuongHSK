@@ -509,6 +509,8 @@
   .pic-name small{font-size:.92rem;}
   .hz-info #hz-pinyin{font-size:1.25rem;}
   #listen9-container .pinyin{font-size:.98rem !important;}
+  .pic-img{height:104px;display:flex;align-items:center;justify-content:center;margin-bottom:4px;}
+  .pic-img svg{width:132px;height:110px;}
 </style>
 </head>
 <body>
@@ -1369,15 +1371,89 @@ function priceMatch(input, item){
   return item.hz.some(h=>h.replace(/[钱元]/g,'')===n);
 }
 
+/* ===== Hình vẽ minh hoạ (SVG, phong cách vẽ tay phẳng) cho Bài 2 & Bài 3 ===== */
+const SV = (inner)=>`<svg viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans SC',sans-serif"><g stroke="#4a3b35" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">${inner}</g></svg>`;
+const ICONS = {
+  bread: SV(`<path d="M20 48 C12 36 20 20 40 20 H80 C100 20 108 36 100 48 V78 C100 84 96 88 90 88 H30 C24 88 20 84 20 78 Z" fill="#E9B86B"/>
+    <path d="M26 46 C22 38 28 28 42 28 H78 C92 28 98 38 94 46 Z" fill="#F6D58F" stroke="none"/>
+    <path d="M44 32 L52 44 M60 32 L68 44 M76 32 L84 44" fill="none" stroke="#B9822F"/>`),
+  watermelon: SV(`<path d="M10 28 A50 50 0 0 0 110 28 Z" fill="#5BAA4F"/>
+    <path d="M15 28 A45 45 0 0 0 105 28 Z" fill="#F3F0C8" stroke="none"/>
+    <path d="M19 28 A41 41 0 0 0 101 28 Z" fill="#EA4A52" stroke="none"/>
+    <ellipse cx="42" cy="46" rx="2.6" ry="4.5" fill="#3b2a2a" stroke="none" transform="rotate(-15 42 46)"/>
+    <ellipse cx="60" cy="56" rx="2.6" ry="4.5" fill="#3b2a2a" stroke="none"/>
+    <ellipse cx="78" cy="46" rx="2.6" ry="4.5" fill="#3b2a2a" stroke="none" transform="rotate(15 78 46)"/>
+    <ellipse cx="50" cy="66" rx="2.6" ry="4.5" fill="#3b2a2a" stroke="none" transform="rotate(-10 50 66)"/>
+    <ellipse cx="70" cy="66" rx="2.6" ry="4.5" fill="#3b2a2a" stroke="none" transform="rotate(10 70 66)"/>`),
+  milk: SV(`<path d="M38 36 H82 V88 H38 Z" fill="#fff"/>
+    <path d="M38 36 L48 18 H72 L82 36 Z" fill="#8EC5E8"/>
+    <rect x="38" y="44" width="44" height="30" fill="#CDE7F7" stroke="none"/>
+    <text x="60" y="68" font-size="24" font-weight="700" text-anchor="middle" fill="#2F6FA3" stroke="none">奶</text>
+    <path d="M38 36 H82 V88 H38 Z" fill="none"/>`),
+  water: SV(`<rect x="51" y="8" width="18" height="11" rx="3" fill="#F2A33A"/>
+    <path d="M50 19 H70 V27 C80 33 84 40 84 48 V82 C84 87 80 90 75 90 H45 C40 90 36 87 36 82 V48 C36 40 40 33 50 27 Z" fill="#D5EEFB"/>
+    <path d="M36 54 Q48 48 60 54 T84 54 V82 C84 87 80 90 75 90 H45 C40 90 36 87 36 82 Z" fill="#6DB9EE" stroke="none"/>
+    <path d="M44 40 V74" stroke="#fff" stroke-width="3" fill="none" opacity=".8"/>`),
+  banana: SV(`<path d="M26 24 C20 56 46 86 96 68 C106 64 106 54 98 55 C70 63 48 48 42 22 C40 14 27 15 26 24 Z" fill="#FFD84A"/>
+    <path d="M32 30 C36 52 54 66 80 64" fill="none" stroke="#E5B820" stroke-width="2"/>
+    <rect x="26" y="10" width="15" height="10" rx="3" fill="#8A6A3B"/>
+    <circle cx="101" cy="59" r="3.5" fill="#6b4f2a"/>`),
+  apple: SV(`<path d="M60 30 C44 18 22 28 24 54 C26 76 42 92 54 88 C58 87 62 87 66 88 C78 92 94 76 96 54 C98 28 76 18 60 30 Z" fill="#E4413F"/>
+    <path d="M60 30 C60 22 62 16 67 11" fill="none" stroke="#7A4A2B" stroke-width="4"/>
+    <path d="M65 20 C72 7 90 9 92 14 C86 25 73 27 65 20 Z" fill="#6DB35A"/>
+    <path d="M33 50 C33 42 37 38 43 36" fill="none" stroke="#fff" opacity=".65" stroke-width="3"/>`),
+  receipt: SV(`<path d="M32 10 H84 V88 L78 84 L72 88 L66 84 L60 88 L54 84 L48 88 L42 84 L36 88 L32 84 Z" fill="#fff"/>
+    <path d="M42 26 H74 M42 38 H74 M42 50 H64" fill="none" stroke="#b9b0a6"/>
+    <circle cx="88" cy="68" r="16" fill="#F5C54A"/>
+    <text x="88" y="75" font-size="20" font-weight="700" text-anchor="middle" fill="#7a4d05" stroke="none">¥</text>`),
+  tshirt: SV(`<path d="M42 12 L60 20 L78 12 L106 30 L94 48 L84 42 V86 H36 V42 L26 48 L14 30 Z" fill="#8FD18A"/>
+    <rect x="36" y="60" width="48" height="9" fill="#F6E27A" stroke="none"/>
+    <path d="M46 13 Q60 32 74 13" fill="#CFEFC9"/>
+    <path d="M36 42 V86 H84 V42" fill="none"/>`),
+  shoe: SV(`<path d="M12 70 C12 52 22 40 36 38 L50 36 C58 50 72 54 90 56 C102 58 108 64 108 72 V78 H12 Z" fill="#35508F"/>
+    <path d="M12 70 C12 60 18 54 26 52 C32 62 28 70 28 78 H12 Z" fill="#9A6240"/>
+    <path d="M36 38 C36 30 44 26 52 28 L50 36" fill="#222f55"/>
+    <rect x="12" y="76" width="96" height="9" rx="4" fill="#3b2f2a"/>
+    <path d="M58 48 L66 52 M68 52 L76 55" fill="none" stroke="#fff" opacity=".7"/>`),
+  bike: SV(`<circle cx="28" cy="66" r="22" fill="none" stroke-width="4"/>
+    <circle cx="94" cy="66" r="22" fill="none" stroke-width="4"/>
+    <path d="M28 66 L48 38 L82 38 L94 66 M48 38 L60 66 L82 38 M28 66 L60 66" fill="none" stroke="#E34A5F" stroke-width="4"/>
+    <path d="M80 38 L86 24 H96 M40 34 H56" fill="none" stroke-width="4"/>
+    <circle cx="60" cy="66" r="5" fill="#F5C54A"/>`),
+  scarf: SV(`<path d="M60 10 C60 4 70 4 70 12 C70 18 60 18 60 26" fill="none" stroke-width="3"/>
+    <path d="M60 26 L14 46 H106 Z" fill="none" stroke-width="3"/>
+    <rect x="30" y="42" width="60" height="42" rx="3" fill="#F2C14E"/>
+    <path d="M30 56 H90 M30 68 H90" fill="none" stroke="#D49A1E" stroke-width="2"/>
+    <path d="M36 84 V94 M46 84 V94 M56 84 V94 M66 84 V94 M76 84 V94 M86 84 V94" fill="none" stroke="#D49A1E" stroke-width="2.5"/>`),
+  clock: SV(`<circle cx="32" cy="20" r="11" fill="#F2A33A"/>
+    <circle cx="88" cy="20" r="11" fill="#F2A33A"/>
+    <path d="M44 86 L38 96 M76 86 L82 96" fill="none" stroke-width="4"/>
+    <circle cx="60" cy="56" r="36" fill="#FF8FA3"/>
+    <circle cx="60" cy="56" r="28" fill="#fff"/>
+    <path d="M60 33 V37 M83 56 H79 M60 79 V75 M37 56 H41" fill="none" stroke-width="2.5"/>
+    <path d="M60 56 V40 M60 56 L74 56" fill="none" stroke-width="3"/>
+    <circle cx="60" cy="56" r="3" fill="#4a3b35"/>`),
+  cap: SV(`<path d="M22 62 C22 32 44 16 66 18 C88 20 102 38 102 62 Z" fill="#3E63B8"/>
+    <path d="M66 18 C88 20 102 38 102 62 H64 Z" fill="#E4413F"/>
+    <path d="M18 62 H102 C114 62 116 72 106 75 C84 80 40 76 18 68 Z" fill="#E4413F"/>
+    <path d="M66 18 V62" fill="none"/>
+    <circle cx="66" cy="17" r="4" fill="#E4413F"/>`),
+  dict: SV(`<rect x="30" y="8" width="62" height="82" rx="4" fill="#2F4C9A"/>
+    <rect x="30" y="8" width="11" height="82" rx="3" fill="#1F347A"/>
+    <rect x="48" y="22" width="36" height="24" rx="3" fill="#F3D36B"/>
+    <text x="66" y="40" font-size="15" font-weight="700" text-anchor="middle" fill="#3b2f2a" stroke="none">词典</text>
+    <path d="M90 14 V84" fill="none" stroke="#fff" stroke-width="2.5"/>`)
+};
+
 /* --- Bài 2: nghe viết giá tiền (10-4.mp3) --- */
 const PRICE_DATA = [
-  {name:"面包", py:"miànbāo", emoji:"🍞", num:3.2,  hz:["三块二","三块二毛"], show:"三块二（3,2 tệ）"},
-  {name:"西瓜", py:"xīguā", emoji:"🍉", num:12.5, hz:["十二块五","十二块五毛"], show:"十二块五（12,5 tệ）"},
-  {name:"牛奶", py:"niúnǎi", emoji:"🥛", num:6.3, hz:["六块三","六块三毛"], show:"六块三（6,3 tệ）"},
-  {name:"水", py:"shuǐ", emoji:"💧", num:1.5, hz:["一块五","一块五毛"], show:"一块五（1,5 tệ）"},
-  {name:"香蕉", py:"xiāngjiāo", emoji:"🍌", num:17.2, hz:["十七块零两毛","十七块两毛","十七块零二毛","十七块二","十七块二毛"], show:"十七块零两毛（17,2 tệ）"},
-  {name:"苹果", py:"píngguǒ", emoji:"🍎", num:6.8, hz:["六块八毛","六块八"], show:"六块八毛钱（6,8 tệ）"},
-  {name:"一共", py:"yígòng", emoji:"🧾", num:47.5, hz:["四十七块五","四十七块五毛"], show:"四十七块五（47,5 tệ）"}
+  {name:"面包", py:"miànbāo", icon:"bread", num:3.2,  hz:["三块二","三块二毛"], show:"三块二（3,2 tệ）"},
+  {name:"西瓜", py:"xīguā", icon:"watermelon", num:12.5, hz:["十二块五","十二块五毛"], show:"十二块五（12,5 tệ）"},
+  {name:"牛奶", py:"niúnǎi", icon:"milk", num:6.3, hz:["六块三","六块三毛"], show:"六块三（6,3 tệ）"},
+  {name:"水", py:"shuǐ", icon:"water", num:1.5, hz:["一块五","一块五毛"], show:"一块五（1,5 tệ）"},
+  {name:"香蕉", py:"xiāngjiāo", icon:"banana", num:17.2, hz:["十七块零两毛","十七块两毛","十七块零二毛","十七块二","十七块二毛"], show:"十七块零两毛（17,2 tệ）"},
+  {name:"苹果", py:"píngguǒ", icon:"apple", num:6.8, hz:["六块八毛","六块八"], show:"六块八毛钱（6,8 tệ）"},
+  {name:"一共", py:"yígòng", icon:"receipt", num:47.5, hz:["四十七块五","四十七块五毛"], show:"四十七块五（47,5 tệ）"}
 ];
 const priceC = document.getElementById('price-container');
 PRICE_DATA.forEach((d,i)=>{
@@ -1385,7 +1461,7 @@ PRICE_DATA.forEach((d,i)=>{
   t.className = 'pic-tile';
   t.innerHTML = `
     <div class="pic-num">${i+1}</div>
-    <div class="pic-emoji">${d.emoji}</div>
+    <div class="pic-img">${ICONS[d.icon]}</div>
     <div class="pic-name hanzi">${d.name}<small>${d.py}</small></div>
     <input class="ans-in hanzi" id="price-in-${i}" placeholder="…… 元" autocomplete="off">
     <div id="price-res-${i}" style="font-size:.85rem;"></div>`;
@@ -1627,20 +1703,20 @@ function checkReadDone(){
 
 /* --- Bài 7: đọc giá tiền (hình trong sách) --- */
 const SAY_DATA = [
-  {emoji:"👕", name:"áo phông", price:"153", hz:"一百五十三块", py:"yìbǎi wǔshísān kuài"},
-  {emoji:"👞", name:"giày", price:"98", hz:"九十八块", py:"jiǔshíbā kuài"},
-  {emoji:"🚲", name:"xe đạp", price:"254.6", hz:"二百五十四块六（毛）", py:"èrbǎi wǔshísì kuài liù (máo)"},
-  {emoji:"🧣", name:"khăn", price:"12.38", hz:"十二块三毛八（分）", py:"shí'èr kuài sān máo bā (fēn)"},
-  {emoji:"⏰", name:"đồng hồ", price:"82.75", hz:"八十二块七毛五（分）", py:"bāshí'èr kuài qī máo wǔ (fēn)"},
-  {emoji:"🧢", name:"mũ", price:"64.53", hz:"六十四块五毛三（分）", py:"liùshísì kuài wǔ máo sān (fēn)"},
-  {emoji:"📘", name:"từ điển", price:"24.76", hz:"二十四块七毛六（分）", py:"èrshísì kuài qī máo liù (fēn)"}
+  {icon:"tshirt", name:"áo phông", price:"153", hz:"一百五十三块", py:"yìbǎi wǔshísān kuài"},
+  {icon:"shoe", name:"giày", price:"98", hz:"九十八块", py:"jiǔshíbā kuài"},
+  {icon:"bike", name:"xe đạp", price:"254.6", hz:"二百五十四块六（毛）", py:"èrbǎi wǔshísì kuài liù (máo)"},
+  {icon:"scarf", name:"khăn", price:"12.38", hz:"十二块三毛八（分）", py:"shí'èr kuài sān máo bā (fēn)"},
+  {icon:"clock", name:"đồng hồ", price:"82.75", hz:"八十二块七毛五（分）", py:"bāshí'èr kuài qī máo wǔ (fēn)"},
+  {icon:"cap", name:"mũ", price:"64.53", hz:"六十四块五毛三（分）", py:"liùshísì kuài wǔ máo sān (fēn)"},
+  {icon:"dict", name:"từ điển", price:"24.76", hz:"二十四块七毛六（分）", py:"èrshísì kuài qī máo liù (fēn)"}
 ];
 const sayC = document.getElementById('say-container');
 SAY_DATA.forEach((d,i)=>{
   const t = document.createElement('div');
   t.className = 'pic-tile'; t.id = 'say-tile-'+i;
   t.innerHTML = `
-    <div class="pic-emoji">${d.emoji}</div>
+    <div class="pic-img">${ICONS[d.icon]}</div>
     <div class="pic-name">${d.name}</div>
     <div class="price-tag">${d.price}元</div>
     <div style="margin-top:8px;"><button class="btn secondary" style="padding:6px 12px;" onclick="document.getElementById('say-rev-${i}').classList.add('show')">👁 Hiện cách đọc</button></div>
