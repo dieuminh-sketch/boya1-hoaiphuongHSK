@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boya Sơ cấp 1 - Bài 11: 北京的冬天比较冷 - Ôn tập tương tác</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Quicksand:wght@600;700&family=Noto+Sans+SC:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#D98A80;
+    --red-dark:#B35D52;
+    --red-light:#F0B8AE;
+    --accent:#E0A85C;
+    --accent-dark:#BD8636;
+    --accent-light:#F3D9A8;
+    --cream:#FBF7F1;
+    --cream-2:#F3EBDD;
+    --white:#FFFFFF;
+    --ink:#2A2622;
+    --gray:#8A8577;
+    --green:#4FAE82;
+    --green-bg:#DCF5E9;
+    --error:#C0392B;
+    --error-bg:#fbe6e3;
+    --red-bg:#fdecdf;
+    --gold:#E8B86B;
+    --gold-dark:#C4913F;
+    --purple:#9B85C9;
+    --shadow: 0 4px 14px rgba(185,133,120,0.14);
+    --shadow-pop: 0 10px 26px rgba(185,133,120,0.24);
+    --radius: 16px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Be Vietnam Pro',sans-serif;
+    background:
+      radial-gradient(circle at 8% 12%, #def5ea 0%, transparent 40%),
+      radial-gradient(circle at 95% 0%, #f8dad5 0%, transparent 35%),
+      radial-gradient(circle at 90% 90%, #f6e4c0 0%, transparent 40%),
+      radial-gradient(circle at 50% 100%, #e6def2 0%, transparent 45%),
+      var(--cream);
+    color:var(--ink);
+    min-height:100vh;
+  }
+  h1,h2,h3,.font-title{font-family:'Baloo 2',sans-serif;}
+  .hanzi{font-family:'Noto Sans SC','Microsoft YaHei','PingFang SC','SimHei',sans-serif;}
+  ::selection{background:var(--gold);color:#fff;}
+
+  .app{display:flex;min-height:100vh;}
+
+  /* XP / gamification bar */
+  .xp-box{
+    background:linear-gradient(135deg,var(--red) 0%,var(--red-dark) 100%);
+    color:#fff;border-radius:var(--radius);padding:14px 18px;box-shadow:var(--shadow);
+  }
+  .xp-box .lvl-row{display:flex;justify-content:space-between;align-items:center;font-family:'Baloo 2';font-size:.85rem;margin-bottom:6px;}
+  .xp-bar-bg{width:100%;height:10px;border-radius:8px;background:rgba(255,255,255,.25);overflow:hidden;}
+  .xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),#ffd76b);border-radius:8px;transition:width .5s ease;width:0%;}
+  .streak-row{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:.8rem;}
+  .streak-flame{font-size:1.1rem;}
+
+  /* Main */
+  .main{flex:1;padding:26px 34px;max-width:1050px;}
+  .topbar{
+    text-align:center;background:linear-gradient(135deg,var(--red) 0%,var(--red-dark) 100%);
+    color:#fff;border-radius:var(--radius);padding:26px 24px 22px;margin-bottom:18px;
+    box-shadow:var(--shadow-pop);
+  }
+  .topbar-brand{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.85rem;opacity:.85;margin-bottom:6px;}
+  .topbar h2{margin:0;color:#fff;font-size:1.8rem;}
+  .topbar .desc{color:rgba(255,255,255,.85);font-size:.88rem;margin-top:8px;}
+  .topbar-actions{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:16px;}
+  .badge-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;}
+  .badge-pill{
+    font-family:'Baloo 2';font-size:.78rem;background:#fff;border:2px solid var(--cream-2);
+    color:var(--gray);padding:4px 12px;border-radius:999px;transition:.2s;
+  }
+  .badge-pill.earned{background:linear-gradient(135deg,var(--gold),#ffcf6b);border-color:var(--gold-dark);color:#7a4d05;box-shadow:0 3px 8px rgba(240,169,58,.4);}
+
+  .tabs{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;}
+  .tab-btn{
+    font-family:'Baloo 2',sans-serif;font-weight:700;
+    background:var(--white);border:2px solid var(--cream-2);color:var(--red-dark);
+    padding:10px 20px;border-radius:999px;cursor:pointer;font-size:.95rem;transition:.18s;
+    box-shadow:0 2px 6px rgba(47,122,92,.08);
+  }
+  .tab-btn.active{background:linear-gradient(135deg,var(--red),var(--red-light));color:#fff;border-color:var(--red);transform:translateY(-2px);box-shadow:var(--shadow-pop);}
+  .tab-btn:hover:not(.active){border-color:var(--red-light);transform:translateY(-1px);}
+
+  .panel{display:none;animation:fade .3s;}
+  .panel.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes pop{0%{transform:scale(1);}40%{transform:scale(1.06);}100%{transform:scale(1);}}
+  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+  @keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(.6);}20%{opacity:1;transform:translateY(-10px) scale(1.1);}100%{opacity:0;transform:translateY(-46px) scale(1);}}
+
+  .card{
+    background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:20px;margin-bottom:18px;border:2px solid transparent;transition:.2s;
+  }
+  .card:hover{box-shadow:var(--shadow-pop);}
+
+  /* Bài khoá / hội thoại */
+  .dialogue-group{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;margin-bottom:18px;}
+  .dialogue-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+  .dialogue-title{font-family:'Baloo 2',sans-serif;color:var(--red-dark);font-size:1.05rem;}
+  .dlg-line{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;}
+  .dlg-line:last-child{margin-bottom:0;}
+  .dlg-avatar-wrap{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:58px;}
+  .dlg-avatar{
+    width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:1.5rem;background:var(--cream-2);border:3px solid var(--red-light);box-shadow:var(--shadow);
+  }
+  .dlg-who{text-align:center;font-size:.66rem;color:var(--gray);margin-top:4px;line-height:1.2;}
+  .dlg-who .hz-mini{font-size:.72rem;font-weight:700;color:var(--red-dark);}
+  .dlg-bubble{
+    position:relative;background:#fff;border:2px solid var(--red);border-radius:14px;
+    padding:10px 40px 10px 16px;flex:1;box-shadow:0 2px 6px rgba(0,0,0,.06);min-width:0;
+  }
+  .dlg-bubble::before{content:'';position:absolute;left:-10px;top:16px;width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-right:10px solid var(--red);}
+  .dlg-bubble::after{content:'';position:absolute;left:-7px;top:16px;width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-right:8px solid #fff;}
+  .dlg-py{font-size:.85rem;color:var(--accent-dark);font-weight:700;margin-bottom:3px;letter-spacing:.2px;}
+  .dlg-hz{font-size:1.5rem;font-weight:700;line-height:1.3;}
+  .dlg-bubble .btn-speak{position:absolute;top:8px;right:8px;width:30px;height:30px;font-size:.85rem;}
+  .btn-play-all{margin-left:auto;}
+
+
+  /* Mục tiêu bài học */
+  .goals-card{
+    background:var(--white);border:2px solid var(--red-light);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:20px 22px;margin-bottom:18px;
+  }
+  .goals-head{
+    font-family:'Baloo 2',sans-serif;font-weight:700;color:var(--red);font-size:1.1rem;
+    display:flex;align-items:center;gap:6px;margin-bottom:14px;
+  }
+  .goal-item{
+    display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;cursor:pointer;
+    font-size:.92rem;line-height:1.6;color:var(--ink);
+  }
+  .goal-item:last-child{margin-bottom:0;}
+  .goal-item input[type="checkbox"]{
+    appearance:none;-webkit-appearance:none;flex-shrink:0;width:20px;height:20px;margin-top:2px;
+    border:2px solid var(--red);border-radius:5px;cursor:pointer;position:relative;background:#fff;
+  }
+  .goal-item input[type="checkbox"]:checked{background:var(--red);}
+  .goal-item input[type="checkbox"]:checked::after{
+    content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:#fff;font-size:.85rem;font-weight:700;
+  }
+  .goal-item .hanzi{color:var(--red-dark);font-weight:700;margin-right:4px;}
+
+  /* Ngữ pháp */
+  .grammar-point{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;margin-bottom:18px;border-left:6px solid var(--red);}
+  .grammar-point .gp-title{font-family:'Baloo 2',sans-serif;color:var(--red-dark);font-size:1.1rem;margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+  .grammar-point .gp-title .gp-num{background:var(--red);color:#fff;width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+  .grammar-point .gp-key{color:var(--ink);font-size:.98rem;margin:10px 0 14px;padding:10px 14px;background:var(--cream-2);border-radius:10px;}
+  .gp-form{margin-bottom:12px;}
+  .gp-form .gp-label{font-family:'Baloo 2';font-weight:700;color:var(--accent-dark);font-size:.88rem;margin-bottom:6px;}
+  .gp-ex-list{margin:0;padding:0;list-style:none;}
+  .gp-ex-list li{display:flex;align-items:baseline;gap:10px;padding:6px 0;font-size:.98rem;border-bottom:1px dashed var(--cream-2);}
+  .gp-ex-list li:last-child{border-bottom:none;}
+  .gp-ex-num{color:var(--gray);font-size:.82rem;flex-shrink:0;width:18px;}
+  .gp-ex-hz{font-weight:700;color:var(--ink);}
+  .gp-ex-py{color:var(--accent-dark);font-size:.82rem;}
+  .gp-ex-arrow{color:var(--gray);margin:0 4px;}
+  .gp-note{margin-top:10px;font-size:.85rem;color:var(--gray);background:var(--green-bg);border-left:4px solid var(--green);padding:8px 12px;border-radius:8px;}
+
+  /* Sơ đồ phương vị từ (compass diagram) */
+  .compass-wrap{display:flex;gap:28px;flex-wrap:wrap;align-items:center;margin:16px 0 20px;}
+  .compass-grid{
+    display:grid;grid-template-columns:repeat(3,84px);grid-template-rows:repeat(3,84px);
+    gap:8px;flex-shrink:0;
+  }
+  .compass-cell{
+    border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:'Baloo 2';text-align:center;line-height:1.2;padding:4px;
+  }
+  .compass-cell.dir{background:linear-gradient(135deg,var(--red),var(--red-light));color:#fff;box-shadow:0 3px 8px rgba(185,133,120,.35);}
+  .compass-cell.dir .cc-hz{font-size:1.35rem;font-weight:700;}
+  .compass-cell.dir .cc-py{font-size:.72rem;opacity:.95;margin-top:1px;}
+  .compass-cell.center{background:var(--cream-2);color:var(--red-dark);border:2px dashed var(--red-light);font-weight:700;font-size:1rem;}
+  .compass-cell.center .cc-icon{font-size:1.5rem;}
+  .compass-cell.empty{background:transparent;}
+  .pair-legend{display:flex;flex-direction:column;gap:8px;flex:1;min-width:280px;}
+  .pair-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .vl-item{
+    display:flex;align-items:center;gap:8px;background:var(--white);border:2px solid var(--cream-2);
+    border-radius:12px;padding:9px 14px;font-family:'Baloo 2';color:var(--red-dark);
+    box-shadow:0 2px 6px rgba(0,0,0,.05);
+  }
+  .vl-item .vl-icon{font-size:1.4rem;flex-shrink:0;}
+  .vl-item .vl-text{display:flex;flex-direction:column;line-height:1.25;}
+  .vl-item .vl-hz{font-size:1.15rem;font-weight:700;}
+  .vl-item .vl-py{color:var(--gray);font-weight:400;font-size:.78rem;}
+  @media(max-width:800px){
+    .compass-wrap{justify-content:center;}
+    .compass-grid{grid-template-columns:repeat(3,72px);grid-template-rows:repeat(3,72px);}
+    .pair-row{grid-template-columns:1fr;}
+    .pair-legend{min-width:0;width:100%;}
+  }
+
+  table.vocab{width:100%;border-collapse:collapse;}
+  table.vocab th{
+    text-align:left;font-family:'Baloo 2',sans-serif;background:var(--cream-2);color:var(--red-dark);
+    padding:10px;font-size:.85rem;
+  }
+  table.vocab.hide-py td.pinyin{visibility:hidden;}
+  #dialogue-container.hide-py .dlg-py{visibility:hidden;}
+  #grammar-container.hide-py .gp-ex-py{visibility:hidden;}
+  #grammar-container.hide-vi .gp-ex-vi{visibility:hidden;}
+  table.vocab td{padding:10px;border-bottom:1px solid var(--cream-2);vertical-align:middle;font-size:.92rem;}
+  table.vocab tr{transition:.15s;}
+  table.vocab tr:hover{background:#fdf3ef;transform:scale(1.005);}
+  .hz{font-size:1.4rem;font-weight:700;}
+  table.vocab .hz{font-size:2.1rem;color:var(--red-dark);letter-spacing:.5px;}
+  table.vocab td:nth-child(2){width:1%;white-space:nowrap;}
+  .pinyin{color:var(--accent-dark);font-weight:700;}
+  .pos{display:inline-block;background:var(--cream-2);color:var(--gray);font-size:.7rem;padding:2px 8px;border-radius:8px;}
+  .btn-speak{
+    border:none;background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;width:34px;height:34px;border-radius:50%;
+    cursor:pointer;font-size:1rem;display:inline-flex;align-items:center;justify-content:center;transition:.15s;
+    box-shadow:0 2px 6px rgba(193,80,63,.35);
+  }
+  .btn-speak:hover{transform:scale(1.15) rotate(-6deg);}
+  .btn-speak:active{transform:scale(.92);}
+
+  /* Flashcards */
+  .fc-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;position:relative;}
+  .fc-progress{color:var(--gray);font-size:.85rem;font-family:'Baloo 2';}
+  .fc-stars{font-size:.85rem;color:var(--gold-dark);}
+  .flashcard{
+    width:320px;height:220px;perspective:1200px;cursor:pointer;
+  }
+  .fc-inner{position:relative;width:100%;height:100%;transition:transform .5s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d;}
+  .flashcard.flipped .fc-inner{transform:rotateY(180deg);}
+  .fc-face{
+    position:absolute;inset:0;border-radius:20px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;backface-visibility:hidden;
+    box-shadow:var(--shadow-pop);padding:14px;text-align:center;
+  }
+  .fc-front{background:linear-gradient(150deg,var(--red) 0%,var(--red-light) 60%,var(--accent-light) 100%);color:#fff;}
+  .fc-front .hz{font-size:2.6rem;text-shadow:0 3px 8px rgba(0,0,0,.2);}
+  .fc-front .hint{position:absolute;bottom:14px;font-size:.72rem;opacity:.75;}
+  .fc-back{background:var(--white);transform:rotateY(180deg);border:3px solid var(--gold);}
+  .fc-back .pinyin{font-size:1.35rem;}
+  .fc-back .mean{margin-top:6px;font-size:1.05rem;}
+  .fc-controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+  .btn{
+    font-family:'Baloo 2',sans-serif;font-weight:700;border:none;border-radius:12px;
+    padding:10px 20px;cursor:pointer;font-size:.9rem;background:linear-gradient(135deg,var(--red),var(--red-light));
+    color:#fff;box-shadow:0 3px 0 var(--red-dark);transition:.12s;
+  }
+  .btn.secondary{background:var(--cream-2);color:var(--red-dark);box-shadow:0 3px 0 #d8c3a5;}
+  .btn.gold{background:linear-gradient(135deg,var(--gold),#ffcf6b);color:#7a4d05;box-shadow:0 3px 0 var(--gold-dark);}
+  .btn.secondary.active{background:linear-gradient(135deg,var(--purple),#c3b3e6);color:#fff;box-shadow:0 3px 0 #6f5aa3;}
+  .btn:hover{filter:brightness(1.06);transform:translateY(-1px);}
+  .btn:active{transform:translateY(2px);box-shadow:none;}
+
+  /* Exercises */
+  .ex-block{margin-bottom:26px;}
+  .ex-title{font-family:'Baloo 2',sans-serif;color:var(--red);font-size:1.05rem;margin-bottom:4px;}
+  .ex-sub{color:var(--gray);font-size:.82rem;margin-bottom:12px;}
+  .fill-line{margin-bottom:12px;font-size:1rem;line-height:1.8;}
+  select.blank{
+    font-family:'Be Vietnam Pro';font-size:.95rem;padding:5px 10px;border:2px solid var(--red-light);
+    border-radius:10px;background:#fff;color:var(--red-dark);font-weight:700;cursor:pointer;
+  }
+  select.blank.ok{border-color:var(--green);background:var(--green-bg);animation:pop .3s;}
+  select.blank.bad{border-color:var(--error);background:var(--error-bg);animation:shake .3s;}
+  .order-item{
+    display:inline-block;background:linear-gradient(135deg,#fff,var(--cream-2));border:2px solid #e9d7bd;
+    padding:7px 14px;margin:4px;border-radius:10px;cursor:pointer;font-size:1.15rem;user-select:none;
+    box-shadow:0 2px 4px rgba(0,0,0,.06);transition:.12s;
+  }
+  .order-item:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.1);}
+  .order-item.chosen{background:linear-gradient(135deg,var(--red),var(--red-light));color:#fff;border-color:var(--red-dark);}
+  .order-zone{min-height:50px;border:2px dashed var(--red-light);border-radius:12px;padding:8px;margin-bottom:8px;background:#fffaf3;transition:.2s;}
+  .order-zone.ok{border-style:solid;border-color:var(--green);background:var(--green-bg);animation:pop .35s;}
+  .order-zone.bad{border-style:solid;border-color:var(--error);background:var(--error-bg);animation:shake .35s;}
+  .order-bank{min-height:50px;border-radius:12px;padding:8px;margin-bottom:8px;}
+  textarea.ans{
+    width:100%;min-height:56px;border:2px solid var(--cream-2);border-radius:12px;padding:10px;
+    font-family:'Be Vietnam Pro';font-size:.95rem;resize:vertical;transition:.15s;
+  }
+  textarea.ans:focus{outline:none;border-color:var(--red-light);box-shadow:0 0 0 3px rgba(47,122,92,.15);}
+  .reveal-box{
+    margin-top:8px;background:var(--green-bg);border-left:4px solid var(--green);padding:10px 14px;
+    border-radius:10px;display:none;font-size:.92rem;
+  }
+  .reveal-box.show{display:block;animation:fade .3s;}
+  .self-grade{display:none;gap:6px;margin-top:6px;}
+  .self-grade.show{display:inline-flex;}
+  .btn-mini{
+    font-family:'Baloo 2';font-weight:700;border:none;border-radius:8px;padding:5px 12px;
+    cursor:pointer;font-size:.8rem;
+  }
+  .btn-mini.yes{background:var(--green-bg);color:var(--green);}
+  .btn-mini.no{background:var(--error-bg);color:var(--error);}
+  .btn-check{margin-right:8px;}
+  .result-ok{color:var(--green);font-weight:700;}
+  .result-bad{color:var(--error);font-weight:700;}
+  .score-box{
+    background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;padding:10px 18px;border-radius:14px;
+    font-family:'Baloo 2';font-weight:700;display:inline-flex;align-items:center;gap:8px;margin-bottom:16px;
+    box-shadow:0 10px 26px rgba(193,80,63,.25);
+  }
+  .score-box .star{color:var(--gold);}
+
+  /* Nghe - trắc nghiệm */
+  .listen-item{margin-bottom:20px;padding-bottom:18px;border-bottom:1px dashed var(--cream-2);}
+  .listen-item:last-child{border-bottom:none;margin-bottom:0;}
+  .listen-head{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+  .listen-num{font-family:'Baloo 2';font-weight:700;color:var(--red-dark);font-size:.95rem;}
+  .btn-listen{
+    border:none;background:linear-gradient(135deg,var(--red),var(--red-light));color:#fff;
+    width:42px;height:42px;border-radius:50%;cursor:pointer;font-size:1.15rem;
+    display:inline-flex;align-items:center;justify-content:center;transition:.15s;
+    box-shadow:0 3px 8px rgba(185,133,120,.35);flex-shrink:0;
+  }
+  .btn-listen:hover{transform:scale(1.1);}
+  .btn-listen:active{transform:scale(.92);}
+  .mc-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;}
+  .mc-opt{
+    font-family:'Be Vietnam Pro';background:#fff;border:2px solid var(--cream-2);border-radius:12px;
+    padding:12px 10px;cursor:pointer;text-align:center;transition:.15s;font-size:1.3rem;
+  }
+  .mc-opt:hover:not(:disabled){border-color:var(--red-light);transform:translateY(-2px);}
+  .mc-opt:disabled{cursor:default;}
+  .mc-opt.ok{border-color:var(--green);background:var(--green-bg);color:var(--green);animation:pop .3s;}
+  .mc-opt.bad{border-color:var(--error);background:var(--error-bg);color:var(--error);animation:shake .3s;}
+  .mc-opt.dim{opacity:.5;}
+  .mc-opt .mc-py{display:block;font-size:.72rem;color:var(--gray);font-weight:400;margin-top:2px;}
+
+  /* Hanzi tab */
+  .hz-picker{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+  .hz-chip{
+    font-size:1.3rem;padding:6px 14px;border-radius:10px;background:var(--cream-2);
+    cursor:pointer;border:2px solid transparent;
+  }
+  .hz-chip.active{background:var(--red);color:#fff;}
+  .hz-stage{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;}
+  #hanzi-target{
+    background-color:#fff;border-radius:14px;box-shadow:var(--shadow);
+    border:2px solid var(--red-light);overflow:hidden;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cline x1='100' y1='0' x2='100' y2='200' stroke='%23F0B8AE' stroke-width='1.5' stroke-dasharray='6,6'/%3E%3Cline x1='0' y1='100' x2='200' y2='100' stroke='%23F0B8AE' stroke-width='1.5' stroke-dasharray='6,6'/%3E%3Cline x1='0' y1='0' x2='200' y2='200' stroke='%23F0B8AE' stroke-width='1' stroke-dasharray='4,5'/%3E%3Cline x1='200' y1='0' x2='0' y2='200' stroke='%23F0B8AE' stroke-width='1' stroke-dasharray='4,5'/%3E%3C/svg%3E");
+    background-size:100% 100%;background-repeat:no-repeat;
+  }
+  .hz-info{flex:1;min-width:220px;}
+  .hz-info .row{margin-bottom:10px;}
+  .hz-info .label{font-size:.75rem;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;}
+  .hz-info .val{font-size:1rem;}
+  .hz-actions{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;}
+
+  .locked-msg{color:var(--gray);font-style:italic;padding:30px;text-align:center;}
+  .mobile-bar{display:none;}
+
+  /* Gamification overlay */
+  #confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999;}
+  .float-pts{
+    position:fixed;font-family:'Baloo 2';font-weight:800;font-size:1.3rem;color:var(--gold-dark);
+    pointer-events:none;z-index:1000;animation:floatUp 1s ease-out forwards;text-shadow:0 2px 4px rgba(0,0,0,.15);
+  }
+  .toast{
+    position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-20px);
+    background:linear-gradient(135deg,var(--red),var(--red-light));color:#fff;
+    font-family:'Baloo 2';font-weight:700;padding:12px 24px;border-radius:14px;
+    box-shadow:0 8px 20px rgba(47,122,92,.35);z-index:1001;opacity:0;transition:.35s;font-size:.95rem;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .toast.gold{background:linear-gradient(135deg,var(--gold),#ffcf6b);color:#7a4d05;}
+
+  @media(max-width:800px){
+    .mobile-bar{
+      display:flex;align-items:center;justify-content:space-between;
+      position:sticky;top:0;z-index:300;background:var(--cream);
+      padding:10px 14px;border-bottom:2px solid var(--cream-2);margin:-18px -18px 14px;
+    }
+    .mobile-bar .icon-btn{
+      background:var(--red);color:#fff;border:none;border-radius:10px;
+      width:42px;height:42px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;
+    }
+    .app{flex-direction:column;}
+    .main{padding:18px;}
+    .topbar h2{font-size:1.25rem;}
+    .tabs{
+      flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;
+      padding-bottom:4px;margin-left:-18px;margin-right:-18px;padding-left:18px;padding-right:18px;
+    }
+    .tab-btn{flex-shrink:0;padding:10px 16px;min-height:44px;}
+    .dialogue-group{padding:14px;}
+    .dlg-avatar-wrap{width:46px;}
+    .dlg-avatar{width:40px;height:40px;font-size:1.15rem;}
+    .dlg-who{font-size:.6rem;}
+    .dlg-hz{font-size:1.2rem;}
+    .dlg-bubble{padding:8px 34px 8px 12px;}
+
+    .btn, .btn-speak, .btn-mini, .order-item, select.blank{min-height:42px;}
+    .btn-speak{width:40px;height:40px;}
+    .order-item{padding:10px 15px;font-size:1.2rem;}
+    table.vocab thead{display:none;}
+    table.vocab, table.vocab tbody, table.vocab tr, table.vocab td{display:block;width:100%;}
+    table.vocab tr{
+      background:#fff;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,.06);
+      margin-bottom:10px;padding:10px 12px;border-bottom:none;position:relative;
+    }
+    table.vocab td{border:none;padding:3px 0;}
+    table.vocab td:first-child{position:absolute;top:10px;right:10px;padding:0;}
+    table.vocab td:nth-child(2){font-size:2rem;padding-right:50px;width:auto;}
+    table.vocab td:nth-child(4){font-size:.88rem;color:var(--gray);}
+    .flashcard{width:100%;max-width:320px;height:200px;}
+    .hz-stage{flex-direction:column;align-items:center;}
+    #hanzi-target{width:220px !important;height:220px !important;}
+    .hz-picker{justify-content:center;}
+  }
+
+  /* Chế độ trình chiếu (giáo viên) — phóng to toàn bộ nội dung cho máy chiếu */
+  body.present .main{zoom:1.35;}
+  body.present .mobile-bar{display:none;}
+  body.present .topbar{display:none;}
+  body.present .goals-card{display:none;}
+  body.present .xp-box{background:none;box-shadow:none;padding:0;margin-bottom:14px;color:var(--ink);}
+  body.present .xp-box .lvl-row,
+  body.present .xp-box .xp-bar-bg{display:none;}
+  body.present .xp-box .streak-row{
+    justify-content:center;font-family:'Baloo 2';font-weight:700;font-size:1.15rem;
+    color:var(--red-dark);margin-top:0;
+  }
+  #present-exit-btn{
+    display:none;position:fixed;top:14px;right:14px;z-index:2000;
+    font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.85rem;
+    background:var(--red-dark);color:#fff;border:none;border-radius:999px;
+    padding:10px 18px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3);
+  }
+  #present-exit-btn:hover{filter:brightness(1.1);}
+  body.present #present-exit-btn{display:block;}
+  .present-toggle{
+    font-family:'Baloo 2';font-weight:700;background:var(--white);border:2px solid var(--cream-2);
+    color:var(--red-dark);border-radius:999px;padding:8px 16px;cursor:pointer;font-size:.85rem;
+    display:inline-flex;align-items:center;gap:6px;transition:.15s;
+  }
+  .present-toggle.active{background:var(--red);color:#fff;border-color:var(--red);}
+  /* Bài 6: tab nhỏ trong Bài tập + bảng giờ/số + bài tập */
+  .subtabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+  .subtab-btn{font-family:'Baloo 2',sans-serif;font-weight:700;background:var(--white);border:2px solid var(--cream-2);color:var(--red-dark);padding:8px 14px;border-radius:12px;cursor:pointer;font-size:.88rem;transition:.15s;}
+  .subtab-btn.active{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;border-color:var(--accent);box-shadow:var(--shadow);}
+  .sub-panel{display:none;} .sub-panel.active{display:block;animation:fade .3s;}
+  .time-table{width:100%;border-collapse:collapse;margin:14px 0 18px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+  .time-table th{background:var(--cream-2);color:var(--red-dark);font-family:'Baloo 2';padding:8px 12px;text-align:left;font-size:.85rem;}
+  .time-table td{padding:9px 12px;border-bottom:1px solid var(--cream-2);font-size:1.05rem;}
+  .time-table td:first-child{font-family:'Baloo 2';font-weight:700;color:var(--accent-dark);white-space:nowrap;width:1%;}
+  .num-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;}
+  .num-tile{background:#fff;border:2px solid var(--cream-2);border-radius:14px;padding:12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+  .num-n{font-family:'Baloo 2';font-size:2.2rem;font-weight:800;color:var(--red-dark);margin-bottom:6px;}
+  .fx-item{margin-bottom:18px;padding-bottom:14px;border-bottom:1px dashed var(--cream-2);}
+  .fx-item:last-child{border-bottom:none;}
+  input.ans-in{width:100%;max-width:460px;border:2px solid var(--cream-2);border-radius:12px;padding:9px 12px;font-size:1.1rem;margin:0 8px 8px 0;transition:.15s;}
+  input.ans-in:focus{outline:none;border-color:var(--red-light);box-shadow:0 0 0 3px rgba(217,138,128,.2);}
+  input.ans-in.ok{border-color:var(--green);background:var(--green-bg);}
+  input.ans-in.bad{border-color:var(--error);background:var(--error-bg);}
+  u.ul-part{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px;color:var(--red-dark);font-weight:700;}
+  .sub-hint{font-size:.95rem;color:var(--gray);font-family:'Be Vietnam Pro';}
+  .wrong-s{color:var(--error);}
+  .passage{background:var(--cream);border-left:5px solid var(--red-light);border-radius:12px;padding:14px 16px;font-size:1.2rem;line-height:2.3;}
+  .cz-n{font-size:.65rem;color:var(--gray);margin:0 2px;}
+
+  .quiz-card{max-width:760px;margin:0 auto;padding:6px 4px;}
+  .quiz-n{font-family:'Baloo 2';font-weight:700;color:var(--red-dark);font-size:.9rem;}
+  .quiz-hz{font-size:3.2rem;font-weight:700;text-align:center;margin:6px 0 2px;color:var(--ink);}
+  .quiz-tag{text-align:center;color:var(--gray);font-family:'Baloo 2';font-weight:700;margin-bottom:14px;}
+  .quiz-opt{text-align:left;padding:12px 14px;}
+  .quiz-l{color:var(--gray);margin-right:4px;}
+  .quiz-fbbox{margin-top:14px;border-radius:12px;padding:12px 16px;}
+  .quiz-fbbox.okbox{background:var(--green-bg);border-left:4px solid var(--green);}
+  .quiz-fbbox.badbox{background:var(--error-bg);border-left:4px solid var(--error);}
+  .quiz-ok{color:var(--green);font-weight:700;margin-bottom:4px;} .quiz-bad{color:var(--error);font-weight:700;margin-bottom:4px;}
+  .quiz-ex{font-size:.95rem;} .quiz-py{color:var(--gray);font-size:.85rem;margin-left:8px;}
+  .wx-group{margin-bottom:22px;} .wx-title{font-family:'Baloo 2';color:var(--red-dark);font-size:1.05rem;margin-bottom:10px;}
+  .wx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;}
+  .wx-card{background:#fff;border:2px solid var(--cream-2);border-radius:14px;padding:12px 8px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.05);transition:.15s;}
+  .wx-card:hover{transform:translateY(-2px);border-color:var(--red-light);}
+  .wx-emoji{font-size:2.8rem;line-height:1.2;} .wx-hz{font-size:1.5rem;font-weight:700;color:var(--red-dark);margin-top:4px;}
+  .wx-py{color:var(--accent-dark);font-weight:700;font-size:.85rem;} .wx-vi{font-size:.85rem;color:var(--gray);margin:2px 0 6px;}
+  #panel-weather.hide-py .wx-py{visibility:hidden;}
+
+  .wx-card{padding:14px 8px 12px;border-radius:16px;} .wx-ico{height:92px;display:flex;align-items:center;justify-content:center;}
+  .wx-hz{font-size:1.45rem;font-weight:800;color:var(--red-dark);margin:6px 0 4px;}
+  .wx-py{display:inline-block;background:var(--accent-light);border:2px solid var(--accent);color:#7a4d05;font-weight:800;font-size:.85rem;padding:2px 12px;border-radius:9px;}
+  .wx-vi{margin:6px 0 8px;font-weight:600;}
+  .fl-sub{display:none;} .fl-sub.active{display:block;animation:fade .3s;}
+  .fc-board{display:flex;border-radius:18px;overflow:hidden;box-shadow:var(--shadow-pop);border:3px solid var(--red);margin:14px 0 16px;background:var(--cream);}
+  .fc-side{background:linear-gradient(180deg,var(--red),var(--red-dark));color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:12px 16px;font-size:1.7rem;font-weight:800;}
+  .fc-days{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:0;}
+  .fc-day{padding:14px 18px;} .fc-day+.fc-day{border-left:2px dashed var(--red-light);}
+  .fc-dayhd{display:inline-block;background:var(--accent-light);border:2px solid var(--accent);color:#7a4d05;font-weight:800;font-size:1.3rem;padding:2px 18px;border-radius:12px;margin-bottom:12px;}
+  .fc-line{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+  .fc-lab{min-width:104px;font-family:'Baloo 2';font-weight:700;color:var(--gray);font-size:.9rem;} .fc-lab.hi{color:#C0463C;} .fc-lab.lo{color:#3C6FB0;}
+  .fc-in{width:112px;border:2px solid var(--red-light);border-radius:10px;padding:7px 8px;font-size:1.1rem;text-align:center;background:#fff;transition:.15s;}
+  .fc-in:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(217,138,128,.25);}
+  .fc-in.ok{border-color:var(--green);background:var(--green-bg);} .fc-in.bad{border-color:var(--error);background:var(--error-bg);}
+  .fc-unit{font-weight:800;color:var(--red-dark);}
+  @media(max-width:800px){.fc-board{flex-direction:column;}.fc-side{flex-direction:row;padding:8px;}.fc-days{grid-template-columns:1fr;}.fc-day+.fc-day{border-left:none;border-top:2px dashed var(--red-light);}}
+</style>
+</head>
+<body>
+<audio id="audio-tuvung" src="tuvung11.mp3" preload="auto"></audio>
+<audio id="audio-baikhoa1" src="baikhoa11_1.mp3" preload="auto"></audio>
+<audio id="audio-baikhoa2" src="baikhoa11_2.mp3" preload="auto"></audio>
+<audio id="audio-ex5" src="11-5.mp3" preload="none"></audio>
+<audio id="audio-ex6" src="11-6.mp3" preload="none"></audio>
+<audio id="audio-ex9" src="11-9.mp3" preload="none"></audio>
+<audio id="audio-ex10" src="11-10.mp3" preload="none"></audio>
+<audio id="audio-ex11" src="11-11.mp3" preload="none"></audio>
+<button id="present-exit-btn" onclick="togglePresent()" aria-label="Thoát chế độ trình chiếu">✕ Thoát trình chiếu</button>
+<div class="app"><div class="main">
+<div class="mobile-bar"><strong style="font-family:'Baloo 2';color:var(--red);">HoaiphuongHSK · Boya SC1 · Bài 11</strong><button class="icon-btn" id="present-toggle-mobile" aria-label="Chế độ trình chiếu">🖥</button></div>
+<div class="topbar"><div class="topbar-brand">🐼 HoaiphuongHSK · Boya Chinese Sơ cấp 1</div>
+<h2>Bài 11 · 北京的冬天比较冷 (Mùa đông Bắc Kinh khá lạnh)</h2>
+<div class="desc">2 hội thoại: Mary hỏi Nakamura về thời tiết hôm nay · David hỏi thầy/cô Lưu về khí hậu Bắc Kinh</div>
+<div class="topbar-actions"><button class="present-toggle" id="present-toggle-desktop">🖥 Chế độ trình chiếu</button></div></div>
+<div class="goals-card"><div class="goals-head">🎯 <span class="hanzi">目标</span> Mục tiêu</div>
+<label class="goal-item"><input type="checkbox"><span><span class="hanzi">掌握"怎么样"的用法，询问天气、身体、学习等情况。</span>Nắm vững cách dùng "怎么样" để hỏi thời tiết, sức khoẻ, học tập…</span></label>
+<label class="goal-item"><input type="checkbox"><span><span class="hanzi">掌握"不A不B"表示正好。</span>Nắm vững cấu trúc "不A不B" (không A không B — vừa vặn).</span></label>
+<label class="goal-item"><input type="checkbox"><span><span class="hanzi">掌握形容词谓语句（不用"是"，前面常加程度副词）。</span>Nắm vững câu vị ngữ tính từ: không dùng "是", trước tính từ thường có phó từ mức độ.</span></label>
+<label class="goal-item"><input type="checkbox"><span><span class="hanzi">能用汉语询问和描述天气、四季，表达喜好。</span>Có thể dùng tiếng Trung để hỏi và miêu tả thời tiết, bốn mùa và nói về sở thích.</span></label></div>
+<div class="xp-box" style="margin-bottom:18px;"><div class="lvl-row"><span id="lvl-label">Cấp 1 🌱</span><span id="xp-label">0 XP</span></div><div class="xp-bar-bg"><div class="xp-bar-fill" id="xp-bar"></div></div><div class="streak-row"><span class="streak-flame">🔥</span><span id="streak-label">Chuỗi đúng: 0</span></div></div>
+<div class="tabs"><button class="tab-btn active" data-tab="vocab">📖 Từ vựng</button><button class="tab-btn" data-tab="weather">🌦 Chủ đề thời tiết</button><button class="tab-btn" data-tab="flash">🃏 Flashcard</button><button class="tab-btn" data-tab="dialogue">💬 Bài khoá</button><button class="tab-btn" data-tab="grammar">📐 Ngữ pháp</button><button class="tab-btn" data-tab="write">📝 Bài tập</button><button class="tab-btn" data-tab="hanzi">字 Chữ Hán</button></div>
+<div class="panel active" id="panel-vocab"><div style="display:flex;justify-content:flex-end;margin-bottom:10px;"><button class="btn secondary" id="vocab-py-toggle" onclick="toggleVocabPinyin()">🙈 Ẩn phiên âm</button></div>
+<div class="card"><table class="vocab"><thead><tr><th></th><th>Chữ Hán</th><th>Pinyin</th><th>Từ loại</th><th>Nghĩa</th></tr></thead><tbody id="vocab-body"></tbody></table></div></div>
+<div class="panel" id="panel-weather"><div style="display:flex;justify-content:flex-end;margin-bottom:10px;"><button class="btn secondary" id="wx-py-toggle" onclick="toggleWxPinyin()">🙈 Ẩn phiên âm</button></div><div class="card" id="wx-host"></div></div>
+<div class="panel" id="panel-dialogue"><div style="display:flex;justify-content:flex-end;margin-bottom:10px;"><button class="btn secondary" id="dialogue-py-toggle" onclick="toggleDialoguePinyin()">🙈 Ẩn phiên âm</button></div><div id="dialogue-container"></div><div class="ex-sub" style="margin-top:-6px;">🔊 Bấm "Nghe cả đoạn" để nghe trọn hội thoại bằng audio gốc Boya — bấm lại để tạm dừng.</div></div>
+<div class="panel" id="panel-grammar"><div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px;flex-wrap:wrap;"><button class="btn secondary" id="grammar-py-toggle" onclick="toggleGrammarPinyin()">🙈 Ẩn pinyin</button><button class="btn secondary" id="grammar-vi-toggle" onclick="toggleGrammarVi()">🙈 Ẩn nghĩa</button></div><div id="grammar-container"></div></div>
+<div class="panel" id="panel-flash"><div class="subtabs" id="fl-subtabs"><button class="subtab-btn active" data-fs="card">🃏 Thẻ lật</button><button class="subtab-btn" data-fs="quiz">🎯 Trắc nghiệm từ vựng</button></div><div class="fl-sub active" id="fs-card"><div class="card fc-wrap"><div class="fc-progress" id="fc-progress">1 / 30</div><div class="fc-stars">⭐ Đã thuộc: <span id="fc-known-count">0</span>/<span id="fc-total">30</span></div>
+<div class="flashcard" id="flashcard"><div class="fc-inner"><div class="fc-face fc-front"><div class="hz" id="fc-hz"></div><div class="hint">👆 Nhấp để lật thẻ</div></div><div class="fc-face fc-back"><div class="pinyin" id="fc-pinyin"></div><div class="mean" id="fc-mean"></div></div></div></div>
+<div class="fc-controls"><button class="btn secondary" onclick="fcPrev()">◀ Trước</button><button class="btn secondary" onclick="flipCard()">🔄 Lật thẻ</button><button class="btn" onclick="fcNext()">Sau ▶</button></div>
+<div class="fc-controls"><button class="btn gold" onclick="fcKnown(true)">✅ Đã thuộc</button><button class="btn secondary" onclick="fcKnown(false)">🔁 Ôn lại</button></div>
+<div class="fc-controls"><button class="btn secondary" id="fc-shuffle-btn" onclick="toggleShuffleFC()">🔀 Trộn thẻ</button></div></div></div><div class="fl-sub" id="fs-quiz"><div class="card ex-block"><div class="ex-title">Trắc nghiệm từ vựng Bài 11</div><div class="ex-sub">Chọn nghĩa đúng của từ. Chọn đúng sẽ phát âm từ và hiện ví dụ. Máy tính: bấm <b>Enter ↵</b> để sang câu tiếp, phím <b>1–4</b> để chọn đáp án.</div><div id="c-quiz"></div></div></div></div>
+<div class="panel" id="panel-write"><div class="score-box"><span class="star">⭐</span> Điểm: <span id="total-score">0</span> / <span id="total-max">0</span></div><div id="ex-host"></div></div>
+<div class="panel" id="panel-hanzi"><div class="card"><div class="hz-picker" id="hz-picker"></div><div class="hz-stage"><div><div id="hanzi-target" style="width:260px;height:260px;"></div><div class="hz-actions"><button class="btn secondary" onclick="hzAnimate()">▶ Xem thứ tự nét</button><button class="btn secondary" onclick="hzQuiz()">✍️ Tự viết (đố nét)</button><button class="btn secondary" onclick="hzOutline()">🖊 Tô nét mờ</button></div></div>
+<div class="hz-info"><div class="row"><div class="label">Pinyin</div><div class="val" id="hz-pinyin"></div></div><div class="row"><div class="label">Bộ thủ</div><div class="val" id="hz-radical"></div></div><div class="row"><div class="label">Số nét</div><div class="val" id="hz-strokes"></div></div><div class="row"><div class="label">Nghĩa</div><div class="val" id="hz-mean"></div></div><div class="row"><div class="label">Mẹo nhớ</div><div class="val" id="hz-tip"></div></div></div></div></div></div>
+</div></div>
+<canvas id="confetti-canvas"></canvas><div class="toast" id="toast"></div>
+<script>
+/* ============ DỮ LIỆU BÀI 11 (Boya Sơ cấp 1 - 《北京的冬天比较冷》- trang 72-74) ============ */
+/* [Hán, pinyin, từ loại, nghĩa, câu ví dụ, pinyin ví dụ, nghĩa ví dụ] — 25 từ sách + 5 từ bổ sung (nhãn EXTRA) */
+const RAW_VOCAB = [
+["天气","tiānqì","dt.","thời tiết","今天的天气怎么样？","Jīntiān de tiānqì zěnmeyàng?","Thời tiết hôm nay thế nào?"],
+["怎么样","zěnmeyàng","đt.","thế nào, ra sao","北京秋天的天气怎么样？","Běijīng qiūtiān de tiānqì zěnmeyàng?","Thời tiết mùa thu Bắc Kinh thế nào?"],
+["不太","bú tài","cụm từ","không … lắm","今天的天气不太好。","Jīntiān de tiānqì bú tài hǎo.","Thời tiết hôm nay không tốt lắm."],
+["风","fēng","dt.","gió","今天有风。","Jīntiān yǒu fēng.","Hôm nay có gió."],
+["雨","yǔ","dt.","mưa","下午还有雨。","Xiàwǔ hái yǒu yǔ.","Buổi chiều còn có mưa."],
+["冷","lěng","tt.","lạnh","北京的冬天比较冷。","Běijīng de dōngtiān bǐjiào lěng.","Mùa đông Bắc Kinh khá lạnh."],
+["度","dù","lượng từ","độ","今天二十度。","Jīntiān èrshí dù.","Hôm nay 20 độ."],
+["晴天","qíngtiān","dt.","ngày nắng, trời quang","明天是晴天。","Míngtiān shì qíngtiān.","Ngày mai trời nắng."],
+["秋天","qiūtiān","dt.","mùa thu","北京的秋天不冷不热。","Běijīng de qiūtiān bù lěng bú rè.","Mùa thu Bắc Kinh không lạnh không nóng."],
+["热","rè","tt.","nóng","夏天很热。","Xiàtiān hěn rè.","Mùa hè rất nóng."],
+["舒服","shūfu","tt.","thoải mái, dễ chịu","北京的秋天很舒服。","Běijīng de qiūtiān hěn shūfu.","Mùa thu Bắc Kinh rất dễ chịu."],
+["最","zuì","phó.","nhất","秋天是最好的季节。","Qiūtiān shì zuì hǎo de jìjié.","Mùa thu là mùa đẹp nhất."],
+["季节","jìjié","dt.","mùa (trong năm)","你最喜欢哪个季节？","Nǐ zuì xǐhuan nǎ ge jìjié?","Bạn thích mùa nào nhất?"],
+["冬天","dōngtiān","dt.","mùa đông","北京的冬天很冷。","Běijīng de dōngtiān hěn lěng.","Mùa đông Bắc Kinh rất lạnh."],
+["比较","bǐjiào","phó.","tương đối, khá","北京的冬天比较冷。","Běijīng de dōngtiān bǐjiào lěng.","Mùa đông Bắc Kinh khá lạnh."],
+["差不多","chàbuduō","phó.","gần như, xấp xỉ","最冷差不多零下十五度。","Zuì lěng chàbuduō língxià shíwǔ dù.","Lạnh nhất xấp xỉ âm 15 độ."],
+["零下","língxià","dt.","dưới 0 độ","今天零下五度。","Jīntiān língxià wǔ dù.","Hôm nay âm 5 độ."],
+["常常","chángcháng","phó.","thường xuyên","常常下雪吗？","Chángcháng xià xuě ma?","Có thường xuyên có tuyết không?"],
+["下","xià","đgt.","rơi (mưa, tuyết)","下午下雨。","Xiàwǔ xià yǔ.","Buổi chiều trời mưa."],
+["雪","xuě","dt.","tuyết","北京的冬天不常下雪。","Běijīng de dōngtiān bù cháng xià xuě.","Mùa đông Bắc Kinh không thường có tuyết."],
+["常","cháng","phó.","thường","不常下雪。","Bù cháng xià xuě.","Không thường có tuyết."],
+["喜欢","xǐhuan","đgt.","thích","我喜欢春天。","Wǒ xǐhuan chūntiān.","Tôi thích mùa xuân."],
+["夏天","xiàtiān","dt.","mùa hè","我喜欢夏天。","Wǒ xǐhuan xiàtiān.","Tôi thích mùa hè."],
+["游泳","yóu yǒng","đgt. (li hợp)","bơi","我喜欢游泳。","Wǒ xǐhuan yóuyǒng.","Tôi thích bơi."],
+["春天","chūntiān","dt.","mùa xuân","刘老师喜欢春天。","Liú lǎoshī xǐhuan chūntiān.","Thầy/cô Lưu thích mùa xuân."],
+["阴天","yīntiān","dt.","trời âm u","今天是阴天。","Jīntiān shì yīntiān.","Hôm nay trời âm u."],
+["刮风","guā fēng","đgt.","nổi gió, gió thổi","今天刮风。","Jīntiān guā fēng.","Hôm nay có gió thổi."],
+["暖和","nuǎnhuo","tt.","ấm áp","春天很暖和。","Chūntiān hěn nuǎnhuo.","Mùa xuân rất ấm áp."],
+["凉快","liángkuai","tt.","mát mẻ","秋天很凉快。","Qiūtiān hěn liángkuai.","Mùa thu rất mát mẻ."],
+["温度","wēndù","dt.","nhiệt độ","今天的温度是二十度。","Jīntiān de wēndù shì èrshí dù.","Nhiệt độ hôm nay là 20 độ."]
+];
+const EXTRA = ["阴天","刮风","暖和","凉快","温度"]; // không có trong mp3 gốc -> giọng máy
+const VOCAB = RAW_VOCAB.map(r=>({hz:r[0],py:r[1],pos:r[2],mean:r[3],ex:{hz:r[4],py:r[5],vi:r[6]},extra:EXTRA.includes(r[0])}));
+
+/* Chủ đề thời tiết: [emoji, Hán, pinyin, nghĩa] */
+const WEATHER = [
+ {title:"① Bầu trời, thiên thể", items:[["☀️","晴天","qíngtiān","ngày nắng, trời quang"],["☁️","阴天","yīntiān","trời âm u"],["⛅","多云","duōyún","nhiều mây"],["🌫️","有雾","yǒu wù","có sương mù"],["🌞","太阳","tàiyáng","mặt trời"],["🌙","月亮","yuèliang","mặt trăng"],["🌈","彩虹","cǎihóng","cầu vồng"],["🌤️","出太阳","chū tàiyáng","ló nắng, có nắng"]]},
+ {title:"② Mưa, sấm sét", items:[["🌧️","下雨","xià yǔ","trời mưa"],["🌦️","阵雨","zhènyǔ","mưa rào"],["💧","毛毛雨","máomaoyǔ","mưa phùn"],["🌧️🌧️","暴雨","bàoyǔ","mưa to, mưa như trút"],["⛈️","雷雨","léiyǔ","mưa giông"],["🌩️","打雷","dǎ léi","có sấm"],["⚡","闪电","shǎndiàn","chớp, tia chớp"]]},
+ {title:"③ Gió, tuyết, bão, mưa đá", items:[["💨","刮风","guā fēng","nổi gió, gió thổi"],["🌀","台风","táifēng","bão (typhoon)"],["❄️","下雪","xià xuě","tuyết rơi"],["🧊","冰雹","bīngbáo","mưa đá"]]},
+ {title:"④ Cảm giác nhiệt độ, độ ẩm", items:[["🥵","热","rè","nóng"],["😊","暖和","nuǎnhuo","ấm áp"],["🍃","凉快","liángkuai","mát mẻ"],["🥶","冷","lěng","lạnh"],["🌡️❄️","零下","língxià","dưới 0 độ"],["💦","潮湿","cháoshī","ẩm ướt, ẩm thấp"]]},
+ {title:"⑤ Dụng cụ, khác", items:[["🌡️","温度","wēndù","nhiệt độ"],["📺","天气预报","tiānqì yùbào","dự báo thời tiết"],["☂️","雨伞","yǔsǎn","ô, dù"],["🌂","带伞","dài sǎn","mang theo ô"]]}
+];
+
+/* Chữ Hán: [chữ, pinyin, bộ thủ, số nét (đã đối chiếu dữ liệu Hanzi Writer), nghĩa, mẹo nhớ] — chỉ chữ mới trong tab Từ vựng chung */
+const HZ_RAW = [
+["气","qì","气(khí)",4,"hơi, khí","Hơi nước bốc lên. 天气 = thời tiết."],
+["怎","zěn","心(tâm)",9,"sao, thế nào","乍 + 心. Dùng trong 怎么样 (thế nào)."],
+["样","yàng","木(mộc)",10,"kiểu, dáng vẻ","木 + 羊. 怎么样 = ra sao, thế nào."],
+["风","fēng","风(phong)",4,"gió","Hình cánh buồm căng gió. 刮风 = nổi gió."],
+["雨","yǔ","雨(vũ)",8,"mưa","Mái trời + các giọt mưa rơi. 下雨 = trời mưa."],
+["冷","lěng","冫(băng)",7,"lạnh","冫(băng) + 令 → lạnh buốt. 北京的冬天很冷."],
+["度","dù","广(nghiễm)",9,"độ (nhiệt độ)","Lượng từ chỉ độ: 二十度 = 20 độ."],
+["晴","qíng","日(nhật)",12,"trời nắng","日(mặt trời) + 青. 晴天 = ngày nắng."],
+["秋","qiū","禾(hòa)",9,"mùa thu","禾(lúa) + 火(lửa) → mùa lúa chín vàng."],
+["热","rè","灬(hoả)",10,"nóng","灬(lửa) ở dưới → nóng. 夏天很热."],
+["舒","shū","舌(thiệt)",12,"thư thái","Trong 舒服 = thoải mái, dễ chịu."],
+["服","fú","月(nguyệt)",8,"phục; quần áo","Trong 舒服. Còn gặp ở 服务员."],
+["最","zuì","曰(viết)",12,"nhất","最 + tính từ: 最好 = tốt nhất, 最冷 = lạnh nhất."],
+["季","jì","子(tử)",8,"mùa","禾 + 子. 季节 = mùa trong năm."],
+["节","jié","艹(thảo)",5,"đốt; lễ, mùa","Trong 季节 (mùa), cũng gặp ở 节日 (ngày lễ)."],
+["冬","dōng","夂(tri)",5,"mùa đông","Mùa cuối năm, băng giá. 冬天 = mùa đông."],
+["比","bǐ","比(tỷ)",4,"so sánh","Hình hai người đứng cạnh nhau. 比较 = tương đối."],
+["较","jiào","车(xa)",10,"so, khá","车 + 交. 比较冷 = khá lạnh."],
+["常","cháng","巾(cân)",11,"thường","不常下雪 = không thường có tuyết. 常常 = thường xuyên."],
+["雪","xuě","雨(vũ)",11,"tuyết","雨 (trời) + ヨ. 下雪 = tuyết rơi."],
+["喜","xǐ","口(khẩu)",12,"vui, thích","Trong 喜欢 = thích."],
+["欢","huān","欠(khiếm)",6,"vui mừng","又 + 欠. 喜欢 = thích (đọc nhẹ chữ 欢)."],
+["夏","xià","夂(tri)",10,"mùa hè","夏天 = mùa hè. 我喜欢夏天."],
+["游","yóu","氵(thuỷ)",12,"bơi; du","氵(nước) → liên quan nước. 游泳 = bơi."],
+["泳","yǒng","氵(thuỷ)",8,"bơi lội","氵(nước) + 永. 游泳 = bơi."],
+["春","chūn","日(nhật)",9,"mùa xuân","Mặt trời + cỏ cây nảy mầm. 春天 = mùa xuân."],
+["阴","yīn","阝(phụ)",6,"âm u, râm","阝 + 月. 阴天 = trời âm u."],
+["刮","guā","刂(đao)",8,"nổi (gió); cạo","刮风 = nổi gió, gió thổi."],
+["暖","nuǎn","日(nhật)",13,"ấm","日(mặt trời) → ấm. 暖和 = ấm áp."],
+["和","hé / huo","口(khẩu)",8,"và; hòa; (ấm)","Đọc huo (nhẹ) trong 暖和 = ấm áp; đọc hé = 'và'."],
+["凉","liáng","冫(băng)",10,"mát","冫 + 京. 凉快 = mát mẻ."],
+["快","kuài","忄(tâm)",7,"nhanh; vui","忄(tâm) + 夬. Trong 凉快 = mát mẻ."],
+["温","wēn","氵(thuỷ)",12,"ấm; nhiệt","氵 + 昷. 温度 = nhiệt độ."]
+];
+const HANZI_LIST = HZ_RAW.map(r=>({char:r[0],py:r[1],radical:r[2],strokes:r[3],mean:r[4],tip:r[5]}));
+
+/* Bài khoá */
+const DLG_GROUPS = [
+  { title:"1. Mary hỏi Nakamura về thời tiết hôm nay", audioSrc:"audio-baikhoa1", lines:[
+    {who:'female1', name:'Mǎlì',     hzName:'玛丽', py:'Jīntiān de tiānqì zěnmeyàng?', hz:'今天的天气怎么样？'},
+    {who:'female2', name:'Zhōngcūn', hzName:'中村', py:'Bú tài hǎo, yǒu fēng, xiàwǔ hái yǒu yǔ.', hz:'不太好，有风，下午还有雨。'},
+    {who:'female1', name:'Mǎlì',     hzName:'玛丽', py:'Lěng ma?', hz:'冷吗？'},
+    {who:'female2', name:'Zhōngcūn', hzName:'中村', py:'Bù lěng, èrshí dù.', hz:'不冷，二十度。'},
+    {who:'female1', name:'Mǎlì',     hzName:'玛丽', py:'Míngtiān ne?', hz:'明天呢？'},
+    {who:'female2', name:'Zhōngcūn', hzName:'中村', py:'Míngtiān shì qíngtiān.', hz:'明天是晴天。'}
+  ]},
+  { title:"2. David hỏi thầy/cô Lưu về khí hậu Bắc Kinh", audioSrc:"audio-baikhoa2", lines:[
+    {who:'male1',   name:'Dàwèi',       hzName:'大卫',   py:'Lǎoshī, Běijīng qiūtiān de tiānqì zěnmeyàng?', hz:'老师，北京秋天的天气怎么样？'},
+    {who:'teacher', name:'Liú lǎoshī',  hzName:'刘老师', py:'Běijīng de qiūtiān bù lěng bú rè, hěn shūfu, shì zuì hǎo de jìjié.', hz:'北京的秋天不冷不热，很舒服，是最好的季节。'},
+    {who:'male1',   name:'Dàwèi',       hzName:'大卫',   py:'Dōngtiān ne? Tīngshuō Běijīng de dōngtiān hěn lěng, shì ma?', hz:'冬天呢？听说北京的冬天很冷，是吗？'},
+    {who:'teacher', name:'Liú lǎoshī',  hzName:'刘老师', py:'Duì, Běijīng de dōngtiān bǐjiào lěng, zuì lěng chàbuduō língxià shíwǔ dù.', hz:'对，北京的冬天比较冷，最冷差不多零下十五度。'},
+    {who:'male1',   name:'Dàwèi',       hzName:'大卫',   py:'Chángcháng xià xuě ma?', hz:'常常下雪吗？'},
+    {who:'teacher', name:'Liú lǎoshī',  hzName:'刘老师', py:'Bù cháng xià xuě. Dàwèi, nǐ zuì xǐhuan nǎ ge jìjié?', hz:'不常下雪。大卫，你最喜欢哪个季节？'},
+    {who:'male1',   name:'Dàwèi',       hzName:'大卫',   py:'Wǒ xǐhuan xiàtiān, wǒ xǐhuan yóuyǒng. Lǎoshī, nín ne?', hz:'我喜欢夏天，我喜欢游泳。老师，您呢？'},
+    {who:'teacher', name:'Liú lǎoshī',  hzName:'刘老师', py:'Wǒ xǐhuan chūntiān.', hz:'我喜欢春天。'}
+  ]}
+];
+const DLG_AVATAR = {male1:'🧑', female1:'👩', female2:'👩‍🦰', teacher:'👨‍🏫'};
+
+/* Ngữ pháp */
+const GRAMMAR_POINTS = [
+  {
+    title: `怎么样 — Thế nào (và phân biệt với 怎么)`,
+    key: `今天的天气怎么样？`, keyPy: `Jīntiān de tiānqì zěnmeyàng?`,
+    diagram: `<table class="time-table"><thead><tr><th></th><th>怎么样</th><th>怎么</th></tr></thead><tbody>
+      <tr><td>Vị trí</td><td>Cuối câu</td><td>Trước động từ</td></tr>
+      <tr><td>Hỏi</td><td>Tình trạng, đánh giá, ý kiến</td><td>Cách thức ("làm thế nào") hoặc nguyên nhân ("sao lại")</td></tr>
+      <tr><td>Ví dụ</td><td class="hanzi">天气怎么样？</td><td class="hanzi">怎么去？ / 你怎么不去？</td></tr></tbody></table>`,
+    forms: [
+      { label: "① 怎么样 — đặt cuối câu, hỏi thời tiết, sức khoẻ, học tập… (hoặc hỏi ý kiến)", examples: [
+        {hz:"北京秋天的天气怎么样？", py:"Běijīng qiūtiān de tiānqì zěnmeyàng?", vi:"Thời tiết mùa thu Bắc Kinh thế nào?"},
+        {hz:"爷爷的身体怎么样？", py:"Yéye de shēntǐ zěnmeyàng?", vi:"Sức khoẻ của ông thế nào? (身体 = cơ thể, sức khoẻ)"},
+        {hz:"北京大学的留学生宿舍怎么样？", py:"Běijīng Dàxué de liúxuéshēng sùshè zěnmeyàng?", vi:"Ký túc xá lưu học sinh Đại học Bắc Kinh thế nào?"},
+        {hz:"你的汉语学得怎么样？", py:"Nǐ de Hànyǔ xué de zěnmeyàng?", vi:"Bạn học tiếng Hán thế nào rồi?"},
+        {hz:"这个电影怎么样？", py:"Zhège diànyǐng zěnmeyàng?", vi:"Bộ phim này thế nào?"},
+        {hz:"今天晚上去游泳，怎么样？", py:"Jīntiān wǎnshang qù yóuyǒng, zěnmeyàng?", vi:"Tối nay đi bơi, được không?"}
+      ]},
+      { label: "② 怎么 — đứng trước động từ: hỏi CÁCH THỨC", examples: [
+        {hz:"这个字怎么读？", py:"Zhège zì zěnme dú?", vi:"Chữ này đọc thế nào?"},
+        {hz:"去图书馆怎么走？", py:"Qù túshūguǎn zěnme zǒu?", vi:"Đến thư viện đi thế nào?"},
+        {hz:"你怎么去学校？", py:"Nǐ zěnme qù xuéxiào?", vi:"Bạn đến trường bằng cách nào?"}
+      ]},
+      { label: "③ 怎么 — hỏi NGUYÊN NHÂN (sao lại…)", examples: [
+        {hz:"你怎么不去？", py:"Nǐ zěnme bú qù?", vi:"Sao bạn không đi?"},
+        {hz:"今天怎么这么冷？", py:"Jīntiān zěnme zhème lěng?", vi:"Sao hôm nay lạnh thế?"},
+        {hz:"你怎么了？", py:"Nǐ zěnme le?", vi:"Bạn sao vậy?"}
+      ]}
+    ],
+    note: `Ghi chú: 怎么样 hỏi "như thế nào" và đứng cuối câu; 怎么 đứng trước động từ để hỏi "bằng cách nào / vì sao". Mục ②③ và các ví dụ về 怎么 là phần mở rộng ngoài sách để phân biệt hai từ.`
+  },
+  {
+    title: `不A不B — Không A không B (vừa vặn)`,
+    key: `北京的秋天不冷不热，很舒服。`, keyPy: `Běijīng de qiūtiān bù lěng bú rè, hěn shūfu.`,
+    forms: [
+      { label: "A và B là hai tính từ trái nghĩa, biểu thị \"vừa đúng, không thái quá\"", examples: [
+        {hz:"北京的秋天不冷不热，很舒服。", py:"Běijīng de qiūtiān bù lěng bú rè, hěn shūfu.", vi:"Mùa thu Bắc Kinh không lạnh không nóng, rất dễ chịu."},
+        {hz:"今天的天气不冷不热。", py:"Jīntiān de tiānqì bù lěng bú rè.", vi:"Thời tiết hôm nay không lạnh không nóng."},
+        {hz:"这个房间不大不小。", py:"Zhège fángjiān bú dà bù xiǎo.", vi:"Căn phòng này không to không nhỏ."},
+        {hz:"现在九点，不早不晚。", py:"Xiànzài jiǔ diǎn, bù zǎo bù wǎn.", vi:"Bây giờ 9 giờ, không sớm không muộn."},
+        {hz:"他说中文说得不快不慢。", py:"Tā shuō Zhōngwén shuō de bú kuài bú màn.", vi:"Anh ấy nói tiếng Trung không nhanh không chậm."}
+      ]}
+    ],
+    note: `Cụm trong sách: 不大不小 (bú dà bù xiǎo) · 不早不晚 (bù zǎo bù wǎn) · 不快不慢 (bú kuài bú màn). Lưu ý biến điệu của 不 (bù → bú trước thanh 4).`
+  },
+  {
+    title: `形容词谓语 — Vị ngữ tính từ`,
+    key: `听说北京的冬天很冷。`, keyPy: `Tīngshuō Běijīng de dōngtiān hěn lěng.`,
+    forms: [
+      { label: "① Tính từ làm vị ngữ KHÔNG cần dùng 是", examples: [
+        {hz:"那个学校很小。", py:"Nàge xuéxiào hěn xiǎo.", vi:"Trường đó rất nhỏ."},
+        {hz:"北京的冬天比较冷。", py:"Běijīng de dōngtiān bǐjiào lěng.", vi:"Mùa đông Bắc Kinh khá lạnh."},
+        {hz:"今天的天气不太舒服。", py:"Jīntiān de tiānqì bú tài shūfu.", vi:"Thời tiết hôm nay không dễ chịu lắm."},
+        {hz:"这个电影很有名。", py:"Zhège diànyǐng hěn yǒumíng.", vi:"Bộ phim này rất nổi tiếng."}
+      ]},
+      { label: "② Trước tính từ thường có phó từ mức độ; nếu không có thì mang ý so sánh, đối chiếu", examples: [
+        {hz:"我的房间大，他的房间小。", py:"Wǒ de fángjiān dà, tā de fángjiān xiǎo.", vi:"Phòng của tôi to, phòng của anh ấy nhỏ."},
+        {hz:"冬天冷，夏天热。", py:"Dōngtiān lěng, xiàtiān rè.", vi:"Mùa đông lạnh, mùa hè nóng."}
+      ]}
+    ],
+    note: `Ghi chú: sai → 北京的冬天是冷; đúng → 北京的冬天很冷 / 比较冷. Phó từ thường gặp: 很, 比较, 不太, 最.`
+  }
+];
+
+/* ============ GAME HOÁ: XP / STREAK / BADGE / CONFETTI / ÂM THANH ============ */
+const GAME = { xp:0, streak:0, bestStreak:0, level:1, badges:{} };
+const BADGES = [{id:'quiz',label:'🎯 Từ vựng'},{id:'mc',label:'📝 Chọn đáp án'},{id:'dict',label:'🎧 Nghe điền'},{id:'listen',label:'🎧 Nghe hiểu'},{id:'order',label:'🧩 Sắp câu'},{id:'fix',label:'✏️ Sửa câu'},{id:'read',label:'📖 Đọc hiểu'},{id:'streak5',label:'🔥 Chuỗi 5'},{id:'hanzi',label:'字 Viết chữ'}];
+function renderBadges(){
+  const row = document.getElementById('badge-row'); if(!row) return;
+  row.innerHTML = BADGES.map(b=>`<span class="badge-pill ${GAME.badges[b.id]?'earned':''}">${b.label}</span>`).join('');
+}
+renderBadges();
+function unlockBadge(id){
+  if(!GAME.badges[id]){ GAME.badges[id]=true; renderBadges(); showToast('🏅 Mở khoá huy hiệu mới!','gold'); }
+}
+function updateXpBar(){
+  const needed = GAME.level*50;
+  document.getElementById('xp-label').textContent = GAME.xp+' XP';
+  document.getElementById('lvl-label').textContent = 'Cấp '+GAME.level+' '+(GAME.level<3?'🌱':GAME.level<6?'🌿':'🌳');
+  document.getElementById('xp-bar').style.width = Math.min(100,(GAME.xp % needed)/needed*100)+'%';
+  document.getElementById('streak-label').textContent = 'Chuỗi đúng: '+GAME.streak;
+}
+function gainXp(n, correct){
+  if(correct){
+    GAME.streak++; GAME.bestStreak = Math.max(GAME.bestStreak,GAME.streak);
+    if(GAME.streak>=5) unlockBadge('streak5');
+  } else {
+    GAME.streak = 0;
+  }
+  GAME.xp += n;
+  const needed = GAME.level*50;
+  if(GAME.xp >= GAME.level*50 + (GAME.level-1)*0){/*noop*/}
+  while(GAME.xp >= levelThreshold(GAME.level)){ GAME.level++; showToast('🎉 Lên cấp '+GAME.level+'!','gold'); }
+  updateXpBar();
+}
+function levelThreshold(lvl){ let t=0; for(let i=1;i<=lvl;i++) t+=i*50; return t; }
+function showToast(msg, kind){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show'+(kind==='gold'?' gold':'');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=>{ t.classList.remove('show'); }, 1800);
+}
+function floatPoints(x,y,text){
+  const el = document.createElement('div');
+  el.className = 'float-pts'; el.textContent = text;
+  el.style.left = x+'px'; el.style.top = y+'px';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1000);
+}
+/* âm thanh đơn giản bằng Web Audio API (không cần file mp3) */
+let audioCtx;
+function beep(freqs, dur){
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    freqs.forEach((f,i)=>{
+      const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+      o.type='sine'; o.frequency.value=f;
+      o.connect(g); g.connect(audioCtx.destination);
+      const start = audioCtx.currentTime + i*dur;
+      g.gain.setValueAtTime(0.001,start);
+      g.gain.exponentialRampToValueAtTime(0.18,start+0.02);
+      g.gain.exponentialRampToValueAtTime(0.001,start+dur);
+      o.start(start); o.stop(start+dur);
+    });
+  }catch(e){}
+}
+function soundCorrect(){ beep([523,659,784],0.11); }
+function soundWrong(){ beep([220,180],0.14); }
+function soundLevelUp(){ beep([523,659,784,1046],0.13); }
+
+/* confetti canvas đơn giản */
+const cvs = document.getElementById('confetti-canvas');
+const ctx = cvs.getContext('2d');
+function resizeCanvas(){ cvs.width = innerWidth; cvs.height = innerHeight; }
+resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+const COLORS = ['#D98A80','#E0A85C','#E8B86B','#9B85C9','#4FAE82','#F0B8AE'];
+let confettiParticles = [];
+function fireConfetti(x,y,count){
+  count = count || 60;
+  x = x !== undefined ? x : cvs.width/2;
+  y = y !== undefined ? y : cvs.height/3;
+  for(let i=0;i<count;i++){
+    confettiParticles.push({
+      x, y,
+      vx:(Math.random()-0.5)*9,
+      vy:Math.random()*-9-3,
+      g:0.28,
+      size:4+Math.random()*4,
+      color:COLORS[Math.floor(Math.random()*COLORS.length)],
+      rot:Math.random()*360,
+      vr:(Math.random()-0.5)*12,
+      life:0, maxLife:70+Math.random()*30
+    });
+  }
+  if(!window._confettiLoop){ window._confettiLoop = true; requestAnimationFrame(confettiTick); }
+}
+function confettiTick(){
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  confettiParticles.forEach(p=>{
+    p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life++;
+    ctx.save();
+    ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = Math.max(0, 1 - p.life/p.maxLife);
+    ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*0.6);
+    ctx.restore();
+  });
+  confettiParticles = confettiParticles.filter(p=>p.life < p.maxLife);
+  if(confettiParticles.length){ requestAnimationFrame(confettiTick); }
+  else { window._confettiLoop = false; ctx.clearRect(0,0,cvs.width,cvs.height); }
+}
+function celebrate(el, points){
+  soundCorrect();
+  const rect = el.getBoundingClientRect();
+  fireConfetti(rect.left+rect.width/2, rect.top+rect.height/2, 45);
+  floatPoints(rect.left+rect.width/2, rect.top, '+'+points+' XP');
+  gainXp(points, true);
+}
+function fail(el){
+  soundWrong();
+  gainXp(0, false);
+}
+updateXpBar();
+
+/* ============ CHẾ ĐỘ TRÌNH CHIẾU ============ */
+function togglePresent(){
+  document.body.classList.toggle('present');
+  const on = document.body.classList.contains('present');
+  document.getElementById('present-toggle-desktop').classList.toggle('active', on);
+  document.getElementById('present-toggle-desktop').textContent = on ? '🖥 Đang trình chiếu' : '🖥 Chế độ trình chiếu';
+  try{ localStorage.setItem('huonghsk_present', on ? '1':'0'); }catch(e){}
+}
+document.getElementById('present-toggle-desktop').addEventListener('click', togglePresent);
+document.getElementById('present-toggle-mobile')?.addEventListener('click', togglePresent);
+try{
+  if(localStorage.getItem('huonghsk_present')==='1'){ togglePresent(); }
+}catch(e){}
+
+/* ============ TABS ============ */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ============ AUDIO THẬT (mp3 gốc Boya) theo timestamp — tuvung11.mp3 (25 từ sách, silencedetect -50dB, đệm -0.06s/+0.12s); 5 từ bổ sung + từ ở tab Thời tiết dùng giọng máy ============ */
+const AUDIO_MAP = {
+  "天气": {audio:"audio-tuvung", start:0.36, end:1.55},
+  "怎么样": {audio:"audio-tuvung", start:2.19, end:3.11},
+  "不太": {audio:"audio-tuvung", start:4.23, end:5.10},
+  "风": {audio:"audio-tuvung", start:5.90, end:6.66},
+  "雨": {audio:"audio-tuvung", start:7.42, end:8.23},
+  "冷": {audio:"audio-tuvung", start:8.91, end:9.71},
+  "度": {audio:"audio-tuvung", start:10.62, end:11.34},
+  "晴天": {audio:"audio-tuvung", start:12.19, end:13.24},
+  "秋天": {audio:"audio-tuvung", start:13.97, end:15.04},
+  "热": {audio:"audio-tuvung", start:16.00, end:16.77},
+  "舒服": {audio:"audio-tuvung", start:17.63, end:18.60},
+  "最": {audio:"audio-tuvung", start:19.29, end:20.08},
+  "季节": {audio:"audio-tuvung", start:21.14, end:22.21},
+  "冬天": {audio:"audio-tuvung", start:23.48, end:24.43},
+  "比较": {audio:"audio-tuvung", start:25.39, end:26.44},
+  "差不多": {audio:"audio-tuvung", start:27.23, end:28.18},
+  "零下": {audio:"audio-tuvung", start:29.11, end:30.11},
+  "常常": {audio:"audio-tuvung", start:31.18, end:32.26},
+  "下": {audio:"audio-tuvung", start:33.09, end:33.91},
+  "雪": {audio:"audio-tuvung", start:34.86, end:35.83},
+  "常": {audio:"audio-tuvung", start:36.96, end:37.89},
+  "喜欢": {audio:"audio-tuvung", start:38.39, end:39.46},
+  "夏天": {audio:"audio-tuvung", start:40.44, end:41.54},
+  "游泳": {audio:"audio-tuvung", start:42.37, end:43.38},
+  "春天": {audio:"audio-tuvung", start:44.28, end:45.22}
+};
+let currentPlayingAudio = null, currentPlayingEl = null, currentPlayingBtn = null;
+function stopAllAudio(){
+  document.querySelectorAll('audio').forEach(el=>el.pause());
+  if(currentPlayingAudio){ clearTimeout(currentPlayingAudio); currentPlayingAudio = null; }
+  if(currentPlayingBtn){ currentPlayingBtn.textContent = currentPlayingBtn.dataset.label; currentPlayingBtn = null; }
+  currentPlayingEl = null;
+}
+function playClip(key, dialogKey){
+  const entry = AUDIO_MAP[dialogKey || key];
+  if(!entry){ speak(key); return; }
+  stopAllAudio();
+  const el = document.getElementById(entry.audio);
+  el.currentTime = entry.start; el.play();
+  currentPlayingAudio = setTimeout(()=>{ el.pause(); }, (entry.end - entry.start)*1000 + 60);
+}
+/* Nút Nghe/Tạm dừng cho 1 file mp3 trọn vẹn (bài khoá, bài nghe) */
+function toggleAudioBtn(id, btn){
+  const el = document.getElementById(id);
+  if(currentPlayingEl && currentPlayingEl !== el){ currentPlayingEl.pause(); if(currentPlayingBtn) currentPlayingBtn.textContent = currentPlayingBtn.dataset.label; }
+  if(currentPlayingAudio){ clearTimeout(currentPlayingAudio); currentPlayingAudio = null; }
+  if(el.paused){
+    if(el.ended || el.currentTime >= el.duration - 0.05) el.currentTime = 0;
+    el.play(); btn.textContent = '⏸ Tạm dừng'; currentPlayingEl = el; currentPlayingBtn = btn;
+  } else { el.pause(); btn.textContent = btn.dataset.label; }
+}
+document.querySelectorAll('audio').forEach(el=>el.addEventListener('ended', ()=>{ if(currentPlayingBtn){ currentPlayingBtn.textContent = currentPlayingBtn.dataset.label; } currentPlayingEl = null; currentPlayingBtn = null; }));
+document.addEventListener('click', e=>{ if(e.target.closest('.tab-btn,.subtab-btn')) stopAllAudio(); });
+/* ============ PHÁT ÂM DỰ PHÒNG (Web Speech API - dùng khi không có audio gốc) ============ */
+function speak(text){
+  if(!('speechSynthesis' in window)){ alert('Trình duyệt không hỗ trợ phát âm.'); return; }
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'zh-CN';
+  u.rate = 0.85;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+
+/* ============ ẨN/HIỆN PHIÊN ÂM ============ */
+function toggleVocabPinyin(){
+  const table = document.querySelector('table.vocab');
+  const btn = document.getElementById('vocab-py-toggle');
+  const hidden = table.classList.toggle('hide-py');
+  btn.textContent = hidden ? '👁 Hiện phiên âm' : '🙈 Ẩn phiên âm';
+}
+function toggleDialoguePinyin(){
+  const container = document.getElementById('dialogue-container');
+  const btn = document.getElementById('dialogue-py-toggle');
+  const hidden = container.classList.toggle('hide-py');
+  btn.textContent = hidden ? '👁 Hiện phiên âm' : '🙈 Ẩn phiên âm';
+}
+function toggleGrammarPinyin(){
+  const container = document.getElementById('grammar-container');
+  const btn = document.getElementById('grammar-py-toggle');
+  const hidden = container.classList.toggle('hide-py');
+  btn.textContent = hidden ? '👁 Hiện pinyin' : '🙈 Ẩn pinyin';
+}
+function toggleGrammarVi(){
+  const container = document.getElementById('grammar-container');
+  const btn = document.getElementById('grammar-vi-toggle');
+  const hidden = container.classList.toggle('hide-vi');
+  btn.textContent = hidden ? '👁 Hiện nghĩa' : '🙈 Ẩn nghĩa';
+}
+
+/* ============ TAB TỪ VỰNG + THỜI TIẾT + BÀI KHOÁ ============ */
+const vocabBody = document.getElementById('vocab-body');
+VOCAB.forEach(v=>{
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><button class="btn-speak" onclick="playClip('${v.hz}')">🔊</button></td><td class="hz hanzi">${v.hz}</td><td class="pinyin">${v.py}</td><td>${v.pos?`<span class="pos">${v.pos}</span>`:''}</td><td>${v.mean}</td>`;
+  vocabBody.appendChild(tr);
+});
+/* ============ MINH HOẠ THỜI TIẾT (SVG phẳng, viền nâu đậm — cùng phong cách ảnh Bài 9) ============ */
+const OL = '#4A3B36';
+const sf = (f,w)=>`fill="${f}" stroke="${OL}" stroke-width="${w||3}" stroke-linejoin="round" stroke-linecap="round"`;
+const sn = (c,w)=>`fill="none" stroke="${c||OL}" stroke-width="${w||3}" stroke-linecap="round" stroke-linejoin="round"`;
+const sunI = (cx,cy,r,face)=>{ let s=''; for(let i=0;i<8;i++){ const a=i*Math.PI/4; s+=`<line x1="${(cx+Math.cos(a)*(r+5)).toFixed(1)}" y1="${(cy+Math.sin(a)*(r+5)).toFixed(1)}" x2="${(cx+Math.cos(a)*(r+12)).toFixed(1)}" y2="${(cy+Math.sin(a)*(r+12)).toFixed(1)}" ${sn(OL)}/>`; }
+  s+=`<circle cx="${cx}" cy="${cy}" r="${r}" ${sf('#F6B94A')}/>`;
+  if(face) s+=`<circle cx="${cx-r*.36}" cy="${cy-r*.1}" r="2.4" fill="${OL}"/><circle cx="${cx+r*.36}" cy="${cy-r*.1}" r="2.4" fill="${OL}"/><path d="M${cx-r*.32} ${cy+r*.28} Q${cx} ${cy+r*.62} ${cx+r*.32} ${cy+r*.28}" ${sn(OL,2.5)}/>`; return s; };
+const cloudI = (x,y,s,f)=>`<g transform="translate(${x} ${y}) scale(${s})"><path d="M28 66 C14 66 10 50 24 46 C22 32 40 26 48 36 C54 26 74 30 74 44 C90 44 90 66 74 66 Z" ${sf(f||'#fff')}/></g>`;
+const dropI = (x,y,s)=>{ s=s||1; return `<path d="M${x} ${y} C${x+6*s} ${y+8*s} ${x+7*s} ${y+13*s} ${x} ${y+14*s} C${x-7*s} ${y+13*s} ${x-6*s} ${y+8*s} ${x} ${y} Z" ${sf('#6DB6E8',2.5)}/>`; };
+const boltI = (x,y,s)=>`<g transform="translate(${x} ${y}) scale(${s})"><polygon points="12,0 0,22 10,22 4,40 24,14 13,14 20,0" ${sf('#F6C945')}/></g>`;
+const flakeI = (cx,cy,r)=>[0,60,120].map(a=>{ const t=a*Math.PI/180, dx=Math.cos(t)*r, dy=Math.sin(t)*r; return `<line x1="${(cx-dx).toFixed(1)}" y1="${(cy-dy).toFixed(1)}" x2="${(cx+dx).toFixed(1)}" y2="${(cy+dy).toFixed(1)}" ${sn('#5BA8E0',3)}/>`; }).join('')+`<circle cx="${cx}" cy="${cy}" r="2.2" fill="#5BA8E0"/>`;
+const starI = (x,y,s)=>`<path d="M${x} ${y-5*s} L${x+1.6*s} ${y-1.6*s} L${x+5*s} ${y} L${x+1.6*s} ${y+1.6*s} L${x} ${y+5*s} L${x-1.6*s} ${y+1.6*s} L${x-5*s} ${y} L${x-1.6*s} ${y-1.6*s} Z" ${sf('#F6C945',2)}/>`;
+const thermoI = (lv,col)=>`<rect x="43" y="12" width="14" height="54" rx="7" ${sf('#fff')}/><circle cx="50" cy="76" r="12" ${sf(col)}/><rect x="47" y="${(66-lv*46).toFixed(1)}" width="6" height="${(70-(66-lv*46)).toFixed(1)}" rx="3" fill="${col}"/>`+[22,32,42,52].map(y=>`<line x1="61" y1="${y}" x2="${y%20?66:70}" y2="${y}" ${sn(OL,2.5)}/>`).join('');
+const leafI = (x,y)=>`<path d="M${x} ${y} C${x+14} ${y-4} ${x+20} ${y-18} ${x+16} ${y-24} C${x} ${y-22} ${x-8} ${y-10} ${x} ${y} Z" ${sf('#8FD18C')}/><line x1="${x}" y1="${y}" x2="${x+12}" y2="${y-16}" ${sn(OL,2)}/>`;
+const swirl = ()=>{ let d=''; for(let t=0;t<=3.6*Math.PI;t+=.15){ const r=4+t*3.4; d+=(d?'L':'M')+(50+r*Math.cos(t)).toFixed(1)+' '+(50+r*Math.sin(t)).toFixed(1); } return `<path d="${d}" ${sn('#3C5FA8',5)}/><circle cx="50" cy="50" r="4" fill="#E8505B"/>`; };
+const umbI = ()=>`<path d="M12 54 C12 24 88 24 88 54 C82 47 75 47 69 54 C63 47 56 47 50 54 C44 47 37 47 31 54 C25 47 18 47 12 54 Z" ${sf('#E8505B')}/><line x1="50" y1="27" x2="50" y2="54" ${sn(OL,2.5)}/><path d="M50 54 V78 a7 7 0 0 1 -14 0" ${sn(OL,4)}/>`;
+const WXI = {
+ '晴天':()=>sunI(50,50,20)+starI(16,22,1.3)+starI(86,82,1.1),
+ '太阳':()=>sunI(50,50,22,true),
+ '阴天':()=>cloudI(6,4,1,'#C3CEDA')+cloudI(22,24,.85,'#E6ECF1'),
+ '多云':()=>sunI(32,34,14)+cloudI(8,24,1,'#fff'),
+ '有雾':()=>cloudI(6,-6,1,'#D8DFE6')+[[16,74,70],[26,84,62],[12,94,50]].map(l=>`<line x1="${l[0]}" y1="${l[1]-4}" x2="${l[0]+l[2]}" y2="${l[1]-4}" ${sn('#9BA9B4',5)}/>`).join(''),
+ '月亮':()=>`<path d="M58 14 C36 16 22 36 28 58 C34 80 58 90 78 80 C58 76 48 56 54 38 C56 28 58 22 58 14 Z" ${sf('#F6D86A')}/>`+starI(78,28,1.4)+starI(88,56,1)+starI(70,12,.9),
+ '彩虹':()=>['#E8505B','#F4A14E','#F6D14E','#7CC78A','#5B8FD6'].map((c,i)=>{ const r=42-i*6; return `<path d="M${50-r} 76 A${r} ${r} 0 0 1 ${50+r} 76" ${sn(c,6.5)}/>`; }).join('')+cloudI(-6,38,.5)+cloudI(56,38,.5),
+ '出太阳':()=>{ let s=''; for(let i=1;i<=5;i++){ const a=Math.PI+i*Math.PI/6; s+=`<line x1="${(50+Math.cos(a)*32).toFixed(1)}" y1="${(72+Math.sin(a)*32).toFixed(1)}" x2="${(50+Math.cos(a)*42).toFixed(1)}" y2="${(72+Math.sin(a)*42).toFixed(1)}" ${sn(OL)}/>`; } return s+`<path d="M26 72 A24 24 0 0 1 74 72 Z" ${sf('#F6B94A')}/><line x1="8" y1="72" x2="92" y2="72" ${sn(OL,3.5)}/><line x1="24" y1="84" x2="76" y2="84" ${sn('#9BA9B4',3)}/>`; },
+ '下雨':()=>cloudI(6,-8,1,'#C3CEDA')+dropI(30,66)+dropI(50,74)+dropI(70,66),
+ '阵雨':()=>sunI(72,24,11)+cloudI(0,-4,.95,'#fff')+dropI(32,64)+dropI(52,72)+dropI(70,62,.8),
+ '毛毛雨':()=>cloudI(6,-8,1,'#D8DFE6')+[[26,70],[42,78],[58,70],[72,78],[34,90],[52,92],[66,90]].map(p=>`<line x1="${p[0]}" y1="${p[1]}" x2="${p[0]-3}" y2="${p[1]+7}" ${sn('#6DB6E8',3)}/>`).join(''),
+ '暴雨':()=>cloudI(6,-10,1,'#8E9BB0')+[[24,62],[38,70],[52,62],[66,70],[80,62],[30,82],[46,88],[60,82],[74,88]].map(p=>`<line x1="${p[0]}" y1="${p[1]}" x2="${p[0]-6}" y2="${p[1]+14}" ${sn('#3C8FD6',4)}/>`).join(''),
+ '雷雨':()=>cloudI(6,-10,1,'#8E9BB0')+boltI(40,52,.85)+dropI(24,64,.9)+dropI(74,64,.9)+dropI(18,80,.8)+dropI(80,82,.8),
+ '打雷':()=>cloudI(6,-8,1,'#8E9BB0')+boltI(38,54,1),
+ '闪电':()=>boltI(26,8,2.1)+`<line x1="14" y1="30" x2="22" y2="34" ${sn('#F6C945',3)}/><line x1="86" y1="60" x2="78" y2="58" ${sn('#F6C945',3)}/>`,
+ '刮风':()=>`<path d="M10 36 H58 C72 36 74 20 62 20 C55 20 53 28 56 31" ${sn(OL,4)}/><path d="M10 54 H76 C92 54 94 74 80 74 C72 74 70 66 73 63" ${sn(OL,4)}/><path d="M10 72 H42" ${sn(OL,4)}/>`+leafI(78,34),
+ '台风':()=>swirl(),
+ '下雪':()=>cloudI(6,-8,1,'#C3CEDA')+flakeI(30,72,8)+flakeI(52,84,8)+flakeI(72,72,8),
+ '冰雹':()=>cloudI(6,-8,1,'#C3CEDA')+[[30,72],[52,80],[72,70],[40,92],[64,92]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="6" ${sf('#E6F4FB',2.5)}/>`).join(''),
+ '热':()=>thermoI(.88,'#E8505B')+sunI(80,24,7),
+ '暖和':()=>thermoI(.55,'#F4A14E')+sunI(80,24,7),
+ '凉快':()=>thermoI(.3,'#7CC78A')+leafI(72,44),
+ '冷':()=>thermoI(.18,'#5B8FD6')+flakeI(80,26,9),
+ '零下':()=>thermoI(.08,'#5B8FD6')+`<text x="64" y="72" font-size="18" font-weight="800" fill="#3C5FA8" font-family="'Baloo 2',sans-serif">&lt;0</text>`,
+ '潮湿':()=>`<path d="M50 10 C66 34 78 48 78 64 C78 80 66 90 50 90 C34 90 22 80 22 64 C22 48 34 34 50 10 Z" ${sf('#6DB6E8')}/><path d="M32 66 C32 76 38 82 46 82" ${sn('#fff',4)}/>`+dropI(14,36,.7)+dropI(88,48,.7),
+ '温度':()=>thermoI(.62,'#E8505B')+`<text x="72" y="34" font-size="17" font-weight="800" fill="${OL}" font-family="'Baloo 2',sans-serif">℃</text>`,
+ '天气预报':()=>`<rect x="12" y="20" width="76" height="52" rx="9" ${sf('#fff')}/><rect x="19" y="27" width="62" height="38" rx="5" fill="#CBE8F7" stroke="${OL}" stroke-width="2"/><g transform="translate(19 27) scale(.62)">${sunI(30,26,11)}${cloudI(14,2,.95,'#fff')}</g><line x1="34" y1="72" x2="28" y2="86" ${sn(OL,4)}/><line x1="66" y1="72" x2="72" y2="86" ${sn(OL,4)}/>`,
+ '雨伞':()=>umbI()+dropI(14,66,.8)+dropI(86,70,.8),
+ '带伞':()=>`<g transform="rotate(-22 50 50)"><path d="M50 8 C65 24 65 50 50 68 C35 50 35 24 50 8 Z" ${sf('#E8505B')}/><path d="M50 8 V68" ${sn(OL,2.5)}/><path d="M50 68 V86 a7 7 0 0 0 14 0" ${sn(OL,4)}/></g>`+dropI(82,26,.8)
+};
+const wxIcon = (hz)=>`<svg viewBox="0 0 100 100" width="92" height="92" aria-hidden="true">${(WXI[hz]||(()=>''))()}</svg>`;
+
+const wxHost = document.getElementById('wx-host');
+WEATHER.forEach(g=>{
+  wxHost.insertAdjacentHTML('beforeend', `<div class="wx-group"><div class="wx-title">${g.title}</div><div class="wx-grid">${g.items.map(it=>`<div class="wx-card"><div class="wx-ico">${wxIcon(it[1])}</div><div class="wx-hz hanzi">${it[1]}</div><div class="wx-py">${it[2]}</div><div class="wx-vi">${it[3]}</div><button class="btn-speak" onclick="playClip('${it[1]}')">🔊</button></div>`).join('')}</div></div>`);
+});
+function toggleWxPinyin(){ const p = document.getElementById('panel-weather'), h = p.classList.toggle('hide-py'); document.getElementById('wx-py-toggle').textContent = h ? '👁 Hiện phiên âm' : '🙈 Ẩn phiên âm'; }
+const dialogueContainer = document.getElementById('dialogue-container');
+DLG_GROUPS.forEach((grp, gi)=>{
+  const group = document.createElement('div'); group.className = 'dialogue-group';
+  group.innerHTML = `<div class="dialogue-head"><span class="dialogue-title">${grp.title}</span><button class="btn secondary btn-play-all" data-label="▶ Nghe cả đoạn" onclick="toggleAudioBtn('${grp.audioSrc}', this)">▶ Nghe cả đoạn</button></div><div class="dlg-lines"></div>`;
+  dialogueContainer.appendChild(group);
+  const linesEl = group.querySelector('.dlg-lines');
+  grp.lines.forEach(l=>{
+    const row = document.createElement('div'); row.className = 'dlg-line';
+    row.innerHTML = `<div class="dlg-avatar-wrap"><div class="dlg-avatar">${DLG_AVATAR[l.who]}</div><div class="dlg-who">${l.name}<br><span class="hz-mini hanzi">${l.hzName}</span></div></div><div class="dlg-bubble"><div class="dlg-py">${l.py}</div><div class="dlg-hz hanzi">${l.hz}</div></div>`;
+    linesEl.appendChild(row);
+  });
+});
+const grammarContainer = document.getElementById('grammar-container');
+GRAMMAR_POINTS.forEach((gp, idx)=>{
+  const div = document.createElement('div');
+  div.className = 'grammar-point';
+  const formsHtml = gp.forms.map(f=>{
+    const exHtml = f.examples.map((e,i)=>{
+      if(e.arrow){
+        return `<li><span class="gp-ex-num">${i+1}.</span>
+          <span><span class="gp-ex-hz hanzi">${e.hz}</span></span>
+          <span class="gp-ex-arrow">→</span>
+          <span><span class="gp-ex-hz hanzi">${e.hz2}</span> <span class="gp-ex-py">${e.py2}</span></span>
+          <button class="btn-speak" style="width:26px;height:26px;font-size:.75rem;" onclick="playClip('${e.hz2.replace(/'/g,"\\'")}')">🔊</button>
+          <span class="gp-ex-vi" style="color:var(--gray);font-size:.82rem;">${e.vi}</span></li>`;
+      }
+      return `<li><span class="gp-ex-num">${i+1}.</span>
+        <span class="gp-ex-hz hanzi">${e.hz}</span>
+        <span class="gp-ex-py">${e.py}</span>
+        <button class="btn-speak" style="width:26px;height:26px;font-size:.75rem;" onclick="playClip('${e.hz.replace(/'/g,"\\'")}')">🔊</button>
+        <span class="gp-ex-vi" style="color:var(--gray);font-size:.82rem;">${e.vi}</span></li>`;
+    }).join('');
+    return `<div class="gp-form"><div class="gp-label">${f.label}</div><ul class="gp-ex-list">${exHtml}</ul></div>`;
+  }).join('');
+  div.innerHTML = `
+    <div class="gp-title"><span class="gp-num">${idx+1}</span>${gp.title}</div>
+    <div class="gp-key hanzi">${gp.key} <span class="pinyin" style="font-size:.85rem;">${gp.keyPy}</span></div>
+    ${gp.diagram || ''}
+    ${formsHtml}
+    ${gp.note ? `<div class="gp-note">${gp.note}</div>` : ''}
+  `;
+  grammarContainer.appendChild(div);
+});
+
+/* ============ TAB FLASHCARD ============ */
+let fcPos = 0; // vị trí hiện tại trong fcOrder
+let fcOrder = VOCAB.map((_,i)=>i); // mảng thứ tự hiển thị (ánh xạ -> index gốc trong VOCAB)
+let fcShuffled = false;
+const fcKnownSet = new Set(); // lưu theo index GỐC trong VOCAB
+const fcCard = document.getElementById('flashcard');
+function renderFC(){
+  const realIdx = fcOrder[fcPos];
+  const v = VOCAB[realIdx];
+  document.getElementById('fc-hz').textContent = v.hz;
+  document.getElementById('fc-pinyin').textContent = v.py;
+  document.getElementById('fc-mean').textContent = v.mean;
+  document.getElementById('fc-progress').textContent = (fcPos+1)+' / '+VOCAB.length;
+  fcCard.classList.remove('flipped');
+}
+function flipCard(){ fcCard.classList.toggle('flipped'); }
+function fcNext(){ fcPos = (fcPos+1)%VOCAB.length; renderFC(); }
+function fcPrev(){ fcPos = (fcPos-1+VOCAB.length)%VOCAB.length; renderFC(); }
+function fcKnown(yes){
+  const realIdx = fcOrder[fcPos];
+  if(yes && !fcKnownSet.has(realIdx)){
+    fcKnownSet.add(realIdx);
+    document.getElementById('fc-known-count').textContent = fcKnownSet.size;
+    celebrate(fcCard, 2);
+    if(fcKnownSet.size === VOCAB.length){ showToast('⭐ Thuộc hết từ vựng Bài 11!','gold'); fireConfetti(); }
+  } else if(!yes){
+    fcKnownSet.delete(realIdx);
+    document.getElementById('fc-known-count').textContent = fcKnownSet.size;
+  }
+  fcNext();
+}
+function toggleShuffleFC(){
+  fcShuffled = !fcShuffled;
+  const btn = document.getElementById('fc-shuffle-btn');
+  if(fcShuffled){
+    fcOrder = shuffleArr(VOCAB.map((_,i)=>i));
+    btn.textContent = '🔀 Đang trộn (bấm để về thứ tự gốc)';
+    btn.classList.add('active');
+    showToast('🔀 Đã trộn thứ tự thẻ!');
+  } else {
+    fcOrder = VOCAB.map((_,i)=>i);
+    btn.textContent = '🔀 Trộn thẻ';
+    btn.classList.remove('active');
+    showToast('↺ Về thứ tự gốc');
+  }
+  fcPos = 0;
+  renderFC();
+}
+fcCard.addEventListener('click', flipCard);
+renderFC();
+
+/* ============ BÀI TẬP BÀI 11 — 8 bài: (1) trắc nghiệm từ vựng, (2)-(8) lấy từ file giáo viên (Bài_11.docx) ============ */
+let scoreTotal = 0, scoreMax = 0;
+function addScore(n){ scoreTotal += n; document.getElementById('total-score').textContent = scoreTotal; }
+function addMax(n){ scoreMax += n; document.getElementById('total-max').textContent = scoreMax; }
+function shuffleArr(arr){ const a = arr.slice(); for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
+function norm(s){ return s.replace(/[\s。，、！？,.!?；;：:《》“”"'（）()]/g,''); }
+function stripTone(s){ return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s|'/g,''); }
+const NB = (i)=>`<b style="color:var(--red-dark);font-family:'Baloo 2';">${i}.</b>`;
+
+/* --- khung tab nhỏ --- */
+const SUBS = [
+ ['mc','1 · 📝 Chọn đáp án'],['dict','2 · 🎧 Nghe điền từ'],['fc','3 · 🌤 Dự báo'],
+ ['lis','4 · 🎧 Nghe chọn đáp án'],['ord','5 · 🧩 Sắp xếp câu'],['fix','6 · ✏️ Sửa câu sai'],['read','7 · 📖 Đọc hiểu']];
+const TITLES = {
+ mc:['Bài 1 · Chọn đáp án đúng','Chọn từ thích hợp điền vào chỗ trống.'],
+ dict:['Bài 2 · 听录音，填空 — Nghe và điền từ vào chỗ trống','Bấm "Nghe" rồi điền từ còn thiếu (viết chữ Hán hoặc pinyin đều được).'],
+ fc:['Bài 3 · 听录音，在图中填空 — Nghe và điền vào bảng dự báo thời tiết','Nghe bản tin rồi điền thời tiết và nhiệt độ (℃). Nhiệt độ âm viết -5 hoặc 零下5.'],
+ lis:['Bài 4 · Nghe và chọn đáp án đúng','Nghe từng đoạn rồi trả lời câu hỏi. Xong cả đoạn sẽ hiện lời thoại.'],
+ ord:['Bài 5 · Sắp xếp từ thành câu hoàn chỉnh','Nhấp các từ theo đúng thứ tự (dấu câu không cần chọn).'],
+ fix:['Bài 6 · Sửa câu sai','Viết lại mỗi câu cho đúng ngữ pháp.'],
+ read:['Bài 7 · Đọc đoạn văn làm bài tập','Đọc đoạn văn, làm Phần 1 (đúng/sai) và Phần 2 (trả lời câu hỏi).']};
+(function(){
+  const host = document.getElementById('ex-host');
+  let tabs = '<div class="subtabs">', panels = '';
+  SUBS.forEach((s,i)=>{
+    tabs += `<button class="subtab-btn${i?'':' active'}" data-sub="${s[0]}">${s[1]}</button>`;
+    const t = TITLES[s[0]];
+    panels += `<div class="card ex-block sub-panel${i?'':' active'}" id="sub-${s[0]}">` +
+      (t ? `<div class="ex-title">${t[0]}</div><div class="ex-sub">${t[1]}</div>` : `<div class="ex-title">Bài 1 · Trắc nghiệm từ vựng Bài 11</div><div class="ex-sub">Chọn nghĩa đúng của từ. Chọn đúng sẽ phát âm từ và hiện ví dụ. Máy tính: bấm <b>Enter ↵</b> để sang câu tiếp, phím <b>1–4</b> để chọn đáp án.</div>`) +
+      `<div id="c-${s[0]}"></div></div>`;
+  });
+  host.innerHTML = tabs + '</div>' + panels;
+  host.querySelectorAll('.subtab-btn').forEach(btn=>btn.addEventListener('click', ()=>{
+    host.querySelectorAll('.subtab-btn').forEach(b=>b.classList.remove('active'));
+    host.querySelectorAll('.sub-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active'); document.getElementById('sub-'+btn.dataset.sub).classList.add('active');
+  }));
+})();
+const $c = (k)=>document.getElementById('c-'+k);
+const audioBtn = (id,txt)=>`<button class="btn secondary" data-label="${txt}" onclick="toggleAudioBtn('${id}',this)">${txt}</button>`;
+const doneBadge = (key,total,badge,msg)=>{ if(done[key].size===total){ unlockBadge(badge); fireConfetti(); showToast(msg); } };
+const done = {mc:new Set(), dict:new Set(), fc:new Set(), ord:new Set(), fix:new Set(), tf:new Set(), rd:new Set()};
+
+/* ===== Bài 1: trắc nghiệm từ vựng ===== */
+const CONFLICT = [["常","常常"],["风","刮风"],["度","温度"]];
+const QZ = { order:[], i:0, answered:false, ok:0 };
+function conflicts(a,b){ return CONFLICT.some(p=>p.includes(a)&&p.includes(b)); }
+function quizStart(){
+  QZ.order = shuffleArr(VOCAB.map((_,i)=>i)); QZ.i = 0; QZ.ok = 0; quizShow();
+}
+function quizShow(){
+  const host = $c('quiz');
+  if(QZ.i >= QZ.order.length){
+    host.innerHTML = `<div style="text-align:center;padding:24px;"><div style="font-size:3rem;">🎉</div><div class="ex-title" style="font-size:1.3rem;">Hoàn thành! Đúng ${QZ.ok}/${QZ.order.length}</div><button class="btn" onclick="quizStart()">↺ Làm lại</button></div>`;
+    if(QZ.ok===QZ.order.length){ unlockBadge('quiz'); fireConfetti(); } return;
+  }
+  const v = VOCAB[QZ.order[QZ.i]];
+  const wrong = shuffleArr(VOCAB.filter(x=>x.hz!==v.hz && !conflicts(x.hz,v.hz) && x.mean!==v.mean)).slice(0,3);
+  const opts = shuffleArr([v,...wrong]);
+  QZ.answered = false; QZ.cur = v; QZ.opts = opts;
+  host.innerHTML = `<div class="quiz-card"><div class="quiz-n">Câu ${QZ.i+1}/${QZ.order.length}</div>
+    <div class="quiz-hz hanzi">${v.hz}</div><div class="quiz-tag">Bài 11</div>
+    <div class="mc-options quiz-opts">${opts.map((o,k)=>`<button class="mc-opt quiz-opt" style="font-size:1rem;font-family:'Be Vietnam Pro';" onclick="quizPick(${k})"><b class="quiz-l">${'ABCD'[k]}.</b> ${o.mean}</button>`).join('')}</div>
+    <div id="quiz-fb"></div></div>`;
+}
+function quizPick(k){
+  if(QZ.answered) return; QZ.answered = true;
+  const v = QZ.cur, btns = document.querySelectorAll('.quiz-opt'), right = QZ.opts[k].hz===v.hz;
+  btns.forEach((b,idx)=>{ b.disabled = true; if(QZ.opts[idx].hz===v.hz) b.classList.add('ok'); else if(idx!==k) b.classList.add('dim'); });
+  const last = QZ.i === QZ.order.length-1;
+  let fb = '';
+  if(right){ btns[k].classList.remove('dim'); QZ.ok++; celebrate(btns[k],4); playClip(v.hz); fb += `<div class="quiz-ok">✅ Chính xác!</div>`; }
+  else { btns[k].classList.add('bad'); fail(btns[k]); fb += `<div class="quiz-bad">❌ Chưa đúng — đáp án: <b>${v.mean}</b></div>`; }
+  fb += `<div class="quiz-ex"><span class="hanzi" style="font-size:1.15rem;">${v.ex.hz}</span> <i class="pinyin">(${v.ex.py})</i> — ${v.ex.vi}</div>
+    <div style="margin-top:10px;"><button class="btn" onclick="quizNext()">${last?'Xem kết quả':'Câu tiếp ▶'} <small>(Enter ↵)</small></button> <span class="quiz-py hanzi">${v.hz} · ${v.py}</span></div>`;
+  document.getElementById('quiz-fb').innerHTML = `<div class="quiz-fbbox ${right?'okbox':'badbox'}">${fb}</div>`;
+}
+function quizNext(){ QZ.i++; quizShow(); }
+quizStart();
+document.addEventListener('keydown', e=>{
+  const tag = (e.target.tagName||'').toLowerCase(); if(tag==='input'||tag==='textarea'||tag==='select') return;
+  const p = document.getElementById('panel-flash'), s = document.getElementById('fs-quiz');
+  if(!p.classList.contains('active') || !s.classList.contains('active')) return;
+  if(e.key==='Enter' && QZ.answered){ e.preventDefault(); quizNext(); }
+  else if(!QZ.answered && /^[1-4]$/.test(e.key) && QZ.opts && QZ.opts[+e.key-1]){ quizPick(+e.key-1); }
+});
+
+document.querySelectorAll('#fl-subtabs .subtab-btn').forEach(btn=>btn.addEventListener('click',()=>{ document.querySelectorAll('#fl-subtabs .subtab-btn').forEach(b=>b.classList.remove('active')); document.querySelectorAll('.fl-sub').forEach(p=>p.classList.remove('active')); btn.classList.add('active'); document.getElementById('fs-'+btn.dataset.fs).classList.add('active'); }));
+
+/* ===== Hàm trắc nghiệm dùng chung (Bài 2, 5, 8) ===== */
+const MCG = {};
+function mcRender(gid, el, items, onAll){
+  MCG[gid] = {items, done:new Set(), onAll};
+  el.insertAdjacentHTML('beforeend', items.map((d,i)=>`<div class="listen-item"><div class="hanzi" style="font-size:1.15rem;margin-bottom:10px;">${NB(i+1)} ${d.q}</div>
+    <div class="mc-options" id="${gid}-o-${i}">${d.o.map((o,k)=>`<button class="mc-opt hanzi" style="font-size:1.05rem;" onclick="mcCheck('${gid}',${i},${k},this)">${'ABCD'[k]}. ${o}</button>`).join('')}</div>
+    <div class="reveal-box" id="${gid}-e-${i}">${d.exp||''}</div></div>`).join(''));
+  addMax(items.length);
+}
+function mcCheck(gid,i,k,btn){
+  const g = MCG[gid], d = g.items[i];
+  document.querySelectorAll(`#${gid}-o-${i} .mc-opt`).forEach((o,idx)=>{ o.disabled = true; if(idx===d.a) o.classList.add('ok'); else o.classList.add('dim'); });
+  btn.classList.remove('dim');
+  if(k===d.a){ addScore(1); celebrate(btn,1); } else { btn.classList.add('bad'); fail(btn); }
+  document.getElementById(`${gid}-e-${i}`).classList.add('show');
+  g.done.add(i); if(g.done.size===g.items.length && g.onAll) g.onAll();
+}
+
+/* ===== Bài 2: chọn đáp án ===== */
+const MC2 = [
+ ["今天的天气很____________，不冷不热。",["热","舒服","冷","难受"],1,"今天的天气很舒服，不冷不热。","Jīntiān de tiānqì hěn shūfu, bù lěng bú rè.","Thời tiết hôm nay rất dễ chịu, không lạnh không nóng."],
+ ["越南的春天不____________刮风。",["很","太","常","最"],2,"越南的春天不常刮风。","Yuènán de chūntiān bù cháng guā fēng.","Mùa xuân ở Việt Nam không thường nổi gió."],
+ ["你看，这辆自行车____________？",["怎么样","怎么","不","吗"],0,"你看，这辆自行车怎么样？","Nǐ kàn, zhè liàng zìxíngchē zěnmeyàng?","Bạn xem, chiếc xe đạp này thế nào?"],
+ ["对不起，今天我____________舒服。",["太","都","很","不太"],3,"对不起，今天我不太舒服。","Duìbuqǐ, jīntiān wǒ bú tài shūfu.","Xin lỗi, hôm nay tôi không được khoẻ lắm."],
+ ["北京的冬天____________多少度？",["一般","常常","都","最"],0,"北京的冬天一般多少度？","Běijīng de dōngtiān yìbān duōshao dù?","Mùa đông Bắc Kinh thông thường là bao nhiêu độ?"],
+ ["在中国秋天是____________舒服的季节。",["不","也","最","都"],2,"在中国秋天是最舒服的季节。","Zài Zhōngguó qiūtiān shì zuì shūfu de jìjié.","Ở Trung Quốc mùa thu là mùa dễ chịu nhất."],
+ ["玛丽是我最喜欢____________人。",["很","的","都","也"],1,"玛丽是我最喜欢的人。","Mǎlì shì wǒ zuì xǐhuan de rén.","Mary là người tôi thích nhất."],
+ ["听说明天下____________雪。",["很","有","大","不"],2,"听说明天下大雪。","Tīngshuō míngtiān xià dà xuě.","Nghe nói ngày mai có tuyết lớn."],
+ ["他今天早上____________八点去学校。",["的","比较","最","差不多"],3,"他今天早上差不多八点去学校。","Tā jīntiān zǎoshang chàbuduō bā diǎn qù xuéxiào.","Sáng nay anh ấy khoảng 8 giờ đến trường."],
+ ["越南的夏天____________热，但是不太难受。",["比较","太","不太"],0,"越南的夏天比较热，但是不太难受。","Yuènán de xiàtiān bǐjiào rè, dànshì bú tài nánshòu.","Mùa hè Việt Nam khá nóng nhưng không quá khó chịu."]
+].map(r=>({q:r[0],o:r[1],a:r[2],exp:`✔ <span class="hanzi">${r[3]}</span> <i class="pinyin">(${r[4]})</i><br>${r[5]}`}));
+mcRender('mc2', $c('mc'), MC2, ()=>{ unlockBadge('mc'); showToast('📝 Hoàn thành Bài 1!'); });
+
+/* ===== Bài 3: nghe điền từ (11-5.mp3) ===== */
+const DICT = [
+ ["今天天气很好，不{0}不{1}。",[["冷","lěng"],["热","rè"]],"今天天气很好，不冷不热。","Jīntiān tiānqì hěn hǎo, bù lěng bú rè.","Hôm nay thời tiết rất tốt, không lạnh không nóng."],
+ ["天气预报说，今天下午有{0}。",[["雨","yǔ"]],"天气预报说，今天下午有雨。","Tiānqì yùbào shuō, jīntiān xiàwǔ yǒu yǔ.","Dự báo thời tiết nói chiều nay có mưa."],
+ ["今天{0}16度。",[["最高","zuìgāo"]],"今天最高16度。","Jīntiān zuì gāo shíliù dù.","Hôm nay cao nhất 16 độ."],
+ ["北京{0}不常下雨。",[["冬天","dōngtiān"]],"北京冬天不常下雨。","Běijīng dōngtiān bù cháng xià yǔ.","Mùa đông Bắc Kinh không thường có mưa."],
+ ["明天我们去{0}吧。",[["逛街","guàngjiē"]],"明天我们去逛街吧。","Míngtiān wǒmen qù guàngjiē ba.","Ngày mai chúng ta đi dạo phố nhé."],
+ ["我不喜欢{0}，太热了。",[["夏天","xiàtiān"]],"我不喜欢夏天，太热了。","Wǒ bù xǐhuan xiàtiān, tài rè le.","Tôi không thích mùa hè, nóng quá."],
+ ["天气预报说明天{0}。",[["晴天","qíngtiān"]],"天气预报说明天晴天。","Tiānqì yùbào shuō míngtiān qíngtiān.","Dự báo thời tiết nói ngày mai trời nắng."],
+ ["外边{0}很大。",[["风","fēng"]],"外边风很大。","Wàibian fēng hěn dà.","Bên ngoài gió rất lớn."]
+];
+$c('dict').innerHTML = audioBtn('audio-ex5','▶ Nghe bài nghe (11-5)') + '<div style="margin-top:14px;">' + DICT.map((d,i)=>`<div class="fx-item"><div class="hanzi" style="font-size:1.25rem;margin-bottom:8px;">${NB(i+1)} ${d[0].replace(/\{(\d)\}/g,(m,n)=>`<input class="ans-in hanzi" style="width:130px;max-width:130px;margin:0 4px;" id="dict-${i}-${n}" autocomplete="off">`)}</div>
+  <button class="btn btn-check" onclick="checkDict(${i})">Kiểm tra</button><span id="dict-r-${i}"></span></div>`).join('') + '</div>';
+addMax(DICT.length);
+function checkDict(i){
+  const d = DICT[i]; let ok = true;
+  d[1].forEach((a,n)=>{ const inp = document.getElementById(`dict-${i}-${n}`), v = inp.value.trim().toLowerCase().replace(/\s/g,'');
+    const good = v && (v===a[0] || stripTone(v)===stripTone(a[1])); inp.classList.remove('ok','bad'); inp.classList.add(good?'ok':'bad'); if(!good) ok = false; });
+  const r = document.getElementById('dict-r-'+i);
+  r.innerHTML = `<span class="${ok?'result-ok':'result-bad'}">${ok?'✔ Chính xác!':'✘ Chưa đúng.'}</span> <span class="hanzi">${d[2]}</span> <i class="pinyin">(${d[3]})</i> — ${d[4]}`;
+  if(ok){ if(!done.dict.has(i)){ done.dict.add(i); addScore(1); celebrate(r,2); doneBadge('dict',DICT.length,'dict','🎧 Hoàn thành Bài 2!'); } } else fail(r);
+}
+
+/* ===== Bài 4: bảng dự báo thời tiết (11-6.mp3) ===== */
+function toNum(s){
+  s = s.replace(/[℃°C度\s]/gi,'').replace(/零下/,'-').replace(/[−–—负]/g,'-');
+  if(/^-?\d+$/.test(s)) return +s;
+  const neg = s[0]==='-'; if(neg) s = s.slice(1);
+  const m = {零:0,〇:0,一:1,二:2,两:2,三:3,四:4,五:5,六:6,七:7,八:8,九:9}; let n;
+  if(s==='十') n = 10; else if(s.includes('十')){ const [a,b] = s.split('十'); n = (a?m[a]:1)*10 + (b?m[b]:0); } else n = m[s];
+  return n===undefined || isNaN(n) ? NaN : (neg?-n:n);
+}
+const FC = {
+ 'f-tw':{k:'w',a:['晴天','晴','qíngtiān']}, 'f-th':{k:'n',a:15}, 'f-tl':{k:'n',a:10},
+ 'f-mw':{k:'w',a:['小雨','有小雨','xiǎoyǔ','yǒuxiǎoyǔ']}, 'f-mh':{k:'n',a:3}, 'f-ml':{k:'n',a:-5}
+};
+const fin = (id,ph)=>`<input class="fc-in hanzi" id="${id}" placeholder="${ph}" autocomplete="off">`;
+$c('fc').innerHTML = audioBtn('audio-ex6','▶ Nghe bản tin (11-6)') + `<div class="fc-board"><div class="fc-side hanzi"><span>天</span><span>气</span><span>预</span><span>报</span></div><div class="fc-days">`
+ + [['今天','tw','th','tl'],['明天','mw','mh','ml']].map(d=>`<div class="fc-day"><div class="fc-dayhd hanzi">${d[0]}</div>
+  <div class="fc-line"><span class="fc-lab">Thời tiết</span>${fin('f-'+d[1],'…')}</div>
+  <div class="fc-line"><span class="fc-lab hi hanzi">▲ 最高气温</span>${fin('f-'+d[2],'…')}<span class="fc-unit">℃</span></div>
+  <div class="fc-line"><span class="fc-lab lo hanzi">▼ 最低气温</span>${fin('f-'+d[3],'…')}<span class="fc-unit">℃</span></div></div>`).join('')
+ + `</div></div><button class="btn btn-check" onclick="checkFC()">Kiểm tra</button><span id="fc-res"></span>
+  <div class="reveal-box" id="fc-key"><b>Đáp án:</b> 今天：晴天 (qíngtiān), 最高 15℃, 最低 10℃ · 明天：有小雨 (yǒu xiǎoyǔ), 最高 3℃, 最低 -5℃ (零下五度).</div>`;
+addMax(6);
+function checkFC(){
+  let ok = 0;
+  Object.keys(FC).forEach(id=>{
+    const inp = document.getElementById(id), c = FC[id], v = inp.value.trim().toLowerCase().replace(/\s/g,'');
+    const good = c.k==='w' ? c.a.some(x=>v===x || (v && stripTone(v)===stripTone(x))) : toNum(inp.value)===c.a;
+    inp.classList.remove('ok','bad'); inp.classList.add(good?'ok':'bad'); if(good){ ok++; if(!done.fc.has(id)){ done.fc.add(id); addScore(1); celebrate(inp,1); } }
+  });
+  document.getElementById('fc-res').innerHTML = `<span class="${ok===6?'result-ok':'result-bad'}">Đúng ${ok}/6</span>`;
+  document.getElementById('fc-key').classList.add('show'); if(ok===6){ fireConfetti(); } else fail(document.getElementById('fc-res'));
+}
+
+/* ===== Bài 5: nghe chọn đáp án (11-9, 11-10, 11-11) ===== */
+const LIS = [
+ {id:'audio-ex9', lab:'Đoạn 1 (11-9)', title:'明天是晴天', tr:['男：明天天气怎么样，有雨吗？','女：没有雨，明天是晴天，天气很好。','男：多少度？','女：最高32度。我们去逛街吧。','男：我不去，天气太热了。'], qs:[
+   ["明天天气怎么样？<i class='pinyin'>Míngtiān tiānqì zěnmeyàng?</i>",["有雨 yǒu yǔ","晴天 qíngtiān","不热 bú rè"],1,"B — 晴天 (qíngtiān)"],
+   ["明天多少度？<i class='pinyin'>Míngtiān duōshao dù?</i>",["20度","30度","32度"],2,"C — 32度 (最高32度)"]]},
+ {id:'audio-ex10', lab:'Đoạn 2 (11-10)', title:'北京的冬天太冷了', tr:['女：圣诞节你去哪儿玩儿？','男：我去泰国，你呢？','女：我去澳大利亚，北京的冬天太冷了。现在澳大利亚是夏天，我喜欢。','男：我也喜欢热的天气。','女：泰国现在是雨季吗？我不喜欢下雨天。','男：不是，现在泰国是最好的季节，不太热，也不常下雨。'], qs:[
+   ["男的圣诞节去哪儿玩儿？<i class='pinyin'>Nán de Shèngdàn Jié qù nǎr wánr?</i>",["泰国 Tàiguó","澳大利亚 Àodàlìyà","北京 Běijīng"],0,"A — 泰国 (Tàiguó)"],
+   ["澳大利亚现在是什么季节？<i class='pinyin'>Àodàlìyà xiànzài shì shénme jìjié?</i>",["冬天 dōngtiān","夏天 xiàtiān","雨季 yǔjì"],1,"B — 夏天 (xiàtiān)"],
+   ["女的喜欢什么天气？<i class='pinyin'>Nǚ de xǐhuan shénme tiānqì?</i>",["冷天 lěngtiān","热天 rètiān","下雨天 xiàyǔtiān"],1,"B — 热天 (rètiān)"]]},
+ {id:'audio-ex11', lab:'Đoạn 3 (11-11)', title:'明天风很大', tr:['这个星期我的好朋友来北京。今天是星期一，天气预报说明天风很大，星期三阴天有雨，星期四天气很好，是晴天，我们打算一起去长城。'], qs:[
+   ["星期几有雨？<i class='pinyin'>Xīngqī jǐ yǒu yǔ?</i>",["星期一 xīngqīyī","星期二 xīngqī’èr","星期三 xīngqīsān"],2,"C — 星期三 (xīngqīsān)"],
+   ["哪天有大风？<i class='pinyin'>Nǎ tiān yǒu dà fēng?</i>",["今天 jīntiān","明天 míngtiān","星期三 xīngqīsān"],1,"B — 明天 (míngtiān)"],
+   ["他们哪天去长城？<i class='pinyin'>Tāmen nǎ tiān qù Chángchéng?</i>",["星期二 xīngqī’èr","星期三 xīngqīsān","星期四 xīngqīsì"],2,"C — 星期四 (xīngqīsì)"]]}
+];
+LIS.forEach((p,pi)=>{
+  const box = document.createElement('div'); box.style.marginBottom = '26px';
+  box.innerHTML = `<div class="ex-title">${p.lab} · <span class="hanzi">${p.title}</span></div>${audioBtn(p.id,'▶ Nghe bài nghe')}<div style="margin-top:12px;" id="lis-q-${pi}"></div>
+    <div class="reveal-box" id="lis-tr-${pi}"><b>Lời thoại:</b><br><span class="hanzi" style="font-size:1.1rem;line-height:1.9;">${p.tr.join('<br>')}</span></div>`;
+  $c('lis').appendChild(box);
+  mcRender('lis'+pi, document.getElementById('lis-q-'+pi), p.qs.map(q=>({q:q[0],o:q[1],a:q[2],exp:`✔ ${q[3]}`})), ()=>{
+    document.getElementById('lis-tr-'+pi).classList.add('show'); done.tf.add(pi); doneBadge('tf',LIS.length,'listen','🎧 Hoàn thành Bài 4!'); });
+});
+
+/* ===== Bài 6: sắp xếp câu ===== */
+const ORD = [
+ [["越南","一般","度","的","冬天","多少？"],["越南的冬天一般多少度？"],"Yuènán de dōngtiān yìbān duōshao dù?","Mùa đông Việt Nam thông thường là bao nhiêu độ?"],
+ [["早上","八点","我","姐姐","上课","常常"],["我姐姐常常早上八点上课。","我姐姐早上八点常常上课。","早上八点我姐姐常常上课。"],"Wǒ jiějie chángcháng zǎoshang bā diǎn shàngkè.","Chị tôi thường vào học lúc 8 giờ sáng."],
+ [["常","周末","我","家","不","看","在","书"],["我周末不常在家看书。","周末我不常在家看书。"],"Wǒ zhōumò bù cháng zài jiā kàn shū.","Cuối tuần tôi không thường đọc sách ở nhà."],
+ [["不","坐","我","公共汽车","最","喜欢"],["我最不喜欢坐公共汽车。"],"Wǒ zuì bù xǐhuan zuò gōnggòng qìchē.","Tôi không thích đi xe buýt nhất."],
+ [["北京","不太","很","的","冬天","冷","舒服"],["北京的冬天很冷，不太舒服。"],"Běijīng de dōngtiān hěn lěng, bú tài shūfu.","Mùa đông Bắc Kinh rất lạnh, không dễ chịu lắm."],
+ [["在","等","明天","我","怎么样","学校","你？"],["明天我在学校等你，怎么样？","我明天在学校等你，怎么样？"],"Míngtiān wǒ zài xuéxiào děng nǐ, zěnmeyàng?","Ngày mai mình đợi bạn ở trường, thế nào?"]
+];
+ORD.forEach((o,i)=>{
+  const w = document.createElement('div'); w.style.marginBottom = '18px';
+  w.innerHTML = `<div style="font-size:.85rem;color:var(--gray);margin-bottom:4px;">Câu ${i+1}</div><div class="order-zone hanzi" id="oz-${i}"></div><div class="order-bank hanzi" id="ob-${i}"></div>
+    <button class="btn secondary" onclick="ordReset(${i})">↺ Làm lại</button> <button class="btn btn-check" onclick="ordCheck(${i})">Kiểm tra</button><span id="or-${i}"></span>`;
+  $c('ord').appendChild(w); ordReset(i);
+});
+addMax(ORD.length);
+function ordReset(i){
+  const bank = document.getElementById('ob-'+i), zone = document.getElementById('oz-'+i);
+  bank.innerHTML = ''; zone.innerHTML = ''; zone.classList.remove('ok','bad'); document.getElementById('or-'+i).innerHTML = '';
+  shuffleArr(ORD[i][0]).forEach(t=>{ const c = document.createElement('span'); c.className = 'order-item'; c.textContent = t;
+    c.onclick = ()=>{ if(c.parentNode===bank){ zone.appendChild(c); c.classList.add('chosen'); } else { bank.appendChild(c); c.classList.remove('chosen'); } }; bank.appendChild(c); });
+}
+function ordCheck(i){
+  const zone = document.getElementById('oz-'+i), built = norm(Array.from(zone.children).map(c=>c.textContent).join('')), o = ORD[i], r = document.getElementById('or-'+i);
+  zone.classList.remove('ok','bad');
+  const info = `<span class="hanzi">${o[1][0]}</span> <i class="pinyin">(${o[2]})</i> — ${o[3]}${o[1].length>1?'<br><small>Cách khác: '+o[1].slice(1).join(' / ')+'</small>':''}`;
+  if(o[1].some(a=>norm(a)===built)){ zone.classList.add('ok'); r.innerHTML = `<div class="result-ok">✔ Chính xác!</div>${info}`; if(!done.ord.has(i)){ done.ord.add(i); addScore(1); celebrate(zone,3); doneBadge('ord',ORD.length,'order','🧩 Sắp câu hoàn hảo!'); } }
+  else { zone.classList.add('bad'); r.innerHTML = `<div class="result-bad">✘ Chưa đúng. Đáp án:</div>${info}`; fail(zone); }
+}
+
+/* ===== Bài 7: sửa câu sai ===== */
+const FIXD = [
+ ["你说那辆自行车怎么？",["你说那辆自行车怎么样？"],"Nǐ shuō nà liàng zìxíngchē zěnmeyàng?","Dùng nhầm 怎么. Hỏi tình trạng, đánh giá (\"thế nào\") phải dùng 怎么样.","Bạn nói chiếc xe đạp kia thế nào?"],
+ ["听说明天下雨大。",["听说明天下大雨。","听说明天雨下得很大。"],"Tīngshuō míngtiān xià dà yǔ.","Tính từ 大 bổ nghĩa trực tiếp cho 雨: 下大雨, không nói 下雨大.","Nghe nói ngày mai mưa to."],
+ ["越南的春天不常下有雨。",["越南的春天不常下雨。","越南的春天不常有雨。"],"Yuènán de chūntiān bù cháng xià yǔ.","Lẫn 下雨 với 有雨, thừa chữ 有: không nói 下有雨.","Mùa xuân Việt Nam không thường mưa."],
+ ["秋天是最好季节，我很喜欢。",["秋天是最好的季节，我很喜欢。"],"Qiūtiān shì zuì hǎo de jìjié, wǒ hěn xǐhuan.","Thiếu trợ từ 的 giữa định ngữ 最好 và trung tâm ngữ 季节.","Mùa thu là mùa đẹp nhất, tôi rất thích."],
+ ["春天不冷都不热，很舒服。",["春天不冷不热，很舒服。","春天不冷也不热，很舒服。"],"Chūntiān bù lěng bú rè, hěn shūfu.","Dùng sai 都. Cấu trúc đúng là 不……不…… hoặc 不……也不……","Mùa xuân không lạnh không nóng, rất dễ chịu."],
+ ["明天三十度差不多。",["明天差不多三十度。"],"Míngtiān chàbuduō sānshí dù.","差不多 phải đứng trước số từ/lượng từ, không đặt cuối câu.","Ngày mai khoảng 30 độ."],
+ ["今天有晴天，明天没有。",["今天是晴天，明天不是。","今天是晴天，明天不是晴天。"],"Jīntiān shì qíngtiān, míngtiān bú shì.","晴天 chỉ trạng thái thời tiết, đi với 是, không dùng 有/没有.","Hôm nay trời nắng, ngày mai thì không."],
+ ["秋天常不下雨，也常不刮风。",["秋天不常下雨，也不常刮风。"],"Qiūtiān bù cháng xià yǔ, yě bù cháng guā fēng.","Phủ định của 常 là 不常, không nói 常不.","Mùa thu không thường mưa, cũng không thường có gió."],
+ ["妈妈是我最爱人。",["妈妈是我最爱的人。"],"Māma shì wǒ zuì ài de rén.","Thiếu 的. Bỏ 的 thì 爱人 nghĩa là \"vợ/chồng\", sai hẳn nghĩa.","Mẹ là người tôi yêu nhất."],
+ ["明天是有雪。",["明天有雪。","明天下雪。"],"Míngtiān yǒu xuě.","Thừa 是. Nói 有雪 hoặc 下雪, không dùng 是有雪.","Ngày mai có tuyết."]
+];
+FIXD.forEach((d,i)=>{
+  const w = document.createElement('div'); w.className = 'fx-item';
+  w.innerHTML = `<div class="hanzi" style="font-size:1.25rem;margin-bottom:8px;">${NB(i+1)} <span class="wrong-s">${d[0]}</span></div>
+    <input class="ans-in hanzi" id="fx-${i}" placeholder="Viết lại câu đúng…" autocomplete="off"> <button class="btn btn-check" onclick="checkFix(${i})">Kiểm tra</button><span id="fxr-${i}"></span>`;
+  $c('fix').appendChild(w);
+});
+addMax(FIXD.length);
+function checkFix(i){
+  const inp = document.getElementById('fx-'+i), r = document.getElementById('fxr-'+i), d = FIXD[i]; if(!inp.value.trim()) return;
+  const good = d[1].some(a=>norm(a)===norm(inp.value));
+  inp.classList.remove('ok','bad'); inp.classList.add(good?'ok':'bad');
+  r.innerHTML = `<span class="${good?'result-ok':'result-bad'}">${good?'✔ Chính xác!':'✘ Chưa đúng.'}</span><div class="reveal-box show"><span class="hanzi">${d[1].join(' / ')}</span> <i class="pinyin">(${d[2]})</i><br>Lỗi sai: ${d[3]}<br>Dịch: ${d[4]}</div>`;
+  if(good){ if(!done.fix.has(i)){ done.fix.add(i); addScore(1); celebrate(inp,2); doneBadge('fix',FIXD.length,'fix','✏️ Sửa câu hoàn hảo!'); } } else fail(inp);
+}
+
+/* ===== Bài 8: đọc hiểu ===== */
+const PASSAGE = "我去年 (qùnián - năm ngoái) 到北京留学，我是美国留学生。我的同屋叫玛丽，她也来中国留学。我的专业是现代汉语，她的专业是中国文学。我们都是清华大学的留学生。我们的学校很大，也很漂亮 (piàoliang – đẹp)。我们学校有很多留学生，都日本、英国、韩国、加拿大、法国还有德国留学生。\n\n一开始我不喜欢北京的天气，夏天太热，冬天太冷，可是现在我习惯 (xíguàn - quen) 了。北京的春天和秋天是最美的季节，天气很舒服，不冷不热。春天有时候下小雨，可没有风。秋天没有雨，常常刮小风。秋天有很多花 (huā - hoa)。北京的夏天很热，差不多三十八度，夏天的时候我哪儿也不想去，只想在房间里看书，喝冷水。可是我的同屋很喜欢夏天，她喜欢游泳，她说夏天我喜欢去玩儿、去游泳。冬天是最难受的季节，北京的冬天差不多零下十度，不过不常下雪。冬天我也不想去玩儿，天气太冷了。我常在房间里喝热茶。";
+const TFQ = [
+ ["玛丽是美国留学生。",1,"Bài chỉ nói \"tôi\" là lưu học sinh Mỹ (我是美国留学生); Mary chỉ \"也来中国留学\", không nêu quốc tịch."],
+ ["玛丽很喜欢春天。",1,"Mary thích mùa hè (我的同屋很喜欢夏天), không phải mùa xuân."],
+ ["“我”的学校很漂亮。",0,"我们的学校很大，也很漂亮。"],
+ ["“我”是清华大学的留学生。",0,"我们都是清华大学的留学生。"],
+ ["“我”的学校没有德国留学生。",1,"Có lưu học sinh Đức (还有德国留学生)."],
+ ["北京的夏天不太热。",1,"Mùa hè Bắc Kinh rất nóng, khoảng 38 độ (差不多三十八度)."],
+ ["在北京只有秋天舒服。",1,"Cả mùa xuân và mùa thu đều dễ chịu (春天和秋天是最美的季节，天气很舒服)."],
+ ["夏天的时候“我”不想去玩儿。",0,"夏天的时候我哪儿也不想去."],
+ ["玛丽在夏天常去游泳。",0,"她喜欢游泳，她说夏天我喜欢去玩儿、去游泳."],
+ ["夏天我喜欢喝热茶。",1,"Mùa hè \"tôi\" uống nước lạnh (喝冷水); mùa đông mới uống trà nóng (我常在房间里喝热茶)."]
+];
+const RDQ = [
+ ["在北京哪个季节最舒服？","在北京，春天和秋天最舒服。","Zài Běijīng, chūntiān hé qiūtiān zuì shūfu.","Ở Bắc Kinh, mùa xuân và mùa thu dễ chịu nhất."],
+ ["夏天“我”常喝什么？","夏天“我”常喝冷水。","Xiàtiān “wǒ” cháng hē lěngshuǐ.","Mùa hè “tôi” thường uống nước lạnh."],
+ ["北京秋天的天气怎么样？","北京秋天天气很舒服，不冷不热，没有雨，常常刮小风。","Běijīng qiūtiān tiānqì hěn shūfu, bù lěng bú rè, méiyǒu yǔ, chángcháng guā xiǎofēng.","Mùa thu Bắc Kinh rất dễ chịu, không lạnh không nóng, không mưa, thường có gió nhẹ."],
+ ["北京的冬天差不多多少度？","北京的冬天差不多零下十度。","Běijīng de dōngtiān chàbuduō língxià shí dù.","Mùa đông Bắc Kinh khoảng âm 10 độ."],
+ ["“我”学校都有哪国留学生？","“我”学校有美国、日本、英国、韩国、加拿大、法国还有德国留学生。","“Wǒ” xuéxiào yǒu Měiguó, Rìběn, Yīngguó, Hánguó, Jiānádà, Fǎguó hái yǒu Déguó liúxuéshēng.","Trường của “tôi” có lưu học sinh Mỹ, Nhật, Anh, Hàn, Canada, Pháp và Đức."]
+];
+$c('read').innerHTML = `<div class="passage hanzi" style="white-space:pre-line;margin-bottom:18px;">${PASSAGE}</div><div class="ex-title">Phần 1 · Phán đoán đúng sai</div><div id="rd-tf"></div>
+  <div class="ex-title" style="margin-top:22px;">Phần 2 · Trả lời câu hỏi</div><div id="rd-q"></div>`;
+mcRender('tf8', document.getElementById('rd-tf'), TFQ.map(t=>({q:t[0],o:['✔ Đúng','✘ Sai'],a:t[1],exp:t[2]})), ()=>{ unlockBadge('read'); showToast('📖 Hoàn thành Phần 1!'); });
+RDQ.forEach((q,i)=>{
+  const w = document.createElement('div'); w.className = 'fx-item';
+  w.innerHTML = `<div class="hanzi" style="font-size:1.2rem;margin-bottom:8px;">${NB(i+1)} ${q[0]}</div><textarea class="ans hanzi" id="rq-${i}" placeholder="Viết câu trả lời…"></textarea>
+    <div style="margin-top:6px;"><button class="btn btn-check" onclick="rqShow(${i})">Xem đáp án mẫu</button><span class="self-grade" id="rqg-${i}"><button class="btn-mini yes" onclick="rqGrade(${i})">✅ Mình làm đúng</button></span></div>
+    <div class="reveal-box" id="rqa-${i}"><span class="hanzi">${q[1]}</span><br><i class="pinyin">${q[2]}</i><br>${q[3]}</div>`;
+  document.getElementById('rd-q').appendChild(w);
+});
+addMax(RDQ.length);
+function rqShow(i){ document.getElementById('rqa-'+i).classList.add('show'); document.getElementById('rqg-'+i).classList.add('show'); }
+function rqGrade(i){ if(done.rd.has(i)) return; done.rd.add(i); addScore(1); celebrate(document.getElementById('rqa-'+i),2); }
+
+/* ============ TAB CHỮ HÁN (Hanzi Writer) ============ */
+let hanziWriterInstance = null;
+let currentHanziIdx = 0;
+
+const hzPicker = document.getElementById('hz-picker');
+HANZI_LIST.forEach((h,idx)=>{
+  const chip = document.createElement('div');
+  chip.className = 'hz-chip hanzi' + (idx===0?' active':'');
+  chip.textContent = h.char;
+  chip.onclick = ()=>selectHanzi(idx);
+  hzPicker.appendChild(chip);
+});
+
+function loadHanziWriterScript(cb){
+  if(window.HanziWriter){ cb(); return; }
+  const sources = [
+    'https://cdn.jsdelivr.net/npm/hanzi-writer@3/dist/hanzi-writer.min.js',
+    'https://unpkg.com/hanzi-writer@3/dist/hanzi-writer.min.js'
+  ];
+  let i=0;
+  function tryLoad(){
+    if(i>=sources.length){ document.getElementById('hanzi-target').innerHTML = '<div class="locked-msg">Không tải được thư viện Hanzi Writer (kiểm tra kết nối mạng).</div>'; return; }
+    const s = document.createElement('script');
+    s.src = sources[i];
+    s.onload = cb;
+    s.onerror = ()=>{ i++; tryLoad(); };
+    document.head.appendChild(s);
+  }
+  tryLoad();
+}
+
+function selectHanzi(idx){
+  currentHanziIdx = idx;
+  document.querySelectorAll('.hz-chip').forEach((c,i)=>c.classList.toggle('active', i===idx));
+  const h = HANZI_LIST[idx];
+  document.getElementById('hz-pinyin').textContent = h.py;
+  document.getElementById('hz-radical').textContent = h.radical;
+  document.getElementById('hz-strokes').textContent = h.strokes;
+  document.getElementById('hz-mean').textContent = h.mean;
+  document.getElementById('hz-tip').textContent = h.tip;
+  drawHanzi(h.char);
+}
+
+function drawHanzi(char){
+  const target = document.getElementById('hanzi-target');
+  target.innerHTML = '';
+  loadHanziWriterScript(()=>{
+    try{
+      hanziWriterInstance = HanziWriter.create('hanzi-target', char, {
+        width: 260, height: 260,
+        padding: 12,
+        strokeColor: '#B35D52',
+        radicalColor: '#D98A80',
+        showOutline: true,
+        strokeAnimationSpeed: 1,
+        delayBetweenStrokes: 200
+      });
+    }catch(e){
+      target.innerHTML = '<div class="locked-msg">Không tải được nét chữ "'+char+'".</div>';
+    }
+  });
+}
+function hzAnimate(){ if(hanziWriterInstance) hanziWriterInstance.animateCharacter(); }
+function hzQuiz(){
+  if(!hanziWriterInstance) return;
+  hanziWriterInstance.quiz({
+    onComplete: (summary)=>{
+      const target = document.getElementById('hanzi-target');
+      celebrate(target, 5);
+      unlockBadge('hanzi');
+      showToast('字 Viết đúng chữ '+HANZI_LIST[currentHanziIdx].char+'!','gold');
+    }
+  });
+}
+function hzOutline(){
+  if(!hanziWriterInstance) return;
+  hanziWriterInstance.hideCharacter();
+  hanziWriterInstance.showOutline();
+}
+// khởi tạo chữ đầu tiên
+selectHanzi(0);
+</script>
+</body>
+</html>
