@@ -100,6 +100,32 @@
   .plan-time{background:var(--accent-light);color:#7a4d05;padding:2px 9px;border-radius:999px;font-size:.78rem;}
   .plan-desc{font-size:.86rem;color:var(--ink);line-height:1.45;}
 
+
+  /* Trắc nghiệm chọn nghĩa (Từ vựng tổng hợp) */
+  .vq-bar-row{display:flex;align-items:center;gap:14px;padding:10px 16px;border:2px solid var(--cream-2);border-radius:999px;margin-bottom:16px;background:#fff;}
+  .vq-count{font-family:'Baloo 2';font-weight:700;font-size:.9rem;color:var(--ink);white-space:nowrap;}
+  .vq-bar{flex:1;height:12px;background:var(--cream-2);border-radius:999px;overflow:hidden;}
+  .vq-bar-fill{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--red));border-radius:999px;transition:width .3s;}
+  .vq-score{font-family:'Baloo 2';font-weight:700;color:var(--red-dark);white-space:nowrap;}
+  .vq-box{border:2px solid var(--cream-2);border-radius:20px;padding:22px 24px;background:#fff;}
+  .vq-qnum{font-family:'Baloo 2';font-weight:700;color:var(--green);font-size:.9rem;}
+  .vq-hz{font-size:3rem;text-align:center;font-weight:700;line-height:1.3;margin:6px 0 2px;}
+  .vq-lesson{text-align:center;font-family:'Baloo 2';font-weight:700;color:var(--gray);margin-bottom:16px;}
+  .vq-opts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+  .vq-opt{font-family:'Be Vietnam Pro';font-size:1rem;font-weight:600;text-align:left;background:var(--cream-2);border:2px solid transparent;border-radius:12px;padding:13px 16px;cursor:pointer;transition:.15s;}
+  .vq-opt:hover:not(:disabled){border-color:var(--red-light);transform:translateY(-2px);}
+  .vq-opt:disabled{cursor:default;}
+  .vq-opt .vq-let{color:var(--gray);font-weight:600;margin-right:8px;}
+  .vq-opt.ok{border-color:var(--green);background:var(--green-bg);color:var(--green);}
+  .vq-opt.bad{border-color:var(--error);background:var(--error-bg);color:var(--error);}
+  .vq-opt.dim{opacity:.55;}
+  .vq-reveal{display:none;margin-top:14px;padding:10px 14px;border-radius:12px;background:var(--cream-2);font-size:.95rem;line-height:1.5;}
+  .vq-reveal.show{display:block;}
+  .vq-actions{display:flex;justify-content:center;gap:10px;margin-top:14px;flex-wrap:wrap;}
+  .vq-done{text-align:center;padding:26px 10px;}
+  .vq-done .big{font-family:'Baloo 2';font-weight:700;font-size:2rem;color:var(--red-dark);}
+  @media(max-width:560px){.vq-opts{grid-template-columns:1fr;}.vq-hz{font-size:2.4rem;}}
+
   /* Goals Card */
   .goals-card{
     background:var(--white);border:2px solid var(--red-light);border-radius:var(--radius);
@@ -610,12 +636,10 @@
     <div class="topbar">
       <div class="topbar-brand">🐼 HoaiphuongHSK · Boya Chinese Sơ cấp 1 · Tổng hợp Đơn vị 2</div>
       <h2>Ôn tập Bài 6–10 · Một ngày và gia đình của mình</h2>
-      <div class="desc">Chủ đề xuyên suốt: Giờ giấc &amp; Số (B6) · Lịch hẹn &amp; Vị trí (B7) · Đường đi &amp; Điện thoại (B8) · Tiền &amp; Mua bán (B9) · Gia đình (B10)</div>
       <div class="topbar-actions">
         <button class="present-toggle" id="fullscreen-toggle-btn" onclick="toggleFullscreen()">⛶ Toàn màn hình</button>
         <button class="present-toggle" id="present-toggle-btn" onclick="togglePresent()">🖥 Chế độ trình chiếu</button>
       </div>
-      <div class="badge-row" id="badge-row" style="display:none"></div>
     </div>
 
     <!-- 90-MIN LESSON PLAN DRAWER -->
@@ -659,19 +683,6 @@
       </div>
     </div>
 
-    <!-- GOALS CARD -->
-    <div class="goals-card">
-      <div class="goals-head">
-        <span>🎯 <span class="hanzi">复习目标</span> Mục tiêu ôn tập Bài 6–10 ("Một ngày và gia đình của mình")</span>
-      </div>
-      <div class="goals-grid">
-        <label class="goal-item"><input type="checkbox"><span><b>Thời gian &amp; Số (B6–8):</b> Nghe – nói – viết chuẩn giờ giấc (<span class="hanzi">点、分、刻、半、差</span>), số 0–100, số phòng và SĐT (<span class="hanzi">幺 yāo, 零 líng</span>).</span></label>
-        <label class="goal-item"><input type="checkbox"><span><b>Tiền &amp; Mua bán (B9):</b> Hỏi giá, tính tổng (<span class="hanzi">一共</span>), tiền thối (<span class="hanzi">找</span>), đổi ký hiệu <span class="hanzi">¥2.85 → 两块八毛五</span>.</span></label>
-        <label class="goal-item"><input type="checkbox"><span><b>Vị trí &amp; Lịch hẹn (B7–8):</b> Dùng đúng <span class="hanzi">有 / 在 / 是</span> với phương vị từ, hỏi đường (<span class="hanzi">怎么走、坐…路、骑车…分钟就到</span>).</span></label>
-        <label class="goal-item"><input type="checkbox"><span><b>Gia đình &amp; Tổng hợp (B10):</b> Giới thiệu gia đình &amp; một ngày với <span class="hanzi">只、一般、还、口、条、张</span>.</span></label>
-      </div>
-    </div>
-
     <!-- STATUS & SCORE BAR -->
     <div class="status-row">
       <div class="xp-box">
@@ -702,35 +713,14 @@
          =================================================================== -->
     <div class="panel active" id="panel-vocab">
       <div class="subtabs">
-        <button class="subtab-btn active" data-target="v-table">📚 Bảng từ vựng theo 5 chủ đề</button>
-        <button class="subtab-btn" data-target="v-grid">🗂️ Ôn từ</button>
+        <button class="subtab-btn active" data-target="v-grid">🗂️ Ôn từ</button>
         <button class="subtab-btn" data-target="v-fc">🃏 Flashcard trộn cả 5 bài</button>
+        <button class="subtab-btn" data-target="v-quiz">📝 Trắc nghiệm chọn nghĩa</button>
       </div>
 
-      <div class="sub-panel active" id="v-table">
-        <div class="card">
-          <div class="ex-title">📖 Từ vựng Bài 6–10 gom theo 5 chủ đề <span class="tag-skill">Nghe phát âm + Nhớ từ theo ngữ cảnh</span></div>
-          <div class="ex-sub">Chọn chủ đề để lọc hoặc gõ chữ Hán / pinyin / nghĩa tiếng Việt để tra nhanh.</div>
-          <div class="topic-pills" id="vocab-topic-pills"></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
-            <input type="text" class="ans-in" id="vocab-search" placeholder="🔍 Tìm chữ Hán, pinyin hoặc nghĩa (VD: 块, yìbān, gia đình)..." oninput="renderVocabTable()" style="margin:0;max-width:420px;">
-            <div style="display:flex;gap:8px;flex-wrap:wrap;">
-              <button class="btn secondary" id="vocab-py-toggle" onclick="toggleVocabPy()">🙈 Ẩn phiên âm</button>
-              <button class="btn secondary" id="vocab-vi-toggle" onclick="toggleVocabVi()">🙈 Ẩn nghĩa</button>
-            </div>
-          </div>
-          <table class="vocab" id="vocab-table">
-            <thead><tr><th>Nghe</th><th>Chữ Hán</th><th>Pinyin</th><th>Từ loại</th><th>Nghĩa tiếng Việt</th><th>Bài</th></tr></thead>
-            <tbody id="vocab-body"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="sub-panel" id="v-grid">
+      <div class="sub-panel active" id="v-grid">
         <div class="card">
           <div class="ex-title">🗂️ Ôn từ theo lưới thẻ lật (Bài 6–10) <span class="tag-skill">Nhấp vào từng thẻ để lật xem Pinyin, Nghĩa &amp; Nghe phát âm</span></div>
-          <div class="ex-sub">Trình bày toàn bộ từ vựng dạng lưới thẻ trực quan. Mặt trước hiển thị chữ Hán, bài học và từ loại; mặt sau hiển thị Pinyin, nghĩa tiếng Việt và nút nghe phát âm như thẻ Flashcard.</div>
-          <div class="topic-pills" id="grid-topic-pills"></div>
           <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
             <div style="display:flex;gap:6px;flex-wrap:wrap;" id="grid-lesson-pills"></div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -780,6 +770,19 @@
             <button class="btn secondary" onclick="fcKnown(false)">🔁 Ôn lại</button>
             <button class="btn secondary" id="fc-shuffle-btn" onclick="toggleShuffleFC()">🔀 Trộn thẻ</button>
           </div>
+        </div>
+      </div>
+
+      <div class="sub-panel" id="v-quiz">
+        <div class="card">
+          <div class="ex-title">📝 Trắc nghiệm chọn nghĩa <span class="tag-skill">Đọc chữ Hán, chọn đúng nghĩa tiếng Việt</span></div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 12px;" id="vq-lesson-pills"></div>
+          <div class="vq-bar-row">
+            <span class="vq-count" id="vq-count">Câu 1 / 1</span>
+            <div class="vq-bar"><div class="vq-bar-fill" id="vq-bar-fill"></div></div>
+            <span class="vq-score">Điểm: <b id="vq-score">0</b> / <span id="vq-total">0</span></span>
+          </div>
+          <div id="vq-stage"></div>
         </div>
       </div>
     </div>
@@ -994,6 +997,7 @@ const scoredItems = new Set();
 
 function renderBadges(){
   const row = document.getElementById('badge-row');
+  if(!row) return;
   row.innerHTML = BADGES.map(b=>`<span class="badge-pill ${GAME.badges[b.id]?'earned':''}">${b.label}</span>`).join('');
 }
 renderBadges();
@@ -1598,46 +1602,8 @@ const VOCAB_ALL = [
   {hz:"吧", py:"ba", pos:"trợ.", mean:"nhé, đi (đề nghị); phải không (phỏng đoán)", lesson:"B7/B8", topic:"phone"}
 ];
 
-let currentVocabTopic = 'all';
-function renderTopicPills(){
-  const box = document.getElementById('vocab-topic-pills');
-  box.innerHTML = TOPICS.map(t=>`<button class="topic-pill ${t.id===currentVocabTopic?'active':''}" onclick="selectVocabTopic('${t.id}')">${t.label}</button>`).join('');
-}
-function selectVocabTopic(id){
-  currentVocabTopic = id;
-  renderTopicPills();
-  renderVocabTable();
-}
-function renderVocabTable(){
-  const q = (document.getElementById('vocab-search').value || '').trim().toLowerCase();
-  const tbody = document.getElementById('vocab-body');
-  const filtered = VOCAB_ALL.filter(v=>{
-    if(currentVocabTopic !== 'all' && v.topic !== currentVocabTopic) return false;
-    if(!q) return true;
-    return v.hz.includes(q) || v.py.toLowerCase().includes(q) || v.mean.toLowerCase().includes(q);
-  });
-  tbody.innerHTML = filtered.map(v=>`
-    <tr>
-      <td><button class="btn-speak" onclick="speak('${v.hz.replace(/（.*?）/g,'')}')">🔊</button></td>
-      <td class="hz hanzi">${v.hz}</td>
-      <td class="pinyin">${v.py}</td>
-      <td><span class="pos">${v.pos}</span></td>
-      <td class="mean-col">${v.mean}</td>
-      <td><span class="lesson-badge">${v.lesson}</span></td>
-    </tr>`).join('');
-}
-function toggleVocabPy(){
-  const tbl = document.getElementById('vocab-table');
-  const hid = tbl.classList.toggle('hide-py');
-  document.getElementById('vocab-py-toggle').textContent = hid ? '👁 Hiện phiên âm' : '🙈 Ẩn phiên âm';
-}
-function toggleVocabVi(){
-  const tbl = document.getElementById('vocab-table');
-  const hid = tbl.classList.toggle('hide-vi');
-  document.getElementById('vocab-vi-toggle').textContent = hid ? '👁 Hiện nghĩa' : '🙈 Ẩn nghĩa';
-}
-renderTopicPills();
-renderVocabTable();
+
+TOPICS[0].label = '🌟 Tất cả (' + VOCAB_ALL.length + ' từ)';
 
 /* Flashcard trộn từ 5 bài */
 let fcTopic = 'all';
@@ -1732,8 +1698,6 @@ let gridLightFront = true;
 let gridOrder = VOCAB_ALL.map((_, i) => i);
 
 function renderGridFilters(){
-  const tBox = document.getElementById('grid-topic-pills');
-  tBox.innerHTML = TOPICS.map(t=>`<button class="topic-pill ${t.id===gridTopic?'active':''}" onclick="selectGridTopic('${t.id}')">${t.label}</button>`).join('');
   const lBox = document.getElementById('grid-lesson-pills');
   lBox.innerHTML = LESSONS_FILTER.map(l=>`<button class="btn-mini ${l.id===gridLesson?'yes':'no'}" style="${l.id===gridLesson?'border:2px solid var(--green);':'background:var(--cream-2);color:var(--red-dark);'}" onclick="selectGridLesson('${l.id}')">${l.label}</button>`).join('');
 }
@@ -1837,6 +1801,110 @@ function renderVocabGrid(){
 }
 renderGridFilters();
 renderVocabGrid();
+
+/* Trắc nghiệm chọn nghĩa (v-quiz) */
+const VQ_STOP = new Set(['của','có','là','ở','và','một','các','nhé','đi']);
+const VQ_LET = ['A','B','C','D'];
+let vqLesson = 'all', vqList = [], vqIdx = 0, vqScore = 0, vqAnswered = false;
+
+function vqClean(m){
+  return m.replace(/[(（][^)）]*[)）]/g,'').replace(/\s+([;,])/g,'$1').replace(/\s+/g,' ').replace(/[;,\s]+$/,'').trim();
+}
+function vqSyl(m){
+  return new Set(vqClean(m).toLowerCase().split(/[\s,;\/]+/).filter(w=>w && !VQ_STOP.has(w)));
+}
+function vqOverlap(a, b){
+  const sa = vqSyl(a), sb = vqSyl(b);
+  for(const w of sa) if(sb.has(w)) return true;
+  return false;
+}
+function vqBuild(v){
+  const correct = vqClean(v.mean);
+  const pool = shuffleArr(VOCAB_ALL.filter(x=>x.hz!==v.hz));
+  pool.sort((a,b)=>(b.pos===v.pos) - (a.pos===v.pos));
+  const picked = [];
+  const used = new Set([correct]);
+  const take = strict => {
+    for(const x of pool){
+      if(picked.length>=3) break;
+      const c = vqClean(x.mean);
+      if(used.has(c)) continue;
+      if(strict && vqOverlap(c, correct)) continue;
+      if(strict && picked.some(p=>vqOverlap(p,c))) continue;
+      picked.push(c); used.add(c);
+    }
+  };
+  take(true);
+  if(picked.length<3) take(false);
+  return {correct, opts: shuffleArr([correct].concat(picked))};
+}
+function vqPills(){
+  const L = LESSONS_FILTER;
+  document.getElementById('vq-lesson-pills').innerHTML = L.map(l=>`<button class="btn-mini ${l.id===vqLesson?'yes':'no'}" style="${l.id===vqLesson?'border:2px solid var(--green);':'background:var(--cream-2);color:var(--red-dark);'}" onclick="vqStart('${l.id}')">${l.label}</button>`).join('');
+}
+function vqStart(lessonId){
+  if(lessonId) vqLesson = lessonId;
+  const pool = VOCAB_ALL.filter(v=> vqLesson==='all' || v.lesson.split('/').includes(vqLesson));
+  vqList = shuffleArr(pool).map(v=>Object.assign({q:vqBuild(v)}, {v}));
+  vqIdx = 0; vqScore = 0; vqAnswered = false;
+  document.getElementById('vq-total').textContent = vqList.length;
+  vqPills();
+  vqRender();
+}
+function vqUpdateBar(){
+  const n = vqList.length;
+  document.getElementById('vq-count').textContent = 'Câu ' + Math.min(vqIdx+1, n) + ' / ' + n;
+  document.getElementById('vq-bar-fill').style.width = (vqIdx / n * 100) + '%';
+  document.getElementById('vq-score').textContent = vqScore;
+}
+function vqRender(){
+  const stage = document.getElementById('vq-stage');
+  vqUpdateBar();
+  if(vqIdx >= vqList.length){
+    document.getElementById('vq-bar-fill').style.width = '100%';
+    const pct = Math.round(vqScore / vqList.length * 100);
+    stage.innerHTML = `<div class="vq-box vq-done"><div class="big">🎉 ${vqScore} / ${vqList.length} (${pct}%)</div><div style="margin:8px 0 14px;color:var(--gray);">Hoàn thành bài trắc nghiệm chọn nghĩa.</div><button class="btn" onclick="vqStart()">🔁 Làm lại (trộn mới)</button></div>`;
+    if(pct >= 80) unlockBadge('vocab');
+    return;
+  }
+  const {v, q} = vqList[vqIdx];
+  vqAnswered = false;
+  const cleanHz = v.hz.replace(/（.*?）/g,'').replace(/'/g,'');
+  stage.innerHTML = `
+    <div class="vq-box">
+      <div class="vq-qnum">Câu ${vqIdx+1}</div>
+      <div class="vq-hz hanzi">${v.hz}</div>
+      <div class="vq-lesson">${v.lesson.replace(/B/g,'Bài ')} <button class="btn-speak" style="width:30px;height:30px;font-size:.85rem;vertical-align:middle;margin-left:6px;" onclick="speak('${cleanHz}')" title="Nghe phát âm">🔊</button></div>
+      <div class="vq-opts" id="vq-opts">
+        ${q.opts.map((o,k)=>`<button class="vq-opt" onclick="vqAnswer(this,${k})"><span class="vq-let">${VQ_LET[k]}.</span>${o}</button>`).join('')}
+      </div>
+      <div class="vq-reveal" id="vq-reveal"><span class="pinyin">${v.py}</span> · <b>${v.pos}</b> ${v.mean}</div>
+      <div class="vq-actions" id="vq-actions" style="display:none;">
+        <button class="btn" onclick="vqNext()">${vqIdx+1>=vqList.length?'Xem kết quả ▶':'Câu tiếp ▶'}</button>
+      </div>
+    </div>`;
+}
+function vqAnswer(btn, k){
+  if(vqAnswered) return;
+  vqAnswered = true;
+  const {q} = vqList[vqIdx];
+  const ok = q.opts[k] === q.correct;
+  document.querySelectorAll('#vq-opts .vq-opt').forEach((o,i)=>{
+    o.disabled = true;
+    if(q.opts[i] === q.correct) o.classList.add('ok');
+    else if(o !== btn) o.classList.add('dim');
+  });
+  if(ok){ vqScore++; celebrate(btn, 1); }
+  else { btn.classList.add('bad'); fail(btn); }
+  document.getElementById('vq-score').textContent = vqScore;
+  document.getElementById('vq-reveal').classList.add('show');
+  document.getElementById('vq-actions').style.display = 'flex';
+}
+function vqNext(){
+  vqIdx++;
+  vqRender();
+}
+vqStart('all');
 
 /* ============================================================================
    3. TAB 2: 📐 SO SÁNH DỄ NHẦM (5 NHÓM ĐỐI CHIẾU + CÂU CHỌN ĐÚNG)
