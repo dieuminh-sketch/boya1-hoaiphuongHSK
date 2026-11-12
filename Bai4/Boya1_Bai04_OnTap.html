@@ -477,6 +477,23 @@
   .pos-btn:disabled{cursor:default;}
   .passage{background:var(--cream);border-left:5px solid var(--red-light);border-radius:12px;padding:14px 16px;font-size:1.2rem;line-height:2.3;}
   .cz-n{font-size:.65rem;color:var(--gray);margin:0 2px;}
+/* ===== Trắc nghiệm từ vựng (tab nhỏ trong Flashcard) ===== */
+  .subtabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+  .subtab-btn{font-family:'Baloo 2',sans-serif;font-weight:700;background:var(--white);border:2px solid var(--cream-2);color:var(--red-dark);padding:8px 14px;border-radius:12px;cursor:pointer;font-size:.88rem;transition:.15s;}
+  .subtab-btn.active{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;border-color:var(--accent);box-shadow:var(--shadow);}
+  .fl-sub{display:none;} .fl-sub.active{display:block;animation:fade .3s;}
+  .quiz-card{max-width:760px;margin:0 auto;padding:6px 4px;}
+  .quiz-n{font-family:'Baloo 2';font-weight:700;color:var(--red-dark);font-size:.9rem;}
+  .quiz-hz{font-size:3.2rem;font-weight:700;text-align:center;margin:6px 0 2px;color:var(--ink);}
+  .quiz-tag{text-align:center;color:var(--gray);font-family:'Baloo 2';font-weight:700;margin-bottom:14px;}
+  .quiz-opt{text-align:left;padding:12px 14px;}
+  .quiz-l{color:var(--gray);margin-right:4px;}
+  .quiz-fbbox{margin-top:14px;border-radius:12px;padding:12px 16px;}
+  .quiz-fbbox.okbox{background:var(--green-bg);border-left:4px solid var(--green);}
+  .quiz-fbbox.badbox{background:var(--error-bg);border-left:4px solid var(--error);}
+  .quiz-ok{color:var(--green);font-weight:700;margin-bottom:4px;} .quiz-bad{color:var(--error);font-weight:700;margin-bottom:4px;}
+  .quiz-ex{font-size:.95rem;} .quiz-py{color:var(--gray);font-size:.85rem;margin-left:8px;}
+  @media(max-width:800px){ .quiz-hz{font-size:2.6rem;} }
 </style>
 </head>
 <body>
@@ -570,31 +587,46 @@
       <div id="grammar-container"></div>
     </div>
 
-    <!-- ================= TAB FLASHCARD ================= -->
+    <!-- ================= TAB FLASHCARD (có tab nhỏ: Thẻ lật / Trắc nghiệm từ vựng) ================= -->
     <div class="panel" id="panel-flash">
-      <div class="card fc-wrap">
-        <div class="fc-progress" id="fc-progress">1 / 12</div>
-        <div class="fc-stars">⭐ Đã thuộc: <span id="fc-known-count">0</span>/<span id="fc-total">21</span></div>
-        <div class="flashcard" id="flashcard">
-          <div class="fc-inner">
-            <div class="fc-face fc-front"><div class="hz" id="fc-hz"></div><div class="hint">👆 Nhấp để lật thẻ</div></div>
-            <div class="fc-face fc-back">
-              <div class="pinyin" id="fc-pinyin"></div>
-              <div class="mean" id="fc-mean"></div>
+      <div class="subtabs" id="fl-subtabs">
+        <button class="subtab-btn active" data-fs="card">🃏 Thẻ lật</button>
+        <button class="subtab-btn" data-fs="quiz">🎯 Trắc nghiệm từ vựng</button>
+      </div>
+ 
+      <div class="fl-sub active" id="fs-card">
+        <div class="card fc-wrap">
+          <div class="fc-progress" id="fc-progress">1 / 12</div>
+          <div class="fc-stars">⭐ Đã thuộc: <span id="fc-known-count">0</span>/<span id="fc-total">21</span></div>
+          <div class="flashcard" id="flashcard">
+            <div class="fc-inner">
+              <div class="fc-face fc-front"><div class="hz" id="fc-hz"></div><div class="hint">👆 Nhấp để lật thẻ</div></div>
+              <div class="fc-face fc-back">
+                <div class="pinyin" id="fc-pinyin"></div>
+                <div class="mean" id="fc-mean"></div>
+              </div>
             </div>
           </div>
+          <div class="fc-controls">
+            <button class="btn secondary" onclick="fcPrev()">◀ Trước</button>
+            <button class="btn secondary" onclick="flipCard()">🔄 Lật thẻ</button>
+            <button class="btn" onclick="fcNext()">Sau ▶</button>
+          </div>
+          <div class="fc-controls">
+            <button class="btn gold" onclick="fcKnown(true)">✅ Đã thuộc</button>
+            <button class="btn secondary" onclick="fcKnown(false)">🔁 Ôn lại</button>
+          </div>
+          <div class="fc-controls">
+            <button class="btn secondary" id="fc-shuffle-btn" onclick="toggleShuffleFC()">🔀 Trộn thẻ</button>
+          </div>
         </div>
-        <div class="fc-controls">
-          <button class="btn secondary" onclick="fcPrev()">◀ Trước</button>
-          <button class="btn secondary" onclick="flipCard()">🔄 Lật thẻ</button>
-          <button class="btn" onclick="fcNext()">Sau ▶</button>
-        </div>
-        <div class="fc-controls">
-          <button class="btn gold" onclick="fcKnown(true)">✅ Đã thuộc</button>
-          <button class="btn secondary" onclick="fcKnown(false)">🔁 Ôn lại</button>
-        </div>
-        <div class="fc-controls">
-          <button class="btn secondary" id="fc-shuffle-btn" onclick="toggleShuffleFC()">🔀 Trộn thẻ</button>
+      </div>
+ 
+      <div class="fl-sub" id="fs-quiz">
+        <div class="card ex-block">
+          <div class="ex-title">Trắc nghiệm từ vựng Bài 4</div>
+          <div class="ex-sub">Chọn nghĩa đúng của từ. Chọn đúng sẽ phát âm từ và hiện ví dụ. Máy tính: bấm <b>Enter ↵</b> để sang câu tiếp, phím <b>1–4</b> để chọn đáp án.</div>
+          <div id="c-quiz"></div>
         </div>
       </div>
     </div>
@@ -813,6 +845,7 @@ const HANZI_LIST = [
 /* ============ GAME HOÁ: XP / STREAK / BADGE / CONFETTI / ÂM THANH ============ */
 const GAME = { xp:0, streak:0, bestStreak:0, level:1, badges:{} };
 const BADGES = [
+  {id:'quiz', label:'🎯 Từ vựng'},
   {id:'fill', label:'🎯 Điền từ', need:'fillDone'},
   {id:'order', label:'🧩 Sắp câu', need:'orderDone'},
   {id:'listen', label:'🎧 Nghe hiểu', need:'listenDone'},
@@ -1302,6 +1335,85 @@ function toggleShuffleFC(){
 }
 fcCard.addEventListener('click', flipCard);
 renderFC();
+/* ============ TRẮC NGHIỆM TỪ VỰNG (tab nhỏ trong Flashcard) ============
+   Dùng sẵn VOCAB, playClip(), celebrate(), fail(), shuffleArr(), stopAllAudio() của file. Dán ngay SAU dòng renderFC(); */
+/* Câu ví dụ hiện sau khi chọn đúng/sai (tra theo chữ Hán trong VOCAB) */
+const VOCAB_EX = {
+  "请问":   {hz:"同学，请问，图书馆在哪儿？", py:"Tóngxué, qǐngwèn, túshūguǎn zài nǎr?", vi:"Bạn ơi, cho hỏi thư viện ở đâu?"},
+  "图书馆": {hz:"图书馆在那儿，宿舍楼的北边。", py:"Túshūguǎn zài nàr, sùshè lóu de běibian.", vi:"Thư viện ở kia, phía bắc toà ký túc xá."},
+  "在":     {hz:"教学楼在宿舍楼的右边。", py:"Jiàoxué lóu zài sùshè lóu de yòubian.", vi:"Toà giảng đường ở bên phải toà ký túc xá."},
+  "哪儿":   {hz:"你们的宿舍楼在哪儿？", py:"Nǐmen de sùshè lóu zài nǎr?", vi:"Toà ký túc xá của các bạn ở đâu?"},
+  "对不起": {hz:"对不起，我不是这个学校的学生，不知道。", py:"Duìbuqǐ, wǒ bú shì zhège xuéxiào de xuésheng, bù zhīdào.", vi:"Xin lỗi, mình không phải học sinh trường này, mình không biết."},
+  "个":     {hz:"我不是这个学校的学生。", py:"Wǒ bú shì zhège xuéxiào de xuésheng.", vi:"Mình không phải học sinh trường này."},
+  "学校":   {hz:"我们学校的北边是留学生宿舍。", py:"Wǒmen xuéxiào de běibian shì liúxuéshēng sùshè.", vi:"Phía bắc trường chúng tôi là ký túc xá lưu học sinh."},
+  "知道":   {hz:"我不知道图书馆在哪儿。", py:"Wǒ bù zhīdào túshūguǎn zài nǎr.", vi:"Mình không biết thư viện ở đâu."},
+  "没关系": {hz:"对不起。——没关系。", py:"Duìbuqǐ. — Méi guānxi.", vi:"Xin lỗi. — Không sao."},
+  "这儿":   {hz:"同学，这儿是图书馆吗？", py:"Tóngxué, zhèr shì túshūguǎn ma?", vi:"Bạn ơi, đây có phải thư viện không?"},
+  "教学楼": {hz:"这是教学楼，图书馆在那儿。", py:"Zhè shì jiàoxué lóu, túshūguǎn zài nàr.", vi:"Đây là toà giảng đường, thư viện ở kia."},
+  "楼":     {hz:"是左边的楼吗？", py:"Shì zuǒbian de lóu ma?", vi:"Có phải toà bên trái không?"},
+  "那儿":   {hz:"图书馆在那儿。", py:"Túshūguǎn zài nàr.", vi:"Thư viện ở kia."},
+  "宿舍":   {hz:"留学生宿舍在图书馆的北边。", py:"Liúxuéshēng sùshè zài túshūguǎn de běibian.", vi:"Ký túc xá lưu học sinh ở phía bắc thư viện."},
+  "北边":   {hz:"加拿大在美国的北边。", py:"Jiānádà zài Měiguó de běibian.", vi:"Canada ở phía bắc nước Mỹ."},
+  "左边":   {hz:"玛丽的左边是大卫。", py:"Mǎlì de zuǒbian shì Dàwèi.", vi:"Bên trái Mary là David."},
+  "右边":   {hz:"李军在大卫的右边。", py:"Lǐ Jūn zài Dàwèi de yòubian.", vi:"Lý Quân ở bên phải David."},
+  "不用谢": {hz:"谢谢。——不用谢。", py:"Xièxie. — Búyòng xiè.", vi:"Cảm ơn. — Không có chi."},
+  "不用":   {hz:"你不用去图书馆。", py:"Nǐ búyòng qù túshūguǎn.", vi:"Bạn không cần đi thư viện."},
+  "教":     {hz:"老师教我们汉语。", py:"Lǎoshī jiāo wǒmen Hànyǔ.", vi:"Thầy/cô dạy chúng tôi tiếng Hán."},
+  "食堂":   {hz:"食堂在教学楼的前边。", py:"Shítáng zài jiàoxué lóu de qiánbian.", vi:"Nhà ăn ở phía trước toà giảng đường."}
+};
+/* Các cặp/nhóm từ nghĩa gần nhau — không cho xuất hiện cùng nhau trong 4 đáp án */
+const QUIZ_CONFLICT = [["楼","教学楼"],["教","教学楼"],["没关系","不用谢","不用"]];
+const QZ = { order:[], i:0, answered:false, ok:0 };
+function quizConflicts(a,b){ return QUIZ_CONFLICT.some(g=>g.includes(a)&&g.includes(b)); }
+function quizStart(){
+  QZ.order = shuffleArr(VOCAB.map((_,i)=>i)); QZ.i = 0; QZ.ok = 0; quizShow();
+}
+function quizShow(){
+  const host = document.getElementById('c-quiz');
+  if(QZ.i >= QZ.order.length){
+    host.innerHTML = `<div style="text-align:center;padding:24px;"><div style="font-size:3rem;">🎉</div><div class="ex-title" style="font-size:1.3rem;">Hoàn thành! Đúng ${QZ.ok}/${QZ.order.length}</div><button class="btn" onclick="quizStart()">↺ Làm lại</button></div>`;
+    if(QZ.ok===QZ.order.length){ unlockBadge('quiz'); fireConfetti(); }
+    return;
+  }
+  const v = VOCAB[QZ.order[QZ.i]];
+  const wrong = shuffleArr(VOCAB.filter(x=>x.hz!==v.hz && !quizConflicts(x.hz,v.hz) && x.mean!==v.mean)).slice(0,3);
+  const opts = shuffleArr([v,...wrong]);
+  QZ.answered = false; QZ.cur = v; QZ.opts = opts;
+  host.innerHTML = `<div class="quiz-card"><div class="quiz-n">Câu ${QZ.i+1}/${QZ.order.length}</div>
+    <div class="quiz-hz hanzi">${v.hz}</div><div class="quiz-tag">Bài 4</div>
+    <div class="mc-options quiz-opts">${opts.map((o,k)=>`<button class="mc-opt quiz-opt" style="font-size:1rem;font-family:'Be Vietnam Pro';" onclick="quizPick(${k})"><b class="quiz-l">${'ABCD'[k]}.</b> ${o.mean}</button>`).join('')}</div>
+    <div id="quiz-fb"></div></div>`;
+}
+function quizPick(k){
+  if(QZ.answered) return; QZ.answered = true;
+  const v = QZ.cur, btns = document.querySelectorAll('.quiz-opt'), right = QZ.opts[k].hz===v.hz;
+  btns.forEach((b,idx)=>{ b.disabled = true; if(QZ.opts[idx].hz===v.hz) b.classList.add('ok'); else if(idx!==k) b.classList.add('dim'); });
+  const last = QZ.i === QZ.order.length-1;
+  let fb = '';
+  if(right){ btns[k].classList.remove('dim'); QZ.ok++; celebrate(btns[k],4); playClip(v.hz); fb += `<div class="quiz-ok">✅ Chính xác!</div>`; }
+  else { btns[k].classList.add('bad'); fail(btns[k]); fb += `<div class="quiz-bad">❌ Chưa đúng — đáp án: <b>${v.mean}</b></div>`; }
+  const ex = VOCAB_EX[v.hz];
+  if(ex){ fb += `<div class="quiz-ex"><span class="hanzi" style="font-size:1.15rem;">${ex.hz}</span> <i class="pinyin">(${ex.py})</i> — ${ex.vi}</div>`; }
+  fb += `<div style="margin-top:10px;"><button class="btn" onclick="quizNext()">${last?'Xem kết quả':'Câu tiếp ▶'} <small>(Enter ↵)</small></button> <span class="quiz-py hanzi">${v.hz} · ${v.py}</span></div>`;
+  document.getElementById('quiz-fb').innerHTML = `<div class="quiz-fbbox ${right?'okbox':'badbox'}">${fb}</div>`;
+}
+function quizNext(){ QZ.i++; quizShow(); }
+quizStart();
+/* Phím tắt (máy tính): Enter = câu tiếp, 1–4 = chọn đáp án — chỉ hoạt động khi đang mở tab nhỏ Trắc nghiệm */
+document.addEventListener('keydown', e=>{
+  const tag = (e.target.tagName||'').toLowerCase(); if(tag==='input'||tag==='textarea'||tag==='select') return;
+  const p = document.getElementById('panel-flash'), s = document.getElementById('fs-quiz');
+  if(!p.classList.contains('active') || !s.classList.contains('active')) return;
+  if(e.key==='Enter' && QZ.answered){ e.preventDefault(); quizNext(); }
+  else if(!QZ.answered && /^[1-4]$/.test(e.key) && QZ.opts && QZ.opts[+e.key-1]){ quizPick(+e.key-1); }
+});
+/* Chuyển qua lại giữa "Thẻ lật" và "Trắc nghiệm từ vựng" */
+document.querySelectorAll('#fl-subtabs .subtab-btn').forEach(btn=>btn.addEventListener('click',()=>{
+  stopAllAudio();
+  document.querySelectorAll('#fl-subtabs .subtab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.fl-sub').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active'); document.getElementById('fs-'+btn.dataset.fs).classList.add('active');
+}));
 
 /* ============ TAB LUYỆN VIẾT CÂU (BÀI TẬP) ============ */
 let scoreTotal = 0, scoreMax = 0;
