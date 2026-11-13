@@ -597,7 +597,7 @@
       <div class="fl-sub active" id="fs-card">
         <div class="card fc-wrap">
           <div class="fc-progress" id="fc-progress">1 / 12</div>
-          <div class="fc-stars">⭐ Đã thuộc: <span id="fc-known-count">0</span>/<span id="fc-total">21</span></div>
+          <div class="fc-stars">⭐ Đã thuộc: <span id="fc-known-count">0</span>/<span id="fc-total">30</span></div>
           <div class="flashcard" id="flashcard">
             <div class="fc-inner">
               <div class="fc-face fc-front"><div class="hz" id="fc-hz"></div><div class="hint">👆 Nhấp để lật thẻ</div></div>
@@ -743,6 +743,15 @@ const VOCAB = [
   {hz:"不用", py:"búyòng", pos:"phó.", mean:"không cần, không phải"},
   {hz:"教", py:"jiāo", pos:"đgt.", mean:"dạy"},
   {hz:"食堂", py:"shítáng", pos:"dt.", mean:"nhà ăn, căng-tin"}
+  {hz:"东边", py:"dōngbian", pos:"dt.", mean:"phía đông, mặt đông"},
+  {hz:"西边", py:"xībian", pos:"dt.", mean:"phía tây, mặt tây"},
+  {hz:"南边", py:"nánbian", pos:"dt.", mean:"phía nam, mặt nam"},
+  {hz:"前边", py:"qiánbian", pos:"dt.", mean:"phía trước, mặt trước"},
+  {hz:"后边", py:"hòubian", pos:"dt.", mean:"phía sau, mặt sau"},
+  {hz:"上面", py:"shàngmiàn", pos:"dt.", mean:"bên trên, phía trên"},
+  {hz:"下面", py:"xiàmiàn", pos:"dt.", mean:"bên dưới, phía dưới"},
+  {hz:"里面", py:"lǐmiàn", pos:"dt.", mean:"bên trong, phía trong"},
+  {hz:"外面", py:"wàimiàn", pos:"dt.", mean:"bên ngoài, phía ngoài"}
 ];
 
 const DIALOGUES = {
@@ -839,7 +848,27 @@ const HANZI_LIST = [
   {char:"生", py:"shēng", radical:"生(sinh)", strokes:5, mean:"sinh ra; sống",
    tip:"学生 = người 'sinh ra' trong môi trường học tập → học sinh, sinh viên."},
   {char:"吗", py:"ma", radical:"口(khẩu)", strokes:6, mean:"trợ từ nghi vấn (câu hỏi có/không)",
-   tip:"口(miệng) — đặt cuối câu để tạo câu hỏi Có/Không: 这儿是图书馆吗？"}
+   tip:"口(miệng) — đặt cuối câu để tạo câu hỏi Có/Không: 这儿是图书馆吗？"},
+  {char:"东", py:"dōng", radical:"一(nhất)", strokes:5, mean:"phương đông",
+   tip:"Đối lập với 西 (tây). 东边 = phía đông: 日本在中国的东边. Dạng phồn thể 東 = mặt trời (日) ló sau cành cây (木)."},
+  {char:"西", py:"xī", radical:"襾(á)", strokes:6, mean:"phương tây",
+   tip:"Đối lập với 东 (đông). 西边 = phía tây. Ghép bốn hướng: 东西南北."},
+  {char:"南", py:"nán", radical:"十(thập)", strokes:9, mean:"phương nam",
+   tip:"Đối lập với 北 (bắc). 南边 = phía nam: 美国在加拿大的南边."},
+  {char:"前", py:"qián", radical:"刂(đao)", strokes:9, mean:"trước, phía trước",
+   tip:"Đối lập với 后 (sau). 前边/前面 = phía trước: 食堂在教学楼的前边."},
+  {char:"后", py:"hòu", radical:"口(khẩu)", strokes:6, mean:"sau, phía sau",
+   tip:"Đối lập với 前 (trước). 后边/后面 = phía sau: 图书馆在宿舍楼的后边."},
+  {char:"上", py:"shàng", radical:"一(nhất)", strokes:3, mean:"trên, phía trên",
+   tip:"Nét ngang dài là mặt phẳng, nét ngắn nằm phía trên → 'bên trên'. 上面 = bên trên. Đối lập với 下."},
+  {char:"下", py:"xià", radical:"一(nhất)", strokes:3, mean:"dưới, phía dưới",
+   tip:"Nét ngang dài là mặt phẳng, nét ngắn nằm phía dưới → 'bên dưới'. 下面 = bên dưới. Đối lập với 上."},
+  {char:"里", py:"lǐ", radical:"里(lý)", strokes:7, mean:"trong, bên trong",
+   tip:"Đối lập với 外 (ngoài). 里面 = bên trong: 同学们在教室里面."},
+  {char:"外", py:"wài", radical:"夕(tịch)", strokes:5, mean:"ngoài, bên ngoài",
+   tip:"Đối lập với 里 (trong). 外面 = bên ngoài: 食堂在宿舍楼外面."},
+  {char:"面", py:"miàn", radical:"面(diện)", strokes:9, mean:"mặt; phía, bên",
+   tip:"Nghĩa gốc là 'khuôn mặt'; làm hậu tố phương vị giống 边: 上面/下面/里面/外面 = bên trên/dưới/trong/ngoài."}
 ];
 
 /* ============ GAME HOÁ: XP / STREAK / BADGE / CONFETTI / ÂM THANH ============ */
@@ -1359,7 +1388,16 @@ const VOCAB_EX = {
   "不用谢": {hz:"谢谢。——不用谢。", py:"Xièxie. — Búyòng xiè.", vi:"Cảm ơn. — Không có chi."},
   "不用":   {hz:"你不用去图书馆。", py:"Nǐ búyòng qù túshūguǎn.", vi:"Bạn không cần đi thư viện."},
   "教":     {hz:"老师教我们汉语。", py:"Lǎoshī jiāo wǒmen Hànyǔ.", vi:"Thầy/cô dạy chúng tôi tiếng Hán."},
-  "食堂":   {hz:"食堂在教学楼的前边。", py:"Shítáng zài jiàoxué lóu de qiánbian.", vi:"Nhà ăn ở phía trước toà giảng đường."}
+  "食堂":   {hz:"食堂在教学楼的前边。", py:"Shítáng zài jiàoxué lóu de qiánbian.", vi:"Nhà ăn ở phía trước toà giảng đường."},
+  "东边":   {hz:"日本在中国的东边。", py:"Rìběn zài Zhōngguó de dōngbian.", vi:"Nhật Bản ở phía đông Trung Quốc."},
+  "西边":   {hz:"中国在日本的西边。", py:"Zhōngguó zài Rìběn de xībian.", vi:"Trung Quốc ở phía tây Nhật Bản."},
+  "南边":   {hz:"美国在加拿大的南边。", py:"Měiguó zài Jiānádà de nánbian.", vi:"Nước Mỹ ở phía nam Canada."},
+  "前边":   {hz:"食堂在教学楼的前边。", py:"Shítáng zài jiàoxué lóu de qiánbian.", vi:"Nhà ăn ở phía trước toà giảng đường."},
+  "后边":   {hz:"图书馆在宿舍楼的后边。", py:"Túshūguǎn zài sùshè lóu de hòubian.", vi:"Thư viện ở phía sau toà ký túc xá."},
+  "上面":   {hz:"书在桌子的上面。", py:"Shū zài zhuōzi de shàngmiàn.", vi:"Sách ở trên bàn."},
+  "下面":   {hz:"我的书包在椅子的下面。", py:"Wǒ de shūbāo zài yǐzi de xiàmiàn.", vi:"Cặp sách của mình ở dưới ghế."},
+  "里面":   {hz:"同学们在教室里面。", py:"Tóngxuémen zài jiàoshì lǐmiàn.", vi:"Các bạn học sinh ở trong lớp học."},
+  "外面":   {hz:"食堂在宿舍楼外面。", py:"Shítáng zài sùshè lóu wàimiàn.", vi:"Nhà ăn ở bên ngoài toà ký túc xá."}
 };
 /* Các cặp/nhóm từ nghĩa gần nhau — không cho xuất hiện cùng nhau trong 4 đáp án */
 const QUIZ_CONFLICT = [["楼","教学楼"],["教","教学楼"],["没关系","不用谢","不用"]];
