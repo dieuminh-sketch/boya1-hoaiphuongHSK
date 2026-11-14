@@ -1700,5 +1700,130 @@ function hzOutline(){
 // khởi tạo chữ đầu tiên
 selectHanzi(0);
 </script>
+<!-- ===== BÀI 7: TAB TRẮC NGHIỆM TỪ VỰNG TRONG FLASHCARD (theo Bài 11) ===== -->
+<style>
+  .subtabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+  .subtab-btn{font-family:'Baloo 2',sans-serif;font-weight:700;background:var(--white);border:2px solid var(--cream-2);color:var(--red-dark);padding:8px 14px;border-radius:12px;cursor:pointer;font-size:.88rem;transition:.15s;}
+  .subtab-btn.active{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;border-color:var(--accent);box-shadow:var(--shadow);}
+  .fl-sub{display:none;} .fl-sub.active{display:block;animation:fade .3s;}
+  .quiz-card{max-width:760px;margin:0 auto;padding:6px 4px;}
+  .quiz-n{font-family:'Baloo 2';font-weight:700;color:var(--red-dark);font-size:.9rem;}
+  .quiz-hz{font-size:3.2rem;font-weight:700;text-align:center;margin:6px 0 2px;color:var(--ink);}
+  .quiz-tag{text-align:center;color:var(--gray);font-family:'Baloo 2';font-weight:700;margin-bottom:14px;}
+  .quiz-opt{text-align:left;padding:12px 14px;}
+  .quiz-l{color:var(--gray);margin-right:4px;}
+  .quiz-fbbox{margin-top:14px;border-radius:12px;padding:12px 16px;}
+  .quiz-fbbox.okbox{background:var(--green-bg);border-left:4px solid var(--green);}
+  .quiz-fbbox.badbox{background:var(--error-bg);border-left:4px solid var(--error);}
+  .quiz-ok{color:var(--green);font-weight:700;margin-bottom:4px;} .quiz-bad{color:var(--error);font-weight:700;margin-bottom:4px;}
+  .quiz-ex{font-size:.95rem;} .quiz-py{color:var(--gray);font-size:.85rem;margin-left:8px;}
+</style>
+<script>
+(function(){
+  const panel = document.getElementById('panel-flash');
+  const cardWrap = document.createElement('div');
+  cardWrap.className = 'fl-sub active'; cardWrap.id = 'fs-card';
+  while(panel.firstChild) cardWrap.appendChild(panel.firstChild);
+
+  const tabs = document.createElement('div');
+  tabs.className = 'subtabs'; tabs.id = 'fl-subtabs';
+  tabs.innerHTML = '<button class="subtab-btn active" data-fs="card">🃏 Thẻ lật</button><button class="subtab-btn" data-fs="quiz">🎯 Trắc nghiệm từ vựng</button>';
+
+  const quizWrap = document.createElement('div');
+  quizWrap.className = 'fl-sub'; quizWrap.id = 'fs-quiz';
+  quizWrap.innerHTML = '<div class="card ex-block"><div class="ex-title">Trắc nghiệm từ vựng Bài 7</div><div class="ex-sub">Chọn nghĩa đúng của từ. Chọn đúng sẽ phát âm từ. Máy tính: bấm <b>Enter ↵</b> để sang câu tiếp, phím <b>1–4</b> để chọn đáp án.</div><div id="c-quiz"></div></div>';
+
+  panel.appendChild(tabs); panel.appendChild(cardWrap); panel.appendChild(quizWrap);
+
+  tabs.querySelectorAll('.subtab-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    tabs.querySelectorAll('.subtab-btn').forEach(b=>b.classList.remove('active'));
+    panel.querySelectorAll('.fl-sub').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('fs-'+btn.dataset.fs).classList.add('active');
+  }));
+
+  /* sửa tổng số thẻ cho khớp số từ vựng thật */
+  const tot=document.getElementById('fc-total'); if(tot) tot.textContent = VOCAB.length;
+
+  /* thêm huy hiệu "Từ vựng" vào hàng huy hiệu */
+  if(typeof BADGES!=='undefined' && !BADGES.some(b=>b.id==='quiz')){ BADGES.push({id:'quiz',label:'🎯 Từ vựng'}); if(typeof renderBadges==='function') renderBadges(); }
+
+  const shuf = a=>{ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+  /* các cặp từ gần nghĩa/dễ nhầm: không đưa vào cùng một câu hỏi */
+  const CONFLICT = [['自行车','车'],['电影院','电影'],['没（有）','没问题']];
+  const conflicts = (a,b)=>CONFLICT.some(p=>p.includes(a)&&p.includes(b));
+  const QZ = { order:[], i:0, answered:false, ok:0, cur:null, opts:[] };
+  const host = ()=>document.getElementById('c-quiz');
+
+  window.b7QuizStart = function(){ QZ.order = shuf(VOCAB.map((_,i)=>i)); QZ.i = 0; QZ.ok = 0; b7QuizShow(); };
+  window.b7QuizShow = function(){
+    const h = host();
+    if(QZ.i >= QZ.order.length){
+      h.innerHTML = `<div style="text-align:center;padding:24px;"><div style="font-size:3rem;">🎉</div><div class="ex-title" style="font-size:1.3rem;">Hoàn thành! Đúng ${QZ.ok}/${QZ.order.length}</div><button class="btn" onclick="b7QuizStart()">↺ Làm lại</button></div>`;
+      if(QZ.ok===QZ.order.length){ unlockBadge('quiz'); fireConfetti(); }
+      return;
+    }
+    const v = VOCAB[QZ.order[QZ.i]];
+    const wrong = shuf(VOCAB.filter(x=>x.hz!==v.hz && !conflicts(x.hz,v.hz) && x.mean!==v.mean)).slice(0,3);
+    const opts = shuf([v,...wrong]);
+    QZ.answered = false; QZ.cur = v; QZ.opts = opts;
+    h.innerHTML = `<div class="quiz-card"><div class="quiz-n">Câu ${QZ.i+1}/${QZ.order.length}</div>
+      <div class="quiz-hz hanzi">${v.hz}</div><div class="quiz-tag">Bài 7</div>
+      <div class="mc-options quiz-opts">${opts.map((o,k)=>`<button class="mc-opt quiz-opt" style="font-size:1rem;font-family:'Be Vietnam Pro';" onclick="b7QuizPick(${k})"><b class="quiz-l">${'ABCD'[k]}.</b> ${o.mean}</button>`).join('')}</div>
+      <div id="quiz-fb"></div></div>`;
+  };
+  window.b7QuizPick = function(k){
+    if(QZ.answered) return; QZ.answered = true;
+    const v = QZ.cur, btns = document.querySelectorAll('.quiz-opt'), right = QZ.opts[k].hz===v.hz;
+    btns.forEach((b,idx)=>{ b.disabled = true; if(QZ.opts[idx].hz===v.hz) b.classList.add('ok'); else if(idx!==k) b.classList.add('dim'); });
+    const last = QZ.i === QZ.order.length-1;
+    let fb = '';
+    if(right){ btns[k].classList.remove('dim'); QZ.ok++; celebrate(btns[k],4); playClip(v.hz); fb += `<div class="quiz-ok">✅ Chính xác!</div>`; }
+    else { btns[k].classList.add('bad'); fail(btns[k]); fb += `<div class="quiz-bad">❌ Chưa đúng — đáp án: <b>${v.mean}</b></div>`; }
+    fb += `<div style="margin-top:10px;"><button class="btn" onclick="b7QuizNext()">${last?'Xem kết quả':'Câu tiếp ▶'} <small>(Enter ↵)</small></button> <span class="quiz-py hanzi">${v.hz} · ${v.py}</span></div>`;
+    document.getElementById('quiz-fb').innerHTML = `<div class="quiz-fbbox ${right?'okbox':'badbox'}">${fb}</div>`;
+  };
+  window.b7QuizNext = function(){ QZ.i++; b7QuizShow(); };
+  b7QuizStart();
+
+  document.addEventListener('keydown', e=>{
+    const tag = (e.target.tagName||'').toLowerCase(); if(tag==='input'||tag==='textarea'||tag==='select') return;
+    if(!panel.classList.contains('active') || !quizWrap.classList.contains('active')) return;
+    if(e.key==='Enter' && QZ.answered){ e.preventDefault(); b7QuizNext(); }
+    else if(!QZ.answered && /^[1-4]$/.test(e.key) && QZ.opts[+e.key-1]){ b7QuizPick(+e.key-1); }
+  });
+})();
+</script>
+<!-- ===== MỤC TIÊU: BẤM ĐỂ HIỆN / ẨN (dùng được cho mọi bài) ===== -->
+<style>
+  .goals-card .goals-head{cursor:pointer;user-select:none;margin-bottom:0;justify-content:space-between;}
+  .goals-card .goals-head .gh-arrow{font-size:.9rem;transition:transform .25s;margin-left:auto;}
+  .goals-card.open .goals-head{margin-bottom:14px;}
+  .goals-card.open .goals-head .gh-arrow{transform:rotate(180deg);}
+  .goals-card .goals-body{display:none;}
+  .goals-card.open .goals-body{display:block;animation:fade .3s;}
+</style>
+<script>
+(function(){
+  const card = document.querySelector('.goals-card');
+  if(!card) return;
+  const head = card.querySelector('.goals-head');
+  /* gom các mục tiêu vào 1 khối để ẩn/hiện */
+  const body = document.createElement('div'); body.className = 'goals-body';
+  Array.from(card.children).forEach(ch=>{ if(ch!==head) body.appendChild(ch); });
+  card.appendChild(body);
+  /* mũi tên + trạng thái bấm */
+  const arrow = document.createElement('span'); arrow.className = 'gh-arrow'; arrow.textContent = '▼';
+  head.appendChild(arrow);
+  head.setAttribute('role','button'); head.setAttribute('tabindex','0');
+  head.title = 'Bấm để hiện / ẩn mục tiêu';
+  const toggle = ()=>{ const o = card.classList.toggle('open'); head.setAttribute('aria-expanded', o); };
+  head.setAttribute('aria-expanded','false');
+  head.addEventListener('click', toggle);
+  head.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); } });
+  /* muốn mở sẵn khi vào trang: bỏ dấu // ở dòng dưới */
+  // toggle();
+})();
+</script>
 </body>
 </html>
