@@ -1444,5 +1444,93 @@ selectHanzi(0);
   showEx(0);
 })();
 </script>
+<!-- ===== BÀI 2: TAB TRẮC NGHIỆM TỪ VỰNG TRONG FLASHCARD (theo Bài 11) ===== -->
+<style>
+  .subtabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+  .subtab-btn{font-family:'Baloo 2',sans-serif;font-weight:700;background:var(--white);border:2px solid var(--cream-2);color:var(--red-dark);padding:8px 14px;border-radius:12px;cursor:pointer;font-size:.88rem;transition:.15s;}
+  .subtab-btn.active{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;border-color:var(--accent);box-shadow:var(--shadow);}
+  .fl-sub{display:none;} .fl-sub.active{display:block;animation:fade .3s;}
+  .quiz-card{max-width:760px;margin:0 auto;padding:6px 4px;}
+  .quiz-n{font-family:'Baloo 2';font-weight:700;color:var(--red-dark);font-size:.9rem;}
+  .quiz-hz{font-size:3.2rem;font-weight:700;text-align:center;margin:6px 0 2px;color:var(--ink);}
+  .quiz-tag{text-align:center;color:var(--gray);font-family:'Baloo 2';font-weight:700;margin-bottom:14px;}
+  .quiz-opt{text-align:left;padding:12px 14px;}
+  .quiz-l{color:var(--gray);margin-right:4px;}
+  .quiz-fbbox{margin-top:14px;border-radius:12px;padding:12px 16px;}
+  .quiz-fbbox.okbox{background:var(--green-bg);border-left:4px solid var(--green);}
+  .quiz-fbbox.badbox{background:var(--error-bg);border-left:4px solid var(--error);}
+  .quiz-ok{color:var(--green);font-weight:700;margin-bottom:4px;} .quiz-bad{color:var(--error);font-weight:700;margin-bottom:4px;}
+  .quiz-ex{font-size:.95rem;} .quiz-py{color:var(--gray);font-size:.85rem;margin-left:8px;}
+</style>
+<script>
+(function(){
+  const panel = document.getElementById('panel-flash');
+  const cardWrap = document.createElement('div');
+  cardWrap.className = 'fl-sub active'; cardWrap.id = 'fs-card';
+  while(panel.firstChild) cardWrap.appendChild(panel.firstChild);
+
+  const tabs = document.createElement('div');
+  tabs.className = 'subtabs'; tabs.id = 'fl-subtabs';
+  tabs.innerHTML = '<button class="subtab-btn active" data-fs="card">🃏 Thẻ lật</button><button class="subtab-btn" data-fs="quiz">🎯 Trắc nghiệm từ vựng</button>';
+
+  const quizWrap = document.createElement('div');
+  quizWrap.className = 'fl-sub'; quizWrap.id = 'fs-quiz';
+  quizWrap.innerHTML = '<div class="card ex-block"><div class="ex-title">Trắc nghiệm từ vựng Bài 2</div><div class="ex-sub">Chọn nghĩa đúng của từ. Chọn đúng sẽ phát âm từ. Máy tính: bấm <b>Enter ↵</b> để sang câu tiếp, phím <b>1–4</b> để chọn đáp án.</div><div id="c-quiz"></div></div>';
+
+  panel.appendChild(tabs); panel.appendChild(cardWrap); panel.appendChild(quizWrap);
+
+  tabs.querySelectorAll('.subtab-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    tabs.querySelectorAll('.subtab-btn').forEach(b=>b.classList.remove('active'));
+    panel.querySelectorAll('.fl-sub').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('fs-'+btn.dataset.fs).classList.add('active');
+  }));
+
+  /* thêm huy hiệu "Từ vựng" vào hàng huy hiệu */
+  if(typeof BADGES!=='undefined' && !BADGES.some(b=>b.id==='quiz')){ BADGES.push({id:'quiz',label:'🎯 Từ vựng'}); if(typeof renderBadges==='function') renderBadges(); }
+
+  const shuf = a=>{ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+  const QZ = { order:[], i:0, answered:false, ok:0, cur:null, opts:[] };
+  const host = ()=>document.getElementById('c-quiz');
+
+  window.b2QuizStart = function(){ QZ.order = shuf(VOCAB.map((_,i)=>i)); QZ.i = 0; QZ.ok = 0; b2QuizShow(); };
+  window.b2QuizShow = function(){
+    const h = host();
+    if(QZ.i >= QZ.order.length){
+      h.innerHTML = `<div style="text-align:center;padding:24px;"><div style="font-size:3rem;">🎉</div><div class="ex-title" style="font-size:1.3rem;">Hoàn thành! Đúng ${QZ.ok}/${QZ.order.length}</div><button class="btn" onclick="b2QuizStart()">↺ Làm lại</button></div>`;
+      if(QZ.ok===QZ.order.length){ unlockBadge('quiz'); fireConfetti(); }
+      return;
+    }
+    const v = VOCAB[QZ.order[QZ.i]];
+    const wrong = shuf(VOCAB.filter(x=>x.hz!==v.hz && x.mean!==v.mean)).slice(0,3);
+    const opts = shuf([v,...wrong]);
+    QZ.answered = false; QZ.cur = v; QZ.opts = opts;
+    h.innerHTML = `<div class="quiz-card"><div class="quiz-n">Câu ${QZ.i+1}/${QZ.order.length}</div>
+      <div class="quiz-hz hanzi">${v.hz}</div><div class="quiz-tag">Bài 2</div>
+      <div class="mc-options quiz-opts">${opts.map((o,k)=>`<button class="mc-opt quiz-opt" style="font-size:1rem;font-family:'Be Vietnam Pro';" onclick="b2QuizPick(${k})"><b class="quiz-l">${'ABCD'[k]}.</b> ${o.mean}</button>`).join('')}</div>
+      <div id="quiz-fb"></div></div>`;
+  };
+  window.b2QuizPick = function(k){
+    if(QZ.answered) return; QZ.answered = true;
+    const v = QZ.cur, btns = document.querySelectorAll('.quiz-opt'), right = QZ.opts[k].hz===v.hz;
+    btns.forEach((b,idx)=>{ b.disabled = true; if(QZ.opts[idx].hz===v.hz) b.classList.add('ok'); else if(idx!==k) b.classList.add('dim'); });
+    const last = QZ.i === QZ.order.length-1;
+    let fb = '';
+    if(right){ btns[k].classList.remove('dim'); QZ.ok++; celebrate(btns[k],4); playClip(v.hz); fb += `<div class="quiz-ok">✅ Chính xác!</div>`; }
+    else { btns[k].classList.add('bad'); fail(btns[k]); fb += `<div class="quiz-bad">❌ Chưa đúng — đáp án: <b>${v.mean}</b></div>`; }
+    fb += `<div style="margin-top:10px;"><button class="btn" onclick="b2QuizNext()">${last?'Xem kết quả':'Câu tiếp ▶'} <small>(Enter ↵)</small></button> <span class="quiz-py hanzi">${v.hz} · ${v.py}</span></div>`;
+    document.getElementById('quiz-fb').innerHTML = `<div class="quiz-fbbox ${right?'okbox':'badbox'}">${fb}</div>`;
+  };
+  window.b2QuizNext = function(){ QZ.i++; b2QuizShow(); };
+  b2QuizStart();
+
+  document.addEventListener('keydown', e=>{
+    const tag = (e.target.tagName||'').toLowerCase(); if(tag==='input'||tag==='textarea'||tag==='select') return;
+    if(!panel.classList.contains('active') || !quizWrap.classList.contains('active')) return;
+    if(e.key==='Enter' && QZ.answered){ e.preventDefault(); b2QuizNext(); }
+    else if(!QZ.answered && /^[1-4]$/.test(e.key) && QZ.opts[+e.key-1]){ b2QuizPick(+e.key-1); }
+  });
+})();
+</script>
 </body>
 </html>
