@@ -876,29 +876,23 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
 /* Từ vựng: tra theo đúng chữ Hán -> {audio: id thẻ <audio>, start, end (giây)}.
    Bài khoá: KHÔNG dùng timestamp từng câu — chỉ phát trọn vẹn cả đoạn qua nút "Nghe cả đoạn" (xem playDialogueFull). */
 const AUDIO_MAP = {
-  // --- Từ vựng (tuvung2.mp3) ---
-  "同学":   {audio:"audio-tuvung", start:0.93, end:1.72},
-  "们":     {audio:"audio-tuvung", start:3.07, end:3.39},
-  "来":     {audio:"audio-tuvung", start:4.97, end:5.45},
-  "介绍":   {audio:"audio-tuvung", start:6.93, end:7.57},
-  "一下儿": {audio:"audio-tuvung", start:9.22, end:9.86},
-  "姓":     {audio:"audio-tuvung", start:11.68, end:12.12},
-  "的":     {audio:"audio-tuvung", start:13.76, end:13.97},
-  "哪":     {audio:"audio-tuvung", start:15.61, end:16.23},
-  "国":     {audio:"audio-tuvung", start:17.62, end:18.09},
-  "人":     {audio:"audio-tuvung", start:19.69, end:20.25},
-  "他":     {audio:"audio-tuvung", start:21.85, end:22.31},
-  "认识":   {audio:"audio-tuvung", start:23.92, end:24.57},
-  "很":     {audio:"audio-tuvung", start:26.04, end:26.71},
-  "高兴":   {audio:"audio-tuvung", start:28.21, end:28.86},
-  "也":     {audio:"audio-tuvung", start:30.43, end:31.03},
-  "呢":     {audio:"audio-tuvung", start:32.51, end:32.80},
-  "刘":     {audio:"audio-tuvung", start:37.20, end:37.73},
-  "刘明":   {audio:"audio-tuvung", start:39.63, end:40.46},
-  "美国":   {audio:"audio-tuvung", start:42.51, end:43.36},
-  "玛丽":   {audio:"audio-tuvung", start:45.23, end:45.91},
-  "加拿大": {audio:"audio-tuvung", start:47.73, end:48.50},
-  "中国":   {audio:"audio-tuvung", start:49.76, end:50.46}
+  // --- Từ vựng + Danh từ riêng (tuvung3.mp3) — silencedetect -50dB, đệm -0.06s/+0.12s ---
+  "那": {audio:"audio-tuvung", start:0.71, end:1.43},
+  "谁": {audio:"audio-tuvung", start:3.11, end:6.18},
+  "书": {audio:"audio-tuvung", start:7.36, end:8.21},
+  "同屋": {audio:"audio-tuvung", start:9.58, end:10.82},
+  "汉语": {audio:"audio-tuvung", start:11.93, end:13.12},
+  "课本": {audio:"audio-tuvung", start:14.38, end:15.56},
+  "词典": {audio:"audio-tuvung", start:16.94, end:18.18},
+  "就是": {audio:"audio-tuvung", start:19.72, end:20.75},
+  "日语": {audio:"audio-tuvung", start:22.02, end:23.13},
+  "这": {audio:"audio-tuvung", start:24.50, end:25.17},
+  "杂志": {audio:"audio-tuvung", start:26.72, end:27.72},
+  "音乐": {audio:"audio-tuvung", start:29.00, end:29.97},
+  "朋友": {audio:"audio-tuvung", start:31.33, end:32.28},
+  "汉日词典": {audio:"audio-tuvung", start:37.07, end:39.00},
+  "中村": {audio:"audio-tuvung", start:40.58, end:41.69},
+  "日本": {audio:"audio-tuvung", start:42.75, end:43.87}
 };
 let currentPlayingAudio = null;
 let currentPlayingEl = null, currentPlayingBtn = null;
